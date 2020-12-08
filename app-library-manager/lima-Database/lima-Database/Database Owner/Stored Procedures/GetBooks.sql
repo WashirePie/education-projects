@@ -1,0 +1,9 @@
+﻿CREATE PROCEDURE [dbo].[GetBooks]
+AS
+
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT *
+	FROM [dbo].[Book]
+END

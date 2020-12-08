@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LIMAFrontEnd.EnumerableExtensions">
+    <Position X="13.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\EnumerableExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.RelayCommand&lt;T&gt;">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQCAAACAAQAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\RelayCommand.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LIMAFrontEnd.ViewModelBase">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\ViewModelBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LIMAFrontEnd.BorrowWindowViewModel">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAEAAAAIAAAAAQAASAAAAAAgBAAAAACAAAAAIAAAAAA=</HashCode>
+      <FileName>Views\Borrow\BorrowWindowViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.CustomerWindowViewModel">
+    <Position X="7.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAABAAAAAAAAAMAIAgCAAAAAAAAAZAAAAAAAIBAAAQA=</HashCode>
+      <FileName>Views\Customer\CustomerWindowViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.LibrarianWindowViewModel">
+    <Position X="9.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JgABACAAAABQAMEIACCBAAAAxFAABAAAAAAAIBAIgQA=</HashCode>
+      <FileName>Views\Librarian\LibrarianWindowViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.LibrarianWindowDataGridMultiBindingCoverter">
+    <Position X="9.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\Librarian\LibrarianWindowViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LIMAFrontEnd.LoginWindowViewModel">
+    <Position X="11.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAEAAAAgIABAAAAIgAAAAAAACAAAAIBAAgQA=</HashCode>
+      <FileName>Views\Login\LoginWindowViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.Helper">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAgAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Access.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.Access">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAABAAAAAAAAAICAAAAAAAAAAAQABABAAA=</HashCode>
+      <FileName>Access.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.Book">
+    <Position X="6.25" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAgAEgAiEAAAAAAgAAAAAAAAAAGAAAACAA=</HashCode>
+      <FileName>Database Classes\Book.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.Borrow">
+    <Position X="8" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAACAgACAAAAAAAAAAAAAAAAAAGBAAAAAA=</HashCode>
+      <FileName>Database Classes\Borrow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.BorrowStates">
+    <Position X="8" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAACAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Database Classes\Borrow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.Customer">
+    <Position X="9.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAIiIAAAAAAQAAAAAAAADAAAEIAAAAAg=</HashCode>
+      <FileName>Database Classes\Customer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LIMAFrontEnd.Librarian">
+    <Position X="11.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAQAAAABAAACAAAEAAAAAAg=</HashCode>
+      <FileName>Database Classes\Librarian.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="LIMAFrontEnd.IClosable">
+    <Position X="13.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Utils\IClosable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

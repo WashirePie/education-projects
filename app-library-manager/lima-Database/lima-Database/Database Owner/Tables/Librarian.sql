@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[Librarian]
+(
+	[PKey] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [Name] NVARCHAR(50) NOT NULL, 
+    [LastName] NVARCHAR(50) NOT NULL, 
+    [Abbrev] NVARCHAR(50) NOT NULL, 
+    [Password] NVARCHAR(MAX) NOT NULL
+
+)

@@ -1,2 +1,2 @@
-# education-studies
+# education-projects
 School Projects

@@ -1,0 +1,174 @@
+﻿{
+    "Books": [
+        {
+            "PKey": 1,
+            "ISBN": "9781593275846",
+            "Title": "Eloquent JavaScript, Second Edition",
+            "Author": "Marijn Haverbeke",
+            "Published": "2014-12-14",
+            "Publisher": "No Starch Press",
+            "Category": "Programming",
+            "Stock": 8,
+            "StorageLocation": "3B",
+            "ImageLink": "NUL",
+            "PageCount": 472
+        },
+        {
+            "PKey": 2,
+            "ISBN": "9781449331818",
+            "Title": "Learning JavaScript Design Patterns",
+            "Author": "Addy Osmani",
+            "Published": "2012-07-01",
+            "Publisher": "O'Reilly Media",
+            "Category": "Programming",
+            "Stock": 12,
+            "StorageLocation": "3A",
+            "ImageLink": "NUL",
+            "PageCount": 254
+        },
+        {
+            "PKey": 3,
+            "ISBN": "9781449365035",
+            "Title": "Speaking JavaScript",
+            "Author": "Axel Rauschmayer",
+            "Published": "2014-02-01",
+            "Publisher": "O'Reilly Media",
+            "Category": "Programming",
+            "Stock": 19,
+            "StorageLocation": "2C",
+            "ImageLink": "NUL",
+            "PageCount": 460
+        },
+        {
+            "PKey": 4,
+            "ISBN": "9781491950296",
+            "Title": "Programming JavaScript Applications",
+            "Author": "Eric Elliott",
+            "Published": "2014-07-01",
+            "Publisher": "O'Reilly Media",
+            "Category": "Programming",
+            "Stock": 3,
+            "StorageLocation": "2B",
+            "ImageLink": "NUL",
+            "PageCount": 254
+        },
+        {
+            "PKey": 5,
+            "ISBN": "9781593277574",
+            "Title": "Understanding ECMAScript 6",
+            "Author": "Nicholas C. Zakas",
+            "Published": "2016-09-03",
+            "Publisher": "No Starch Press",
+            "Category": "Programming",
+            "Stock": 4,
+            "StorageLocation": "2A",
+            "ImageLink": "NUL",
+            "PageCount": 352
+        },
+        {
+            "PKey": 6,
+            "ISBN": "9781491904244",
+            "Title": "You Don't Know JS",
+            "Author": "Kyle Simpson",
+            "Published": "2015-12-27",
+            "Publisher": "O'Reilly Media",
+            "Category": "Programming",
+            "Stock": 2,
+            "StorageLocation": "1C",
+            "ImageLink": "NUL",
+            "PageCount": 278
+        },
+        {
+            "PKey": 7,
+            "ISBN": "9781449325862",
+            "Title": "Git Pocket Guide",
+            "Author": "Richard E. Silverman",
+            "Published": "2013-08-02",
+            "Publisher": "O'Reilly Media",
+            "Category": "Programming",
+            "Stock": 9,
+            "StorageLocation": "1B",
+            "ImageLink": "NUL",
+            "PageCount": 234
+        },
+        {
+            "PKey": 8,
+            "ISBN": "9781449337711",
+            "Title": "Designing Evolvable Web APIs with ASP.NET",
+            "Author": "Glenn Block, et al.",
+            "Published": "2014-04-07",
+            "Publisher": "O'Reilly Media",
+            "Category": "Programming",
+            "Stock": 65,
+            "StorageLocation": "1A",
+            "ImageLink": "NUL",
+            "PageCount": 538
+        }
+    ],
+    "Customers": [
+        {
+            "PKey": 1,
+            "Name": "Urs",
+            "LastName": "Uhrmacher",
+            "StreetName": "Rolex-Promenade 17",
+            "ZipCode": 3200,
+            "City": "Biel",
+            "Email": "urs.uhrmacher@zeit.ch",
+            "Phone": "+41 44 222 90 90",
+            "Password": "3894370cb2ac201e4285ad7af45940a4cd69a8add45355de51230c8215586c54"
+        },
+        {
+            "PKey": 2,
+            "Name": "Max",
+            "LastName": "Muster",
+            "StreetName": "Musterstrasse 42",
+            "ZipCode": 1234,
+            "City": "Musterien",
+            "Email": "max@muster.ch",
+            "Phone": "+41 23 456 78 90",
+            "Password": "80d3756ead5e3a5f4220679a8b4ebae066546d1b169fc8e5785c144c3aee3e94"
+        }
+    ],
+    "Borrows": [
+        {
+            "PKey": 1,
+            "FKey_Book": 3,
+            "FKey_Customer": 1,
+            "DateOfBorrow": "2020-08-01T08:43:55.456Z",
+            "DateOfReturn": "2020-09-10T10:30:00.000Z",
+            "Returned": true
+        },
+        {
+            "PKey": 2,
+            "FKey_Book": 4,
+            "FKey_Customer": 1,
+            "DateOfBorrow": "2020-08-01T08:45:43.123Z",
+            "DateOfReturn": "2020-10-12T10:30:00.000Z",
+            "Returned": false
+        },
+        {
+            "PKey": 3,
+            "FKey_Book": 7,
+            "FKey_Customer": 2,
+            "DateOfBorrow": "2020-08-01T09:56:01.678Z",
+            "DateOfReturn": "2020-08-10T10:30:00.000Z",
+            "Returned": false
+        }
+    ],
+    "Librarians": [
+        {
+            "PKey": 1,
+            "Name": "Pius",
+            "LastName": "Panoni",
+            "Abbrev": "pip",
+            "Password": "d0ef7131f539d90eb6e8afaf5f24663955d2069482f2d66776d8920f040ef55d"
+        },
+        {
+            "PKey": 2,
+            "Name": "Uschi",
+            "LastName": "Weber",
+            "Abbrev": "uwe",
+            "Password": "83c6e0abe941e43d3096da5c0b3187bf4cf89e551dfec1eb405ee191af53b753"
+        }
+    ]
+}       
