@@ -5,15 +5,24 @@ module.exports = {
   },
   extends: [
     'plugin:vue/vue3-essential',
-    '@vue/standard',
-    '@vue/typescript/recommended'
+    '@vue/typescript/recommended',
+    '@vue/standard'
   ],
   parserOptions: {
     ecmaVersion: 2020
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'nonblock-statement-body-position': ['error', 'below'],
+    'brace-style': ['error', 'allman'],
+    curly: 'off',
+    'vue/require-valid-default-prop': 'off',
+    'no-unreachable': 'off',
+    'no-prototype-builtins': 'off',
+    'no-return-assign': 'off',
+    'space-before-function-paren': 'off',
+    eqeqeq: 'off'
   },
   overrides: [
     {
