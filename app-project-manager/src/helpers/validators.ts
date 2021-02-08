@@ -2,6 +2,7 @@ export const genericTextValidation = (type: string,
   value: string,
   minChar: number,
   maxChar: number,
+  checkContent: true = true,
   duplicatesArray: Array<string> = [],
   sourcesArray: Array<string> = []) =>
 {
@@ -15,7 +16,7 @@ export const genericTextValidation = (type: string,
     append(`should not exceed ${maxChar} characters`)
 
   // Validate content
-  if (!/^[a-z\-_\s\döäü]*$/i.test(value))
+  if (!/^[a-z\-_\s\döäü]*$/i.test(value) && checkContent)
     append('should only contain letters, numbers, spaces, underscores or hyphens')
 
   // Optional: Check for duplicates
@@ -23,7 +24,7 @@ export const genericTextValidation = (type: string,
   if (duplicatesArray.length)
   {
     if (duplicatesArray.map(i => i = i.toUpperCase()).includes(value.toUpperCase()))
-      append('should not be a duplicate')
+      append('should not contain duplicates')
   }
 
   // Optional: Check for at least one match

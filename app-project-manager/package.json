@@ -14,8 +14,8 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@primer/css": "^15.2.0",
     "core-js": "^3.6.5",
-    "equal-vue": "^0.7.20",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
