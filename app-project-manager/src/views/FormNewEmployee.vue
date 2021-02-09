@@ -46,11 +46,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from 'vue'
+import { computed, defineComponent, Ref, ref } from 'vue'
 import { useStore } from 'vuex'
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelectMultiple from '@/components/PrimerFieldSelectMultiple.vue'
 import { PrimerSelectMultipleItem } from '@/interfaces/primerField'
+import { EmployeeFunction } from '@/interfaces/employee'
 
 export default defineComponent({
   name: 'FormNewEmployee',
@@ -71,14 +72,16 @@ export default defineComponent({
     const workloadField = ref<Ref | null>(null)
     const functionsField = ref<Ref | null>(null)
 
-    // TODO: Grab this from vuex
-    // const employeeFunctions = ref(store.state.employeeFunctions)
-    const employeeFunctions: Array<PrimerSelectMultipleItem> = [
-      { name: 'Developer', note: 'Available for developer functions', state: false, payload: 'Developer' },
-      { name: 'Designer', note: 'Available for designer functions', state: false, payload: 'Designer' },
-      { name: 'Project Lead', note: 'Available as project lead', state: false, payload: 'Project Lead' },
-      { name: 'Administrator', note: 'Available for administrative functions', state: false, payload: 'Administrator' }
-    ]
+    const employeeFunctions = computed(() =>
+    {
+      let functions: Array<EmployeeFunction> = store.getters.allEmployeeFunctions
+      let mapped: Array<PrimerSelectMultipleItem> = functions.map(f => 
+      {
+        return <PrimerSelectMultipleItem> { name: f.name, payload: f.note, state: false } 
+      })
+      return mapped
+    })
+
 
     const validateForm = (): Promise<string> =>
     {
@@ -100,7 +103,16 @@ export default defineComponent({
       })
     }
 
-    return { validateForm, nameField, lastNameField, departmentField, functionsField, workloadField, persIdField, employeeFunctions }
+    return { 
+      validateForm, 
+      nameField, 
+      lastNameField, 
+      departmentField, 
+      functionsField, 
+      workloadField, 
+      persIdField, 
+      employeeFunctions 
+    }
   }
 })
 </script>

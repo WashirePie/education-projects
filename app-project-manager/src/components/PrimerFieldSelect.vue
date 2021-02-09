@@ -83,7 +83,11 @@ export default defineComponent({
       }
     }
 
-    return { validateInput, errorMessage, inputValue }
+    return { 
+      validateInput, 
+      errorMessage, 
+      inputValue
+    }
   }
 })
 </script>

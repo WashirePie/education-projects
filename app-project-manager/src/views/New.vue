@@ -39,8 +39,6 @@
         type="button"
         @click="validateCurrentForm"
       >Store</button>
-
-      <PrimerToast />
   </div>
 
 </template>
@@ -51,7 +49,6 @@ import FormNewApproachModel from './FormNewApproachModel.vue'
 import FormNewProject from './FormNewProject.vue'
 import FormNewEmployee from './FormNewEmployee.vue'
 import FormNewCostCenter from './FormNewCostCenter.vue'
-import PrimerToast from '@/components/PrimerToast.vue'
 
 interface PrimerForm {
   name: string;
@@ -65,7 +62,6 @@ export default defineComponent({
     FormNewProject,
     FormNewEmployee,
     FormNewCostCenter,
-    PrimerToast
   },
   setup()
   {

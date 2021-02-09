@@ -91,7 +91,12 @@ export default defineComponent({
       }
     }
 
-    return { inputValue, errorMessage, validateInput, validateInputCustom }
+    return { 
+      inputValue, 
+      errorMessage, 
+      validateInput, 
+      validateInputCustom 
+    }
   }
 })
 </script>

@@ -43,13 +43,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from 'vue'
+import { computed, defineComponent, Ref, ref } from 'vue'
 import { useStore } from 'vuex'
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelect from '@/components/PrimerFieldSelect.vue'
 import PrimerFieldTextArea from '@/components/PrimerFieldTextArea.vue'
 import { PrimerSelectItem } from '@/interfaces/primerField'
 import { EProjectPriority } from '@/interfaces/project'
+import { ApproachModel } from '@/interfaces/approachModel'
 
 export default defineComponent({
   name: 'FormNewProject',
@@ -70,12 +71,15 @@ export default defineComponent({
     const priorityField = ref<Ref | null>(null)
     const descField = ref<Ref | null>(null)
 
-    // TODO: Grab this from vuex
-    // const approachModels = ref(store.state.approachModels)
-    const approachModels: Array<PrimerSelectItem> = [
-      { name: 'HERMES', payload: 123 },
-      { name: 'IPDRCE', payload: 321 }
-    ]
+    const approachModels = computed(() =>
+    {
+      let models: Array<ApproachModel> = store.getters.allApproachModels
+      let mapped: Array<PrimerSelectItem> = models.map(a => 
+      {
+        return <PrimerSelectItem> { name: a.title, payload: a.phases } 
+      })
+      return mapped
+    })
 
     const priorities: Array<PrimerSelectItem> = [
       { name: EProjectPriority.HIGH, payload: EProjectPriority.HIGH },
@@ -104,7 +108,16 @@ export default defineComponent({
       })
     }
 
-    return { validateForm, titleField, idField, approachModelField, priorityField, descField, approachModels, priorities }
+    return {
+      validateForm,
+      titleField,
+      idField,
+      approachModelField,
+      priorityField,
+      descField,
+      approachModels,
+      priorities
+    }
   }
 })
 </script>

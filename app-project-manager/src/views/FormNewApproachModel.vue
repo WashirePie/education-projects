@@ -57,7 +57,10 @@ export default defineComponent({
       })
     }
 
-    return { validateForm, titleField, phaseTitlesField }
+    return { 
+      validateForm, 
+      titleField, 
+      phaseTitlesField }
   }
 })
 </script>

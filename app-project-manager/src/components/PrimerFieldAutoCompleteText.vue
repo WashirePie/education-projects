@@ -66,7 +66,12 @@ export default defineComponent({
 
     const insertAutoCompleteItem = () => inputValue.value = autoCompleteList.value[selectedIndex.value].value
 
-    return { inputValue, selectedIndex, autoCompleteList, insertAutoCompleteItem }
+    return { 
+      inputValue, 
+      selectedIndex, 
+      autoCompleteList, 
+      insertAutoCompleteItem 
+    }
   }
 })
 </script>

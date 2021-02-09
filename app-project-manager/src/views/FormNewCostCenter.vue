@@ -54,7 +54,11 @@ export default defineComponent({
       })
     }
 
-    return { validateForm, titleField, idField }
+    return { 
+      validateForm, 
+      titleField, 
+      idField 
+    }
   }
 })
 </script>

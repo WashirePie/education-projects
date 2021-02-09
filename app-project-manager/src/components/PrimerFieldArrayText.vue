@@ -164,7 +164,15 @@ export default defineComponent({
       }
     }
 
-    return { items, inputValue, errorMessage, addItem, removeItem, changeOrder, validateInput }
+    return { 
+      items, 
+      inputValue, 
+      errorMessage, 
+      addItem, 
+      removeItem, 
+      changeOrder, 
+      validateInput 
+    }
   }
 })
 </script>
