@@ -1,6 +1,7 @@
 import { ApproachModel } from './approachModel'
-import { Employee } from './employee'
+import { DocumentRef } from './document'
 import { Phase } from './phase'
+import { PersonnelResource } from './resource'
 
 export interface Project
 {
@@ -9,13 +10,13 @@ export interface Project
   model: ApproachModel;
   progress: number;
   phases: Array<Phase>;
-  projectLead: Employee;
+  projectLead: PersonnelResource;
   startDate: Date;
   endDate: Date;
   approvalDate: Date;
   state: EProjectState;
   priority: EProjectPriority;
-  documents: Array<null>;
+  documents: Array<DocumentRef>;
   description: string;
 }
 

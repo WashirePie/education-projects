@@ -41,9 +41,9 @@ export default defineComponent({
     const titleField = ref<Ref | null>(null)
     const phaseTitlesField = ref<Ref | null>(null)
 
-    const validateForm: Promise<unkown> = () =>
+    const validateForm = (): Promise<string> =>
     {
-      return new Promise((resolve, reject) =>
+      return new Promise<string>((resolve, reject) =>
       {
         const title = titleField.value.validateInput(2, 60)
         const phaseTitles = phaseTitlesField.value.validateInput(1)
@@ -51,8 +51,8 @@ export default defineComponent({
         if (title && phaseTitles)
         {
           store.dispatch('storeApproachModel', { title, phases: phaseTitles })
-            .then(res => resolve(res))
-            .catch(err => reject(err))
+            .then((res: string) => resolve(res))
+            .catch((err: string) => reject(err))
         }
       })
     }

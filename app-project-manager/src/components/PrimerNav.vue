@@ -19,6 +19,13 @@
     <div class="Header-item">
       <router-link
         class="Header-link"
+        to="/"
+      >Dash</router-link>
+    </div>
+
+    <div class="Header-item">
+      <router-link
+        class="Header-link"
         to="/new"
       >New</router-link>
     </div>

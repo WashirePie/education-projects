@@ -1,5 +1,10 @@
 <template>
-  <div class="pm-dashboard" />
+  <div class="container-xl my-5 px-3 px-md-4 px-lg-5">
+    <button
+      class="btn btn-primary mr-2"
+      type="button"
+    >Plan a new Project</button>
+  </div>
 </template>
 
 <script lang="ts">

@@ -31,6 +31,7 @@
         v-if="forms[3].isCurrent"
         ref="formCostCenter"
       />
+
       <hr>
 
       <button
@@ -86,8 +87,8 @@ export default defineComponent({
       // TODO: Wire up all Forms to their respective store
       const currentForm = forms.filter(f => f.isCurrent)[0].component
       currentForm.validateForm()
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then((res: string) => console.log(res))
+        .catch((err: string) => console.log(err))
     }
 
     const select = (form: PrimerForm) =>

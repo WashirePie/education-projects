@@ -38,9 +38,9 @@ export default defineComponent({
     const titleField = ref<Ref | null>(null)
     const idField = ref<Ref | null>(null)
 
-    const validateForm: Promise<unknown> = () =>
+    const validateForm = (): Promise<string> =>
     {
-      return new Promise((resolve, reject) =>
+      return new Promise<string>((resolve, reject) =>
       {
         const title = titleField.value.validateInput(2, 60)
         const identifier = idField.value.validateInputCustom(/CC[\d]{3}/g)
@@ -48,8 +48,8 @@ export default defineComponent({
         if (title && identifier)
         {
           store.dispatch('storeCostCenter', { title, identifier })
-            .then(res => resolve(res))
-            .catch(err => reject(err))
+            .then((res: string) => resolve(res))
+            .catch((err: string) => reject(err))
         }
       })
     }

@@ -85,9 +85,9 @@ export default defineComponent({
       { name: EProjectPriority.LOW, payload: EProjectPriority.LOW }
     ]
 
-    const validateForm: Promise<unknown> = () =>
+    const validateForm = (): Promise<string> =>
     {
-      return new Promise((resolve, reject) =>
+      return new Promise<string>((resolve, reject) =>
       {
         const title = titleField.value.validateInput(2, 60)
         const id = idField.value.validateInputCustom(/CC[\d]{3}/g)
@@ -98,8 +98,8 @@ export default defineComponent({
         if (title && id && model && priority && description)
         {
           store.dispatch('storeProject', { title, model, priority, description })
-            .then(res => resolve(res))
-            .catch(err => reject(err))
+            .then((res: string) => resolve(res))
+            .catch((err: string) => reject(err))
         }
       })
     }

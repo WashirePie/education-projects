@@ -80,9 +80,9 @@ export default defineComponent({
       { name: 'Administrator', note: 'Available for administrative functions', state: false, payload: 'Administrator' }
     ]
 
-    const validateForm: Promise<unknown> = () =>
+    const validateForm = (): Promise<string> =>
     {
-      return new Promise((resolve, reject) =>
+      return new Promise<string>((resolve, reject) =>
       {
         const name = nameField.value.validateInput(2, 60)
         const lastName = lastNameField.value.validateInput(2, 60)
@@ -94,8 +94,8 @@ export default defineComponent({
         if (name && lastName && department && persId && workload && funcs)
         {
           store.dispatch('storeEmployee', { name, lastName, department, personellIdentifier: persId, workload, possibleFunctions: funcs })
-            .then(res => resolve(res))
-            .catch(err => reject(err))
+            .then((res: string) => resolve(res))
+            .catch((err: string) => reject(err))
         }
       })
     }
