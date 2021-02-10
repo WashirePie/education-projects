@@ -65,12 +65,12 @@ export default defineComponent({
     const store = useStore()
 
     // Setup references for the form fields
-    const nameField = ref<Ref | null>(null)
-    const lastNameField = ref<Ref | null>(null)
+    const nameField       = ref<Ref | null>(null)
+    const lastNameField   = ref<Ref | null>(null)
     const departmentField = ref<Ref | null>(null)
-    const persIdField = ref<Ref | null>(null)
-    const workloadField = ref<Ref | null>(null)
-    const functionsField = ref<Ref | null>(null)
+    const persIdField     = ref<Ref | null>(null)
+    const workloadField   = ref<Ref | null>(null)
+    const functionsField  = ref<Ref | null>(null)
 
     const employeeFunctions = computed(() =>
     {

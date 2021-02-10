@@ -35,8 +35,8 @@ export default defineComponent({
     const store = useStore()
 
     // Setup references for the form fields
-    const titleField = ref<Ref | null>(null)
-    const idField = ref<Ref | null>(null)
+    const titleField  = ref<Ref | null>(null)
+    const idField     = ref<Ref | null>(null)
 
     const validateForm = (): Promise<string> =>
     {

@@ -7,6 +7,17 @@ import { createStore } from 'vuex'
 // const Datastore = require('nedb')
 // const path = require('path')
 
+
+// Helper functions
+const success = {
+  generic: (type: string, action: string): string => `${type} was successfully ${action}`,
+}
+
+const error = {
+  duplicate: (type: string, property: string): ReferenceError => new ReferenceError(`${type} with this '${property}' already exists`),
+  inexists: (type: string, property: string): ReferenceError => new ReferenceError(`No ${type} with this '${property}' exists`)
+}
+
 export default createStore({
   state: {
     /* Hardcoded and immutable. This could be easily moved to a database. 
@@ -24,10 +35,10 @@ export default createStore({
       { title: 'IPDRCE', phases: ['Inform', 'Plan', 'Decide', 'Realize', 'Control', 'Evaluate'] }
     ] as Array<ApproachModel>,
     costCenters: [
-      { title: 'Education',              identifier: 'CC000' },
-      { title: 'Software Development',   identifier: 'CC200' },
-      { title: 'Software Testing',       identifier: 'CC210' },
-      { title: 'Software Documentation', identifier: 'CC220' },
+      { title: 'Education',              id: 'CC000' },
+      { title: 'Software Development',   id: 'CC200' },
+      { title: 'Software Testing',       id: 'CC210' },
+      { title: 'Software Documentation', id: 'CC220' },
     ] as Array<CostCenter>,
 
     projects: [] as Array<Project>,
@@ -35,18 +46,205 @@ export default createStore({
   },
 
   getters: {
-    allApproachModels: (state) => state.approachModels as Array<ApproachModel>,
-    allEmployeeFunctions: (state) => state.employeeFunctions as Array<EmployeeFunction>,
-    allCostCenters: (state) => state.costCenters as Array<CostCenter>,
-    allProjects: (state) => state.projects as Array<Project>,
-    allEmployees: (state) => state.employees as Array<Employee>
+    allEmployeeFunctions: (state):  Array<EmployeeFunction> => state.employeeFunctions as Array<EmployeeFunction>,
+
+    allApproachModels: (state): Array<ApproachModel> => state.approachModels as Array<ApproachModel>,
+    getApproachModel: (state) => (title: ApproachModel['title']): ApproachModel => state.approachModels.filter(a => a.title == title)[0],
+
+    allCostCenters: (state): Array<CostCenter> => state.costCenters as Array<CostCenter>,
+    getCostCenter: (state) => (id: CostCenter['id']): CostCenter => state.costCenters.filter(c => c.id == id)[0],
+
+    allProjects: (state): Array<Project> => state.projects as Array<Project>,
+    getProject: (state) => (id: Project['id']): Project => state.projects.filter(p => p.id == id)[0],
+
+    allEmployees: (state): Array<Employee> => state.employees as Array<Employee>,
+    getEmployee: (state) => (id: Employee['id']): Employee => state.employees.filter(e => e.id == id)[0],
   },
 
   mutations: {
+    addApproachModel: (state, payload: ApproachModel) => state.approachModels.push(payload),
+    removeApproachModel: (state, payload: ApproachModel) => state.approachModels = state.approachModels.filter(a => a.title != payload.title),
 
+    addCostCenter: (state, payload: CostCenter) => state.costCenters.push(payload),
+    removeCostCenter: (state, payload: CostCenter) => state.costCenters = state.costCenters.filter(c => c.id != payload.id),
+
+    addProject: (state, payload: Project) => state.projects.push(payload),
+    removeProject: (state, payload: Project) => state.projects = state.projects.filter(p => p.id != payload.id),
+
+    addEmployee: (state, payload: Employee) => state.employees.push(payload),
+    removeEmployee: (state, payload: Employee) => state.employees = state.employees.filter(e => e.id != payload.id)
   },
 
   actions: {
+    storeApproachModel: ({ commit, getters }, payload: ApproachModel): Promise<string> => 
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (getters.getApproachModel(payload.title))
+          reject(error.duplicate('approach model', 'title'))
+        else
+        {
+          commit('addApproachModel', payload)
+          resolve(success.generic('approach model', 'stored'))
+        }
+      })
+    },
+    updateApproachModel: ({ commit, getters }, payload: ApproachModel): Promise<string> =>
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (!getters.getApproachModel(payload.title))
+          reject(error.inexists('approach model', 'title'))
+        else
+        {
+          commit('removeApproachModel', payload)
+          commit('addApproachModel', payload)
+          resolve(success.generic('approach model', 'updated'))
+        }
+      })
+    },
+    removeApproachModel: ({ commit, getters }, payload: ApproachModel): Promise<string> => 
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (!getters.getApproachModel(payload.title))
+          reject(error.inexists('approach model', 'title'))
+        else
+        {
+          commit('removeApproachModel', payload)
+          resolve(success.generic('approach model', 'stored'))
+        }
+      })
+    },
+
+    storeCostCenter: ({ commit, getters }, payload: CostCenter): Promise<string> => 
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (getters.getCostCenter(payload.id))
+          reject(error.duplicate('cost center', 'id'))
+        else
+        {
+          commit('addCostCenter', payload)
+          resolve(success.generic('cost center', 'stored'))
+        }
+      })
+    },
+    updateCostCenter: ({ commit, getters }, payload: CostCenter): Promise<string> =>
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (!getters.getCostCenter(payload.id))
+        {
+          reject(error.inexists('cost center', 'id'))
+        }
+        else
+        {
+          commit('removeCostCenter', payload)
+          commit('addCostCenter', payload)
+          resolve(success.generic('cost center', 'updated'))
+        }
+      })
+    },
+    removeCostCenter: ({ commit, getters }, payload: CostCenter): Promise<string> => 
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (!getters.getCostCenter(payload.id))
+          reject(error.inexists('cost center', 'id'))
+        else
+        {
+          commit('removeCostCenter', payload)
+          resolve(success.generic('cost center', 'stored'))
+        }
+      })
+    },
+
+    storeEmployee: ({ commit, getters }, payload: Employee): Promise<string> => 
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (getters.getEmployee(payload.id))
+          reject(error.duplicate('employee', 'id'))
+        else
+        {
+          commit('addEmployee', payload)
+          resolve(success.generic('employee', 'stored'))
+        }
+      })
+    },
+    updateEmployee: ({ commit, getters }, payload: Employee): Promise<string> =>
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (!getters.getEmployee(payload.id))
+        {
+          reject(error.inexists('employee', 'id'))
+        }
+        else
+        {
+          commit('removeEmployee', payload)
+          commit('addEmployee', payload)
+          resolve(success.generic('employee', 'updated'))
+        }
+      })
+    },
+    removeEmployee: ({ commit, getters }, payload: Employee): Promise<string> => 
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (!getters.getEmployee(payload.id))
+          reject(error.inexists('employee', 'id'))
+        else
+        {
+          commit('removeEmployee', payload)
+          resolve(success.generic('employee', 'stored'))
+        }
+      })
+    },
+
+    storeProject: ({ commit, getters }, payload: Project): Promise<string> => 
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (getters.getProject(payload.id))
+          reject(error.duplicate('project', 'id'))
+        else
+        {
+          commit('addProject', payload)
+          resolve(success.generic('project', 'stored'))
+        }
+      })
+    },
+    updateProject: ({ commit, getters }, payload: Project): Promise<string> =>
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (!getters.getProject(payload.id))
+        {
+          reject(error.inexists('project', 'id'))
+        }
+        else
+        {
+          commit('removeProject', payload)
+          commit('addProject', payload)
+          resolve(success.generic('project', 'updated'))
+        }
+      })
+    },
+    removeProject: ({ commit, getters }, payload: Project): Promise<string> => 
+    {
+      return new Promise<string>((resolve, reject) =>
+      {
+        if (!getters.getProject(payload.id))
+          reject(error.inexists('project', 'id'))
+        else
+        {
+          commit('removeProject', payload)
+          resolve(success.generic('project', 'stored'))
+        }
+      })
+    },
   },
 
   modules: {

@@ -49,7 +49,7 @@ import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelect from '@/components/PrimerFieldSelect.vue'
 import PrimerFieldTextArea from '@/components/PrimerFieldTextArea.vue'
 import { PrimerSelectItem } from '@/interfaces/primerField'
-import { EProjectPriority } from '@/interfaces/project'
+import { EProjectPriority, Project } from '@/interfaces/project'
 import { ApproachModel } from '@/interfaces/approachModel'
 
 export default defineComponent({
@@ -65,11 +65,11 @@ export default defineComponent({
     const store = useStore()
 
     // Setup references for the form fields
-    const titleField = ref<Ref | null>(null)
-    const idField = ref<Ref | null>(null)
-    const approachModelField = ref<Ref | null>(null)
-    const priorityField = ref<Ref | null>(null)
-    const descField = ref<Ref | null>(null)
+    const titleField          = ref<Ref | null>(null)
+    const idField             = ref<Ref | null>(null)
+    const approachModelField  = ref<Ref | null>(null)
+    const priorityField       = ref<Ref | null>(null)
+    const descField           = ref<Ref | null>(null)
 
     const approachModels = computed(() =>
     {
@@ -82,11 +82,11 @@ export default defineComponent({
     })
 
     const priorities: Array<PrimerSelectItem> = [
-      { name: EProjectPriority.HIGH, payload: EProjectPriority.HIGH },
+      { name: EProjectPriority.HIGH,          payload: EProjectPriority.HIGH },
       { name: EProjectPriority.ABOVE_AVERAGE, payload: EProjectPriority.ABOVE_AVERAGE },
-      { name: EProjectPriority.NORMAL, payload: EProjectPriority.NORMAL },
+      { name: EProjectPriority.NORMAL,        payload: EProjectPriority.NORMAL },
       { name: EProjectPriority.BELOW_AVERAGE, payload: EProjectPriority.BELOW_AVERAGE },
-      { name: EProjectPriority.LOW, payload: EProjectPriority.LOW }
+      { name: EProjectPriority.LOW,           payload: EProjectPriority.LOW }
     ]
 
     const validateForm = (): Promise<string> =>
@@ -94,14 +94,15 @@ export default defineComponent({
       return new Promise<string>((resolve, reject) =>
       {
         const title = titleField.value.validateInput(2, 60)
-        const id = idField.value.validateInputCustom(/CC[\d]{3}/g)
+        const id = idField.value.validateInputCustom(/P[\d]{3}/g)
         const model = approachModelField.value.validateInput()
         const priority = priorityField.value.validateInput()
         const description = descField.value.validateInput(10, 500)
 
         if (title && id && model && priority && description)
         {
-          store.dispatch('storeProject', { title, model, priority, description })
+          const newProject: Partial<Project> = { title, id, model, priority, description }
+          store.dispatch('storeProject', { newProject })
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }
