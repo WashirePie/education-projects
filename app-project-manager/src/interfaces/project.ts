@@ -29,7 +29,6 @@ export const enum EProjectState
   FINISHED = 'Finished'
 }
 
-// TODO: Change Project Form to implement this
 export const enum EProjectPriority
 {
   HIGH = 'High',
