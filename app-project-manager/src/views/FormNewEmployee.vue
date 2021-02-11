@@ -48,10 +48,10 @@
 <script lang="ts">
 import { computed, defineComponent, Ref, ref } from 'vue'
 import { useStore } from 'vuex'
+import { Employee, EmployeeFunction } from '@/interfaces/employee'
+import { PrimerSelectMultipleItem } from '@/interfaces/primerField'
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelectMultiple from '@/components/PrimerFieldSelectMultiple.vue'
-import { PrimerSelectMultipleItem } from '@/interfaces/primerField'
-import { EmployeeFunction } from '@/interfaces/employee'
 
 export default defineComponent({
   name: 'FormNewEmployee',
@@ -77,7 +77,7 @@ export default defineComponent({
       let functions: Array<EmployeeFunction> = store.getters.allEmployeeFunctions
       let mapped: Array<PrimerSelectMultipleItem> = functions.map(f => 
       {
-        return <PrimerSelectMultipleItem> { name: f.name, payload: f.note, state: false } 
+        return <PrimerSelectMultipleItem> { name: f.name, payload: f.name, note: f.note, state: false } 
       })
       return mapped
     })
@@ -96,10 +96,11 @@ export default defineComponent({
 
         if (name && lastName && department && persId && workload && funcs)
         {
-          store.dispatch('storeEmployee', { name, lastName, department, personellIdentifier: persId, workload, possibleFunctions: funcs })
+          store.dispatch('storeEmployee', { name, lastName, department, id: persId, workload, possibleFunctions: funcs } as Employee)
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }
+        else reject(new Error('Not valid'))        
       })
     }
 

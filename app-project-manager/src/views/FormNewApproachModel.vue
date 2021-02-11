@@ -23,6 +23,7 @@
 <script lang="ts">
 import { defineComponent, Ref, ref } from 'vue'
 import { useStore } from 'vuex'
+import { ApproachModel } from '@/interfaces/approachModel'
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldArrayText from '@/components/PrimerFieldArrayText.vue'
 
@@ -50,11 +51,11 @@ export default defineComponent({
 
         if (title && phaseTitles)
         {
-          store.dispatch('storeApproachModel', { title, phases: phaseTitles })
+          store.dispatch('storeApproachModel', { title, phases: phaseTitles } as ApproachModel)
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }
-        // COMBAK
+        else reject(new Error('Not valid'))        
       })
     }
 

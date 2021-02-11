@@ -14,21 +14,20 @@
     </div>
   </nav>
 
-  <div class="container-md my-6 px-3 px-md-4 px-lg-5">
+  <div class="container-lg my-6 px-lg-5">
+      
       <FormNewApproachModel
         v-if="forms[0].isCurrent"
         ref="formApproachModel"
       />
-      <FormNewProject
-        v-if="forms[1].isCurrent"
-        ref="formProject"
-      />
+
       <FormNewEmployee
-        v-if="forms[2].isCurrent"
+        v-if="forms[1].isCurrent"
         ref="formEmployee"
       />
+
       <FormNewCostCenter
-        v-if="forms[3].isCurrent"
+        v-if="forms[2].isCurrent"
         ref="formCostCenter"
       />
 
@@ -44,9 +43,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, Ref, ref } from 'vue'
+import { defineComponent, getCurrentInstance, reactive, Ref, ref } from 'vue'
 import FormNewApproachModel from './FormNewApproachModel.vue'
-import FormNewProject from './FormNewProject.vue'
 import FormNewEmployee from './FormNewEmployee.vue'
 import FormNewCostCenter from './FormNewCostCenter.vue'
 
@@ -59,32 +57,34 @@ interface PrimerForm {
 export default defineComponent({
   components: {
     FormNewApproachModel,
-    FormNewProject,
     FormNewEmployee,
     FormNewCostCenter,
   },
   setup()
   {
+    // Setup references for the form components
     const formApproachModel = ref<Ref | null>(null)
-    const formProject = ref<Ref | null>(null)
-    const formEmployee = ref<Ref | null>(null)
-    const formCostCenter = ref<Ref | null>(null)
+    const formEmployee      = ref<Ref | null>(null)
+    const formCostCenter    = ref<Ref | null>(null)
 
-    /* eslint-disable no-multi-spaces */
+    const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
+
     const forms = reactive<PrimerForm[]>([
       { name: 'Approach Model', isCurrent: true,  component: formApproachModel  },
-      { name: 'Project',        isCurrent: false, component: formProject },
       { name: 'Employee',       isCurrent: false, component: formEmployee },
       { name: 'Cost Center',    isCurrent: false, component: formCostCenter }
     ])
 
     const validateCurrentForm = () =>
     {
-      // TODO: Wire up all Forms to their respective store
       const currentForm = forms.filter(f => f.isCurrent)[0].component
+
+      loadingbar.start()
+      
       currentForm.validateForm()
         .then((res: string) => console.log(res))
         .catch((err: string) => console.log(err))
+        .finally(() => loadingbar.finish())      
     }
 
     const select = (form: PrimerForm) =>
@@ -93,7 +93,14 @@ export default defineComponent({
       form.isCurrent = true
     }
 
-    return { forms, select, validateCurrentForm, formApproachModel, formProject, formEmployee, formCostCenter }
+    return { 
+      forms, 
+      select, 
+      validateCurrentForm, 
+      formApproachModel, 
+      formEmployee, 
+      formCostCenter 
+    }
   }
 })
 

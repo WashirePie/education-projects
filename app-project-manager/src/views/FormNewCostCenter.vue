@@ -20,9 +20,10 @@
   />
 </template>
 <script lang="ts">
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
+import { CostCenter } from '@/interfaces/costCenter'
 import { defineComponent, Ref, ref } from 'vue'
 import { useStore } from 'vuex'
+import PrimerFieldText from '@/components/PrimerFieldText.vue'
 
 export default defineComponent({
   name: 'FormNewCostCenter',
@@ -43,14 +44,15 @@ export default defineComponent({
       return new Promise<string>((resolve, reject) =>
       {
         const title = titleField.value.validateInput(2, 60)
-        const identifier = idField.value.validateInputCustom(/CC[\d]{3}/g)
+        const id = idField.value.validateInputCustom(/CC[\d]{3}/g)
 
-        if (title && identifier)
+        if (title && id)
         {
-          store.dispatch('storeCostCenter', { title, identifier })
+          store.dispatch('storeCostCenter', { title, id } as CostCenter)
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }
+        else reject(new Error('Not valid'))        
       })
     }
 

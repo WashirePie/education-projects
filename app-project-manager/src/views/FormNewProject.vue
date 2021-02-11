@@ -45,12 +45,12 @@
 <script lang="ts">
 import { computed, defineComponent, Ref, ref } from 'vue'
 import { useStore } from 'vuex'
+import { PrimerSelectItem } from '@/interfaces/primerField'
+import { EProjectPriority, EProjectState, Project } from '@/interfaces/project'
+import { ApproachModel } from '@/interfaces/approachModel'
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelect from '@/components/PrimerFieldSelect.vue'
 import PrimerFieldTextArea from '@/components/PrimerFieldTextArea.vue'
-import { PrimerSelectItem } from '@/interfaces/primerField'
-import { EProjectPriority, Project } from '@/interfaces/project'
-import { ApproachModel } from '@/interfaces/approachModel'
 
 export default defineComponent({
   name: 'FormNewProject',
@@ -76,7 +76,7 @@ export default defineComponent({
       let models: Array<ApproachModel> = store.getters.allApproachModels
       let mapped: Array<PrimerSelectItem> = models.map(a => 
       {
-        return <PrimerSelectItem> { name: a.title, payload: a.phases } 
+        return <PrimerSelectItem> { name: a.title, payload: a } 
       })
       return mapped
     })
@@ -101,11 +101,20 @@ export default defineComponent({
 
         if (title && id && model && priority && description)
         {
-          const newProject: Partial<Project> = { title, id, model, priority, description }
-          store.dispatch('storeProject', { newProject })
+          const newProject = { 
+            title, 
+            id, 
+            model, 
+            priority,
+            description, 
+            state: EProjectState.PLANNING 
+          } as Partial<Project>
+
+          store.dispatch('setNewProject', { newProject })
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }
+        else reject(new Error('Not valid'))        
       })
     }
 

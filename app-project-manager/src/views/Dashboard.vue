@@ -3,41 +3,41 @@
     <button
       class="btn btn-primary mr-2"
       type="button"
-      @click="showModal = true"
+      @click="showNewProjectModal = true"
     >Plan a new Project</button>
 
-    <button
-      class="btn btn-primary mr-2"
-      type="button"
-      @click="load"
-    >Start</button>  
-
-    <button
-      class="btn btn-primary mr-2"
-      type="button"
-      @click="finish"
-    >Finish</button>
-
-    <button
-      class="btn btn-primary mr-2"
-      type="button"
-      @click="fifty"
-    >50%</button>
   </div>
+
   <PrimerModal
-    v-if="showModal"
-    @close="showModal = false"  
+    v-if="showNewProjectModal"
+    :displayFooter="true"
+    @close="showNewProjectModal = false"  
   >
     <template v-slot:body>
-      <FormNewProject />
+      <div class="container-md">
+        <FormNewProject
+          ref="formProject"
+        />
+      </div>
     </template>
+
+    <template v-slot:footer>
+      <div class="container-md">
+        <button
+          class="btn btn-primary mr-2"
+          type="button"
+          @click="validateNewProject"
+        >Create</button>
+      </div>
+    </template>
+
   </PrimerModal>
 
 
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, ref } from 'vue'
+import { computed, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from 'vuex'
 import FormNewProject from '@/views/FormNewProject.vue'
 
@@ -49,15 +49,28 @@ export default defineComponent({
   setup() 
   {
     const store = useStore()
-    const showModal = ref(true)
+    const showNewProjectModal = ref(false)
+
+    // Setup references for the form components
+    const formProject = ref<Ref | null>(null)
 
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
 
-    const load = () => loadingbar.start()
-    const finish = () => loadingbar.finish()
-    const fifty = () => loadingbar.update(50)
+    const validateNewProject = () =>
+    {
+      loadingbar.start()
+      
+      formProject.value.validateForm()
+        .then((res: string) => console.log(res))
+        .catch((err: string) => console.log(err))
+        .finally(() => loadingbar.finish())     
+    }
 
-    return { showModal, load, finish, fifty }
+    return { 
+      showNewProjectModal, 
+      validateNewProject,
+      formProject
+    }
   }
 })
 </script>

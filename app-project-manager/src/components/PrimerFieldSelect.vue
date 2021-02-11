@@ -62,7 +62,7 @@ export default defineComponent({
   },
   setup(props)
   {
-    const inputValue = ref<string>('')
+    const inputValue   = ref<string>('')
     const errorMessage = ref<string>('')
 
     onMounted(() => inputValue.value = props.placeHolder)

@@ -5,7 +5,7 @@
           class="modal-mask"
           ref="modalMask"
         >
-          <div class="Box Box--overlay mx-6 my-5 d-flex flex-column modal-restrict">
+          <div class="Box Box--overlay my-5 container-lg d-flex flex-column modal-restrict">
             <div class="Box-header p-1 bg-white">
               <button 
                 class="btn-octicon btn-octicon-danger float-right" 

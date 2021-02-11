@@ -45,7 +45,7 @@ export default defineComponent({
   },
   setup(props)
   {
-    const inputValue = ref<string>('')
+    const inputValue    = ref<string>('')
     const selectedIndex = ref<number>(0)
 
     const autoCompleteList = computed((): Array<AutoCompleteItem> =>

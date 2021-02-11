@@ -99,9 +99,9 @@ export default defineComponent({
   },
   setup(props)
   {
-    const inputValue = ref<string>('')
+    const inputValue   = ref<string>('')
     const errorMessage = ref<string>('')
-    const items = ref<Array<string>>([])
+    const items        = ref<Array<string>>([])
 
     const addItem = (event: KeyboardEvent) =>
     {
