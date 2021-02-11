@@ -37,9 +37,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
-import { useStore } from 'vuex'
 import FormNewProject from '@/views/FormNewProject.vue'
+import { defineComponent, getCurrentInstance, Ref, ref } from 'vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'Dashboard',

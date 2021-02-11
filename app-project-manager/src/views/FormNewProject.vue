@@ -43,14 +43,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, Ref, ref } from 'vue'
-import { useStore } from 'vuex'
-import { PrimerSelectItem } from '@/interfaces/primerField'
-import { EProjectPriority, EProjectState, Project } from '@/interfaces/project'
-import { ApproachModel } from '@/interfaces/approachModel'
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelect from '@/components/PrimerFieldSelect.vue'
 import PrimerFieldTextArea from '@/components/PrimerFieldTextArea.vue'
+import { computed, defineComponent, Ref, ref } from 'vue'
+import { useStore } from '@/store'
+import { PrimerSelectItem } from '@/interfaces/primerField'
+import { EProjectPriority, EProjectState, Project } from '@/interfaces/project'
+import { ApproachModel } from '@/interfaces/approachModel'
+import { ActionTypes } from '@/store/actions'
 
 export default defineComponent({
   name: 'FormNewProject',
@@ -73,7 +74,7 @@ export default defineComponent({
 
     const approachModels = computed(() =>
     {
-      let models: Array<ApproachModel> = store.getters.allApproachModels
+      let models: Array<ApproachModel> = store.state.approachModels
       let mapped: Array<PrimerSelectItem> = models.map(a => 
       {
         return <PrimerSelectItem> { name: a.title, payload: a } 
@@ -110,7 +111,7 @@ export default defineComponent({
             state: EProjectState.PLANNING 
           } as Partial<Project>
 
-          store.dispatch('setNewProject', { newProject })
+          store.dispatch(ActionTypes.setNewProject, newProject)
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }

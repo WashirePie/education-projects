@@ -46,12 +46,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, Ref, ref } from 'vue'
-import { useStore } from 'vuex'
-import { Employee, EmployeeFunction } from '@/interfaces/employee'
-import { PrimerSelectMultipleItem } from '@/interfaces/primerField'
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelectMultiple from '@/components/PrimerFieldSelectMultiple.vue'
+import { computed, defineComponent, Ref, ref } from 'vue'
+import { useStore } from '@/store'
+import { Employee, EmployeeFunction } from '@/interfaces/employee'
+import { PrimerSelectMultipleItem } from '@/interfaces/primerField'
+import { ActionTypes } from '@/store/actions'
 
 export default defineComponent({
   name: 'FormNewEmployee',
@@ -74,7 +75,7 @@ export default defineComponent({
 
     const employeeFunctions = computed(() =>
     {
-      let functions: Array<EmployeeFunction> = store.getters.allEmployeeFunctions
+      let functions: Array<EmployeeFunction> = store.state.employeeFunctions
       let mapped: Array<PrimerSelectMultipleItem> = functions.map(f => 
       {
         return <PrimerSelectMultipleItem> { name: f.name, payload: f.name, note: f.note, state: false } 
@@ -96,7 +97,16 @@ export default defineComponent({
 
         if (name && lastName && department && persId && workload && funcs)
         {
-          store.dispatch('storeEmployee', { name, lastName, department, id: persId, workload, possibleFunctions: funcs } as Employee)
+          const newEmployee: Employee = {
+            name, 
+            lastName, 
+            department, 
+            id: persId, 
+            workload, 
+            possibleFunctions: funcs 
+          }
+
+          store.dispatch(ActionTypes.storeEmployee, newEmployee)
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }

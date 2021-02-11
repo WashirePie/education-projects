@@ -21,11 +21,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from 'vue'
-import { useStore } from 'vuex'
-import { ApproachModel } from '@/interfaces/approachModel'
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldArrayText from '@/components/PrimerFieldArrayText.vue'
+import PrimerFieldText from '@/components/PrimerFieldText.vue'
+import { defineComponent, Ref, ref } from 'vue'
+import { useStore } from '@/store'
+import { ApproachModel } from '@/interfaces/approachModel'
+import { ActionTypes } from '@/store/actions'
 
 export default defineComponent({
   name: 'FormNewApproachModel',
@@ -51,7 +52,7 @@ export default defineComponent({
 
         if (title && phaseTitles)
         {
-          store.dispatch('storeApproachModel', { title, phases: phaseTitles } as ApproachModel)
+          store.dispatch(ActionTypes.storeApproachModel, <ApproachModel>{ title, phases: phaseTitles })
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }

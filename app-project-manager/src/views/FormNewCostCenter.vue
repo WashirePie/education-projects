@@ -20,10 +20,11 @@
   />
 </template>
 <script lang="ts">
+import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import { CostCenter } from '@/interfaces/costCenter'
 import { defineComponent, Ref, ref } from 'vue'
-import { useStore } from 'vuex'
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
+import { useStore } from '@/store'
+import { ActionTypes } from '@/store/actions'
 
 export default defineComponent({
   name: 'FormNewCostCenter',
@@ -48,7 +49,7 @@ export default defineComponent({
 
         if (title && id)
         {
-          store.dispatch('storeCostCenter', { title, id } as CostCenter)
+          store.dispatch(ActionTypes.storeCostCenter, <CostCenter>{ title, id })
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }
