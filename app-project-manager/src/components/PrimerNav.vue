@@ -35,7 +35,7 @@
       v-if="hasNewProject"
     >
       <router-link
-        class="Header-link"
+        class="Header-link anim-pulse"
         to="/plan"
       >Planner</router-link>
     </div>

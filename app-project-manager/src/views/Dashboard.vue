@@ -49,6 +49,8 @@ import PrimerWidgetProjects from '@/components/PrimerWidgetProjects.vue'
 import PrimerWidgetEmployees from '@/components/PrimerWidgetEmployees.vue'
 import { defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
+import router from '@/router'
+import { RouteLocationRaw } from 'vue-router'
 
 export default defineComponent({
   name: 'Dashboard',
@@ -72,7 +74,7 @@ export default defineComponent({
       loadingbar.start()
       
       formProject.value.validateForm()
-        .then((res: string) => console.log(res))
+        .then((res: string) => router.push( <RouteLocationRaw>{ path: '/plan'}))
         .catch((err: string) => console.log(err))
         .finally(() => loadingbar.finish())     
     }
