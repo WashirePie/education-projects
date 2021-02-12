@@ -12,9 +12,9 @@
       <input type="search" class="form-control input-dark" />
     </div> -->
 
-    <div class="Header-item">
+    <!-- <div class="Header-item">
       Routes
-    </div>
+    </div> -->
 
     <div class="Header-item">
       <router-link
@@ -28,6 +28,16 @@
         class="Header-link"
         to="/new"
       >New</router-link>
+    </div>
+
+    <div 
+      class="Header-item"
+      v-if="hasNewProject"
+    >
+      <router-link
+        class="Header-link"
+        to="/plan"
+      >Planner</router-link>
     </div>
 
     <div class="Header-item Header-item--full">
@@ -47,12 +57,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, ComputedRef, defineComponent } from 'vue'
 import AppIcon from '@/components/octicons/AppIcon.vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
   components: {
     AppIcon
+  },
+  setup()
+  {
+    const store = useStore()
+
+    const hasNewProject: ComputedRef<boolean> = computed(() => store.state.newProject != null )
+
+    return {
+      hasNewProject
+    }
   }
 })
 </script>
+
+<style lang="scss">
+a.router-link-exact-active {
+  color: rgba(255,255,255,0.7);
+}
+</style>

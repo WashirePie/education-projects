@@ -80,7 +80,7 @@ export default defineComponent({
       else
       {
         errorMessage.value = ''
-        return props.inputSource.filter(i => i.state)[0].payload
+        return props.inputSource.filter(i => i.state).map(i => i.payload)
       }
 
       return null

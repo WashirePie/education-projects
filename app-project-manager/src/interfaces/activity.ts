@@ -8,7 +8,7 @@ export interface Activity
   progress: number;
   startDate: Date;
   endDate: Date;
-  documents: Array<DocumentRef>;
+  documents: Array<DocumentRef> | null;
   responsibility: Employee;
   resources: Array<Resource>;
 }

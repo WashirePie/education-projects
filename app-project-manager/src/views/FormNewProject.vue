@@ -79,6 +79,7 @@ export default defineComponent({
       {
         return <PrimerSelectItem> { name: a.title, payload: a } 
       })
+      
       return mapped
     })
 
@@ -99,6 +100,8 @@ export default defineComponent({
         const model = approachModelField.value.validateInput()
         const priority = priorityField.value.validateInput()
         const description = descField.value.validateInput(10, 500)
+
+
 
         if (title && id && model && priority && description)
         {

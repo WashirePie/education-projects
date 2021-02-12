@@ -91,19 +91,21 @@ export default defineComponent({
         const name = nameField.value.validateInput(2, 60)
         const lastName = lastNameField.value.validateInput(2, 60)
         const department = departmentField.value.validateInput(2, 60)
-        const persId = persIdField.value.validateInputCustom(/#[\d]{5}/g)
+        const id = persIdField.value.validateInputCustom(/#[\d]{5}/g)
         const workload = workloadField.value.validateInputCustom(/[\d]{1,2}(\.[\d]{2})?/g)
-        const funcs = functionsField.value.validateInput(1)
+        const funcs: Array<string> = functionsField.value.validateInput(1)
 
-        if (name && lastName && department && persId && workload && funcs)
+        const possibleFunctions: Array<EmployeeFunction> = funcs.map(f => { return <EmployeeFunction>{ name: f } })
+
+        if (name && lastName && department && id && workload && possibleFunctions)
         {
           const newEmployee: Employee = {
             name, 
             lastName, 
             department, 
-            id: persId, 
+            id, 
             workload, 
-            possibleFunctions: funcs 
+            possibleFunctions,
           }
 
           store.dispatch(ActionTypes.storeEmployee, newEmployee)

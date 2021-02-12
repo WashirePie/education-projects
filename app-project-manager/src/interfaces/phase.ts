@@ -13,5 +13,5 @@ export interface Phase
   endDate: Date;
   approvalDate: Date;
   state: EProjectState;
-  documents: Array<DocumentRef>;
+  documents: Array<DocumentRef> | null;
 }

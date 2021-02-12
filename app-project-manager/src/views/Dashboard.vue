@@ -6,6 +6,14 @@
       @click="showNewProjectModal = true"
     >Plan a new Project</button>
 
+    <hr>
+
+    <PrimerWidgetProjects/>
+    
+    <hr>
+    
+    <PrimerWidgetEmployees />
+    
   </div>
 
   <PrimerModal
@@ -33,18 +41,21 @@
 
   </PrimerModal>
 
-
 </template>
 
 <script lang="ts">
 import FormNewProject from '@/views/FormNewProject.vue'
+import PrimerWidgetProjects from '@/components/PrimerWidgetProjects.vue'
+import PrimerWidgetEmployees from '@/components/PrimerWidgetEmployees.vue'
 import { defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'Dashboard',
   components: {
-    FormNewProject
+    FormNewProject,
+    PrimerWidgetProjects,
+    PrimerWidgetEmployees
   },
   setup() 
   {

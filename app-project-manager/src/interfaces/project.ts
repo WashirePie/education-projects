@@ -1,5 +1,6 @@
 import { ApproachModel } from './approachModel'
 import { DocumentRef } from './document'
+import { Employee } from './employee'
 import { Phase } from './phase'
 import { PersonnelResource } from './resource'
 
@@ -10,13 +11,13 @@ export interface Project
   model: ApproachModel;
   progress: number;
   phases: Array<Phase>;
-  projectLead: PersonnelResource;
+  projectLead: Employee;
   startDate: Date;
   endDate: Date;
   approvalDate: Date;
   state: EProjectState;
   priority: EProjectPriority;
-  documents: Array<DocumentRef>;
+  documents: Array<DocumentRef> | null;
   description: string;
 }
 
@@ -37,27 +38,3 @@ export const enum EProjectPriority
   BELOW_AVERAGE = 'Below average',
   LOW = 'Low'
 }
-
-const emptyProject: Project = {
-  title: '',
-  id: '',
-  model: {} as ApproachModel,
-  progress: 0,
-  phases: [{} as Phase],
-  projectLead: {} as PersonnelResource,
-  startDate: {} as Date,
-  endDate: {} as Date,
-  approvalDate: {} as Date,
-  state: EProjectState.PLANNING,
-  priority: EProjectPriority.HIGH,
-  documents: [{} as DocumentRef],
-  description: ''
-}
-
-/**
- * @summary Helper function to do runtime Typechecking. It's <b>only</b> used in conjunction with
- * Vuex. Vuex TS support is too involved for such a small project
- * @param {any} [obj] Object to be checked
- * @returns {boolean} True if typecheck succeeded
- */
-export const isProject = (obj: any): obj is Project => Object.keys(obj).every(k => Object.keys(emptyProject).includes(k))
