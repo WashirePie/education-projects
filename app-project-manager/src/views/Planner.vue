@@ -20,7 +20,7 @@
     </div>
 
     <div class="TimelineItem-break ml-0"></div>
-    
+
   </div>
 
 </template>
@@ -28,13 +28,25 @@
 <script lang="ts">
 import CheckIcon from '@/components/octicons/CheckIcon.vue'
 import AlertIcon from '@/components/octicons/AlertIcon.vue'
-import { defineComponent } from "vue";
+import { computed, ComputedRef, defineComponent } from "vue";
+import { useStore } from '@/store';
+import { Project } from '@/interfaces/project';
 
 export default defineComponent({
   name: 'Planner',
   components: {
     CheckIcon,
     AlertIcon,
+  },
+  setup() 
+  {
+    const store = useStore()
+
+    const newProject: ComputedRef<Project | null> = computed(() => store.state.newProject )
+
+    return {
+      newProject
+    }
   }
 })
 </script>

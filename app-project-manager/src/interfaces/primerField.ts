@@ -1,10 +1,10 @@
-export interface PrimerSelectItem
+export interface IPrimerSelectItem
 {
   name: string
   payload: any
 }
 
-export interface PrimerSelectMultipleItem extends PrimerSelectItem
+export interface IPrimerSelectMultipleItem extends IPrimerSelectItem
 {
   note: string
   state: false

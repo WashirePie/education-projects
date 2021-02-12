@@ -50,8 +50,8 @@ import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelectMultiple from '@/components/PrimerFieldSelectMultiple.vue'
 import { computed, defineComponent, Ref, ref } from 'vue'
 import { useStore } from '@/store'
-import { Employee, EmployeeFunction } from '@/interfaces/employee'
-import { PrimerSelectMultipleItem } from '@/interfaces/primerField'
+import { Employee, IEmployeeFunction } from '@/interfaces/employee'
+import { IPrimerSelectMultipleItem } from '@/interfaces/primerField'
 import { ActionTypes } from '@/store/actions'
 
 export default defineComponent({
@@ -75,10 +75,10 @@ export default defineComponent({
 
     const employeeFunctions = computed(() =>
     {
-      let functions: Array<EmployeeFunction> = store.state.employeeFunctions
-      let mapped: Array<PrimerSelectMultipleItem> = functions.map(f => 
+      let functions: Array<IEmployeeFunction> = store.state.employeeFunctions
+      let mapped: Array<IPrimerSelectMultipleItem> = functions.map(f => 
       {
-        return <PrimerSelectMultipleItem> { name: f.name, payload: f.name, note: f.note, state: false } 
+        return <IPrimerSelectMultipleItem> { name: f.name, payload: f.name, note: f.note, state: false } 
       })
       return mapped
     })
@@ -95,7 +95,7 @@ export default defineComponent({
         const workload = workloadField.value.validateInputCustom(/[\d]{1,2}(\.[\d]{2})?/g)
         const funcs: Array<string> = functionsField.value.validateInput(1)
 
-        const possibleFunctions: Array<EmployeeFunction> = funcs.map(f => { return <EmployeeFunction>{ name: f } })
+        const possibleFunctions: Array<IEmployeeFunction> = funcs.map(f => { return <IEmployeeFunction>{ name: f } })
 
         if (name && lastName && department && id && workload && possibleFunctions)
         {

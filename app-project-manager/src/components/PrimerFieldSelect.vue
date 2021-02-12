@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { PrimerSelectItem } from '@/interfaces/primerField'
+import { IPrimerSelectItem } from '@/interfaces/primerField'
 import { defineComponent, onMounted, watch, ref, PropType } from 'vue'
 
 export default defineComponent({
@@ -48,7 +48,7 @@ export default defineComponent({
       default: ''
     },
     selectOptions: {
-      type: Array as PropType<Array<PrimerSelectItem>>,
+      type: Array as PropType<Array<IPrimerSelectItem>>,
       default: () => ([{ name: 'Low', payload: 1 }, { name: 'Medium', payload: 2 }, { name: 'High', payload: 3 }])
     },
     darkMode: {
@@ -69,7 +69,7 @@ export default defineComponent({
 
     watch(inputValue, () => errorMessage.value = '')
 
-    const validateInput = (): PrimerSelectItem['payload'] =>
+    const validateInput = (): IPrimerSelectItem['payload'] =>
     {
       if (inputValue.value == props.placeHolder)
       {

@@ -1,6 +1,6 @@
 import { ApproachModel } from "@/interfaces/approachModel";
 import { CostCenter } from "@/interfaces/costCenter";
-import { Employee, EmployeeFunction } from "@/interfaces/employee";
+import { Employee } from "@/interfaces/employee";
 import { Project } from "@/interfaces/project";
 import { ActionContext, ActionTree } from "vuex";
 import { Mutations, MutationType } from "./mutations";
@@ -45,7 +45,7 @@ export type Actions = {
   [ActionTypes.storeProject](context: ActionAugments, project: Project): Promise<string>
   [ActionTypes.updateProject](context: ActionAugments, project: Project): Promise<string>
   [ActionTypes.deleteProject](context: ActionAugments, project: Project): Promise<string>
-  [ActionTypes.setNewProject](context: ActionAugments, project: Partial<Project>): Promise<string>
+  [ActionTypes.setNewProject](context: ActionAugments, nullableProject: Project | null): Promise<string>
 }
 
 // Message generators
@@ -226,14 +226,14 @@ export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Act
     })  
   },
 
-  [ActionTypes.setNewProject]({ commit }, project)
+  [ActionTypes.setNewProject]({ commit }, nullableProject)
   {
     return new Promise<string>((resolve, reject) =>
     {
       if (state.newProject != null) reject(error.singleton('new project'))
       else
       {
-        commit(MutationType.assignNewProject, project)
+        commit(MutationType.assignNewProject, nullableProject)
         resolve(success.generic('new project', 'created'))
       }
     })  

@@ -35,6 +35,14 @@
     :selectOptions="approachModels"
   />
 
+  <PrimerFieldSelect
+    ref="projectLeadField"
+    inputName="Project Lead"
+    inputDescription="Select an employee as project lead"
+    placeHolder="Choose a project leader"
+    :selectOptions="availableProjectLeads"
+  />
+
   <PrimerFieldTextArea
     ref="descField"
     inputName="Description"
@@ -46,13 +54,13 @@
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerFieldSelect from '@/components/PrimerFieldSelect.vue'
 import PrimerFieldTextArea from '@/components/PrimerFieldTextArea.vue'
-import { computed, defineComponent, Ref, ref } from 'vue'
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue'
 import { useStore } from '@/store'
-import { PrimerSelectItem } from '@/interfaces/primerField'
-import { EProjectPriority, EProjectState, Project } from '@/interfaces/project'
+import { IPrimerSelectItem } from '@/interfaces/primerField'
+import { EProjectPriority, Project } from '@/interfaces/project'
 import { ApproachModel } from '@/interfaces/approachModel'
 import { ActionTypes } from '@/store/actions'
-
+import { EEmployeeFunctions, Employee, IEmployeeFunction } from '@/interfaces/employee'
 export default defineComponent({
   name: 'FormNewProject',
   components: {
@@ -69,21 +77,29 @@ export default defineComponent({
     const titleField          = ref<Ref | null>(null)
     const idField             = ref<Ref | null>(null)
     const approachModelField  = ref<Ref | null>(null)
+    const projectLeadField    = ref<Ref | null>(null)
     const priorityField       = ref<Ref | null>(null)
     const descField           = ref<Ref | null>(null)
 
-    const approachModels = computed(() =>
+    const approachModels: ComputedRef<Array<IPrimerSelectItem>> = computed(() =>
     {
-      let models: Array<ApproachModel> = store.state.approachModels
-      let mapped: Array<PrimerSelectItem> = models.map(a => 
-      {
-        return <PrimerSelectItem> { name: a.title, payload: a } 
-      })
+      const models: Array<ApproachModel> = store.state.approachModels
+      const mapped: Array<IPrimerSelectItem> = models.map(a => <IPrimerSelectItem> { name: a.title, payload: a })
       
       return mapped
     })
 
-    const priorities: Array<PrimerSelectItem> = [
+    const availableProjectLeads: ComputedRef<Array<IPrimerSelectItem>> = computed(() =>
+    {    
+      const projectLeaders: Array<Employee> = 
+        store.state.employees.filter(e => 
+          e.possibleFunctions.some(f => f.name == EEmployeeFunctions.ProjectLead))
+      const mapped: Array<IPrimerSelectItem> = projectLeaders.map(pl => <IPrimerSelectItem> { name: `${pl.name} ${pl.lastName}`, payload: pl })
+
+      return mapped
+    })
+
+    const priorities: Array<IPrimerSelectItem> = [
       { name: EProjectPriority.HIGH,          payload: EProjectPriority.HIGH },
       { name: EProjectPriority.ABOVE_AVERAGE, payload: EProjectPriority.ABOVE_AVERAGE },
       { name: EProjectPriority.NORMAL,        payload: EProjectPriority.NORMAL },
@@ -95,24 +111,16 @@ export default defineComponent({
     {
       return new Promise<string>((resolve, reject) =>
       {
-        const title = titleField.value.validateInput(2, 60)
-        const id = idField.value.validateInputCustom(/P[\d]{3}/g)
-        const model = approachModelField.value.validateInput()
-        const priority = priorityField.value.validateInput()
-        const description = descField.value.validateInput(10, 500)
+        const title: string               = titleField.value.validateInput(2, 60)
+        const id: string                  = idField.value.validateInputCustom(/P[\d]{3}/g)
+        const model: ApproachModel        = approachModelField.value.validateInput()
+        const projectLead: Employee       = projectLeadField.value.validateInput()
+        const priority: EProjectPriority  = priorityField.value.validateInput()
+        const description: string         = descField.value.validateInput(10, 500)
 
-
-
-        if (title && id && model && priority && description)
+        if (title && id && model && projectLead && priority && description)
         {
-          const newProject = { 
-            title, 
-            id, 
-            model, 
-            priority,
-            description, 
-            state: EProjectState.PLANNING 
-          } as Partial<Project>
+          const newProject: Project = new Project(title, id, model, description, new Date(), priority, projectLead )
 
           store.dispatch(ActionTypes.setNewProject, newProject)
             .then((res: string) => resolve(res))
@@ -128,8 +136,10 @@ export default defineComponent({
       idField,
       approachModelField,
       priorityField,
+      projectLeadField,
       descField,
       approachModels,
+      availableProjectLeads,
       priorities
     }
   }

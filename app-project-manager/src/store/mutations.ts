@@ -33,7 +33,8 @@ export type Mutations = {
 
   [MutationType.addProject](state: ProjectManagerState, project: Project): void
   [MutationType.removeProject](state: ProjectManagerState, project: Project): void
-  [MutationType.assignNewProject](state: ProjectManagerState, project: Partial<Project>): void
+  [MutationType.assignNewProject](state: ProjectManagerState, nullableProject: Project | null): void
+
 }
 
 export const mutations: MutationTree<ProjectManagerState> & Mutations = {
@@ -48,5 +49,5 @@ export const mutations: MutationTree<ProjectManagerState> & Mutations = {
 
   [MutationType.addProject](state, project) { state.projects.push(project) },
   [MutationType.removeProject](state, project) { state.projects = state.projects.filter(p => p.id != project.id) },
-  [MutationType.assignNewProject](state, newProject) { state.newProject = newProject },
+  [MutationType.assignNewProject](state, nullableProject) { state.newProject = nullableProject },
 }

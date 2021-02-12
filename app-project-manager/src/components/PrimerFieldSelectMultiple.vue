@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue'
-import { PrimerSelectMultipleItem } from '@/interfaces/primerField'
+import { IPrimerSelectMultipleItem } from '@/interfaces/primerField'
 
 export default defineComponent({
   props: {
@@ -53,7 +53,7 @@ export default defineComponent({
       default: ''
     },
     inputSource: {
-      type: Array as PropType<Array<PrimerSelectMultipleItem>>,
+      type: Array as PropType<Array<IPrimerSelectMultipleItem>>,
       default: () => ([{ name: 'Option 1', note: 'Available', state: true, payload: 1 }, { name: 'Option 2', note: 'Available', state: false, payload: 1 }])
     },
     darkMode: {
@@ -66,7 +66,7 @@ export default defineComponent({
     const errorMessage = ref<string>('')
 
     // TODO: Make the errorMessage reset upon changes in inputSource (When the user selects an item)
-    const validateInput = (minSelected = 1, maxSelected = props.inputSource.length): PrimerSelectMultipleItem['payload'] =>
+    const validateInput = (minSelected = 1, maxSelected = props.inputSource.length): IPrimerSelectMultipleItem['payload'] =>
     {
       /* eslint-disable indent */
       const selected = props.inputSource.filter(i => i.state).length

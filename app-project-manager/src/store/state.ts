@@ -1,162 +1,82 @@
-import { Activity } from "@/interfaces/activity";
 import { ApproachModel } from "@/interfaces/approachModel";
-import { CostCenter } from "@/interfaces/costCenter";
-import { Employee, EmployeeFunction } from "@/interfaces/employee";
-import { Milestone } from "@/interfaces/milestone";
-import { Phase } from "@/interfaces/phase";
+import { CostCenter, ICostCenter } from "@/interfaces/costCenter";
+import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/interfaces/employee";
 import { EProjectPriority, EProjectState, Project } from "@/interfaces/project";
-import { ExternalCostResource, PersonnelResource, Resource } from "@/interfaces/resource";
 
 export type ProjectManagerState =
 {
-  employeeFunctions: Array<EmployeeFunction>
+  employeeFunctions: Array<IEmployeeFunction>
   employees: Array<Employee>
   approachModels: Array<ApproachModel>
   costCenters: Array<CostCenter>
   projects: Array<Project>
-  newProject: Partial<Project> | null
+  newProject: Project | null
 }
 
 /* TODO: Will be taken from db */
+// Sample Data
+const employeeFunctions = <Array<IEmployeeFunction>>[
+  { name: EEmployeeFunctions.Developer,     note: 'Available for developer functions' },
+  { name: EEmployeeFunctions.Designer,      note: 'Available for designer functions' },
+  { name: EEmployeeFunctions.ProjectLead,   note: 'Available as project lead' },
+  { name: EEmployeeFunctions.Administrator, note: 'Available for administrative functions' }
+]
+
+const costCenterOne   = new CostCenter('Education',             'CC000')
+const costCenterTwo   = new CostCenter('Software Development',  'CC200')
+const costCenterThree = new CostCenter('Software Testing',      'CC210')
+const costCenterFour  = new CostCenter('Software Documentation','CC220')
+
+const HERMES: ApproachModel = new ApproachModel('HERMES', ['Initialization', 'Concept', 'Realization', 'Introduction'] )
+const IPDRCE: ApproachModel = new ApproachModel('IPDRCE', ['Inform', 'Plan', 'Decide', 'Realize', 'Control', 'Evaluate'] )
+
+const employeeMax: Employee = new Employee('Max', 'Muster', 'Development',    '#99999', 40, [employeeFunctions[0], employeeFunctions[3]])
+const employeeBob: Employee = new Employee('Bob', 'Muster', 'Administration', '#99998', 30, [employeeFunctions[2], employeeFunctions[3]])
+const employeeEve: Employee = new Employee('Eve', 'Muster', 'Product Design', '#99997', 42, [employeeFunctions[1]])
+const employeeJil: Employee = new Employee('Jil', 'Muster', 'Development',    '#99996', 10, [employeeFunctions[0], employeeFunctions[2], employeeFunctions[3]])
+
+const projectOne   = new Project('Sample Project',  'P999', HERMES, 'A very basic sample Project', new Date(), EProjectPriority.NORMAL, employeeBob)
+const projectTwo   = new Project('Another Project', 'P998', IPDRCE, 'Another basic sample Project', new Date(), EProjectPriority.HIGH, employeeJil)
+const projectThree = new Project('A third Project',  'P997', HERMES, 'A third basic sample Project', new Date(), EProjectPriority.LOW, employeeBob)
+
+projectOne.state = EProjectState.EXECUTION
+projectOne.progress = 68
+
+projectTwo.state = EProjectState.FINISHED
+projectTwo.progress = 100
+
+projectThree.state = EProjectState.CANCELLED
+projectThree.progress = 23
+
+
 export const state: ProjectManagerState = {
   /* 'employeeFunctions' are hardcoded and immutable. This could easily be moved to a database. */
-  employeeFunctions: [
-    { name: 'Developer',     note: 'Available for developer functions' },
-    { name: 'Designer',      note: 'Available for designer functions' },
-    { name: 'Project Lead',  note: 'Available as project lead' },
-    { name: 'Administrator', note: 'Available for administrative functions' }
-  ] as Array<EmployeeFunction>,
+  employeeFunctions,
 
-  employees: [] as Array<Employee>,
+  employees: <Array<Employee>>[
+    employeeMax,
+    employeeBob,
+    employeeEve,
+    employeeJil,
+  ],
 
-  approachModels: [
-    { title: 'HERMES', phases: ['Initialization', 'Concept', 'Realization', 'Introduction'] },
-    { title: 'IPDRCE', phases: ['Inform', 'Plan', 'Decide', 'Realize', 'Control', 'Evaluate'] }
-  ] as Array<ApproachModel>,
+  approachModels: <Array<ApproachModel>>[ 
+    HERMES, 
+    IPDRCE,
+  ],
 
-  costCenters: [
-    { title: 'Education',              id: 'CC000' },
-    { title: 'Software Development',   id: 'CC200' },
-    { title: 'Software Testing',       id: 'CC210' },
-    { title: 'Software Documentation', id: 'CC220' },
-  ] as Array<CostCenter>,
+  costCenters: <Array<CostCenter>>[
+    costCenterOne,
+    costCenterTwo,
+    costCenterThree,
+    costCenterFour,
+  ],
 
-  projects: [
-    { 
-      title: 'Sample Project',
-      description: 'A sample project with a minimal structure',
-      projectLead: <Employee> {
-        name: 'Franz',
-        lastName: 'Muster',
-        id: '#99997',
-        department: 'Project Management',
-        workload: 42.5,
-        possibleFunctions: <Array<EmployeeFunction>> [
-          {
-            name: 'Project Lead'
-          }
-        ]
-      },
-      id: 'P999', 
-      approvalDate: new Date(),
-      startDate: new Date(),
-      endDate: new Date(),
-      model: <ApproachModel>{ title: 'GENERIC MODEL', phases: ['Phase 1'] },
-      documents: null,
-      state: EProjectState.FINISHED,
-      priority: EProjectPriority.HIGH,
-      progress: 100,
-      phases: <Array<Phase>>[
-        { 
-          title: 'Phase 1',
-          approvalDate: new Date(),
-          startDate: new Date(),
-          endDate: new Date(),
-          state: EProjectState.FINISHED,
-          progress: 100,
-          documents: null,
-          milestones: <Array<Milestone>> [
-            {
-              activities: ['1']
-            }
-          ],
-          activities: <Array<Activity>> [
-            {
-              startDate: new Date(),
-              endDate: new Date(),
-              id: '1',
-              documents: null,
-              progress: 100,
-              resources: <Array<Resource>> [
-                <ExternalCostResource> {
-                  costCenter: <CostCenter> {
-                    title: 'Dummy Cost Center',
-                    id: 'CC999',
-                  },
-                  actual: 20,
-                  plan: 20,
-                  deviation: ''
-                }
-              ],
-              responsibility: <Employee> {
-                name: 'Max',
-                lastName: 'Muster',
-                id: '#99999',
-                department: 'SW Development',
-                possibleFunctions: <Array<EmployeeFunction>> [
-                  {
-                    name: 'Developer'
-                  }
-                ],
-                workload: 42.5
-              },
-            },
-            {
-              startDate: new Date(),
-              endDate: new Date(),
-              id: '1',
-              documents: null,
-              progress: 100,
-              resources: <Array<Resource>> [
-                <PersonnelResource> {
-                  function: <EmployeeFunction> {
-                    name: 'Developer'
-                  },
-                  assignee: <Employee> {
-                    name: 'Peter',
-                    lastName: 'Muster',
-                    id: '#99998',
-                    department: 'SW Development',
-                    possibleFunctions: <Array<EmployeeFunction>> [
-                      {
-                        name: 'Developer'
-                      }
-                    ],
-                    workload: 30
-                  },
-                  actual: 20,
-                  plan: 20,
-                  deviation: ''
-                }
-              ],
-              responsibility: <Employee> {
-                name: 'Max',
-                lastName: 'Muster',
-                id: '#99999',
-                department: 'SW Development',
-                possibleFunctions: <Array<EmployeeFunction>> [
-                  {
-                    name: 'Developer'
-                  }
-                ],
-                workload: 42.5
-              },
-            },
-          ],
-        }
-      ],
-    }
-  ] as Array<Project>,
+  projects: <Array<Project>>[
+    projectOne, 
+    projectTwo, 
+    projectThree,
+  ],
 
-  newProject: null as Partial<Project> | null,
+  newProject: null,
 }
