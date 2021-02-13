@@ -91,8 +91,8 @@ export default defineComponent({
         const name = nameField.value.validateInput(2, 60)
         const lastName = lastNameField.value.validateInput(2, 60)
         const department = departmentField.value.validateInput(2, 60)
-        const id = persIdField.value.validateInputCustom(/#[\d]{5}/g)
-        const workload = workloadField.value.validateInputCustom(/[\d]{1,2}(\.[\d]{2})?/g)
+        const id = persIdField.value.validateInputCustom(/^#[\d]{5}$/g)
+        const workload = workloadField.value.validateInputCustom(/^[\d]{1,2}(\.[\d]{2})?$/g)
         const funcs: Array<string> = functionsField.value.validateInput(1)
 
         const possibleFunctions: Array<IEmployeeFunction> = funcs.map(f => { return <IEmployeeFunction>{ name: f } })

@@ -38,9 +38,7 @@ export const genericTextValidation = (type: string,
   return response ? `'${type}' ${response}` : ''
 }
 
-export const customTextValidation = (type: string,
-  value: string,
-  regex = /^[a-z\-_\s\döäü]*$/i) =>
+export const customTextValidation = (type: string, value: string, regex = /^[a-z\-_\s\döäü]*$/i) =>
 {
   let response = ''
   const append = (message: string) => response += response ? `, ${message}` : message
@@ -50,6 +48,18 @@ export const customTextValidation = (type: string,
   // Validate content
   if (!regex.test(value))
     append(`should match '${regex.toString()}'`)
+
+  return response ? `'${type}' ${response}` : ''
+}
+
+export const dateValidation = (type: string, value: string) =>
+{
+  let response = ''
+  const append = (message: string) => response += response ? `, ${message}` : message
+
+  // Validate content
+  if (!/[\d]{1,2}\.[\d]{1,2}\.[\d]{4}/g.test(value))
+    append(`should match 'dd-mm-YYYY'`)
 
   return response ? `'${type}' ${response}` : ''
 }

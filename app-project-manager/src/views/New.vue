@@ -37,7 +37,10 @@
         class="btn btn-primary mr-2"
         type="button"
         @click="validateCurrentForm"
-      >Store</button>
+      >
+        <PrimerIcon octicon="download" />
+        <span>Store</span>
+      </button>
   </div>
 
 </template>
@@ -47,6 +50,7 @@ import { defineComponent, getCurrentInstance, reactive, Ref, ref } from 'vue'
 import FormNewApproachModel from './FormNewApproachModel.vue'
 import FormNewEmployee from './FormNewEmployee.vue'
 import FormNewCostCenter from './FormNewCostCenter.vue'
+import PrimerIcon from '@/components/PrimerIcon.vue'
 
 interface PrimerForm {
   name: string;
@@ -55,10 +59,12 @@ interface PrimerForm {
 }
 
 export default defineComponent({
+  name: 'New',
   components: {
     FormNewApproachModel,
     FormNewEmployee,
     FormNewCostCenter,
+    PrimerIcon
   },
   setup()
   {

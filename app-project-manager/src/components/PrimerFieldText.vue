@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { customTextValidation, genericTextValidation } from '@/helpers/validators'
+import { customTextValidation, dateValidation, genericTextValidation } from '@/helpers/validators'
 import { defineComponent, watch, ref } from 'vue'
 
 export default defineComponent({
@@ -91,11 +91,27 @@ export default defineComponent({
       }
     }
 
+    const validateInputDate = () =>
+    {
+      const validation = dateValidation(props.inputName, inputValue.value)
+      if (!validation)
+      {
+        errorMessage.value = ''
+        return new Date(inputValue.value)
+      }
+      else
+      {
+        errorMessage.value = validation
+        return null
+      }
+    }
+
     return { 
       inputValue, 
       errorMessage, 
       validateInput, 
-      validateInputCustom 
+      validateInputCustom,
+      validateInputDate
     }
   }
 })

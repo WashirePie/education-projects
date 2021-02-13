@@ -16,27 +16,22 @@
       <span class="IssueLabel bg-green text-white ml-2 d-inline">
         {{ proj.state.toLowerCase() }}
       </span>
-
-      <div class="d-block"></div>
-
-      <p class="f6 d-inline">
-        {{proj.startDate.toLocaleDateString() }} - {{ proj.endDate.toLocaleDateString() }} | model: {{ proj.model.title }} | priority 
-      </p>
+    
       <span class="IssueLabel bg-red text-white ml-1 d-inline">
         🔥 {{ proj.priority.toLowerCase() }}
       </span>
 
-      <div class="d-block"></div>
-      
-      <PersonIcon class="circle d-inline my-1" />
-      
-      <p class="f5 d-inline ml-2">
-        Project lead
-      </p>
-
-      <span class="IssueLabel IssueLabel--big bg-blue text-white ml-2 d-inline">
+      <span class="IssueLabel IssueLabel--big bg-blue text-white ml-1 d-inline">
         {{ proj.projectLead.name }} {{ proj.projectLead.lastName }}
       </span>
+
+      <span class="IssueLabel IssueLabel--big bg-purple text-white ml-1 d-inline">
+        {{ proj.model.title }}
+      </span>
+
+      <p class="f6 float-right">
+        {{proj.startDate.toLocaleDateString() }} - {{ proj.endDate.toLocaleDateString() }}
+      </p>
 
       <p class="note">
         Progress {{ proj.progress }}%
@@ -55,7 +50,6 @@
 </template>
 
 <script lang="ts">
-import PersonIcon from '@/components/octicons/PersonIcon.vue'
 import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "@/store";
 import { Project } from "@/interfaces/project";
@@ -63,7 +57,6 @@ import { Project } from "@/interfaces/project";
 export default defineComponent({
   name: 'PrimerWidgetProjects',
   components: {
-    PersonIcon
   },
   setup() 
   {

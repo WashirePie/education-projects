@@ -3,7 +3,7 @@
 
     <div class="Header-item">
       <a class="Header-link f4 d-flex flex-items-center">
-        <AppIcon/>
+        <PrimerIcon octicon="package" :size="24"/>
         <span>ProjectManager</span>
       </a>
     </div>
@@ -57,13 +57,13 @@
 </template>
 
 <script lang="ts">
+import PrimerIcon from '@/components/PrimerIcon.vue'
 import { computed, ComputedRef, defineComponent } from 'vue'
-import AppIcon from '@/components/octicons/AppIcon.vue'
 import { useStore } from '@/store'
 
 export default defineComponent({
   components: {
-    AppIcon
+    PrimerIcon
   },
   setup()
   {

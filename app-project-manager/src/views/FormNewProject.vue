@@ -61,6 +61,7 @@ import { EProjectPriority, Project } from '@/interfaces/project'
 import { ApproachModel } from '@/interfaces/approachModel'
 import { ActionTypes } from '@/store/actions'
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from '@/interfaces/employee'
+
 export default defineComponent({
   name: 'FormNewProject',
   components: {
@@ -112,7 +113,7 @@ export default defineComponent({
       return new Promise<string>((resolve, reject) =>
       {
         const title: string               = titleField.value.validateInput(2, 60)
-        const id: string                  = idField.value.validateInputCustom(/P[\d]{3}/g)
+        const id: string                  = idField.value.validateInputCustom(/^P[\d]{3}$/g)
         const model: ApproachModel        = approachModelField.value.validateInput()
         const projectLead: Employee       = projectLeadField.value.validateInput()
         const priority: EProjectPriority  = priorityField.value.validateInput()

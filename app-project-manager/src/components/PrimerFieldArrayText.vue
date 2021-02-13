@@ -43,21 +43,21 @@
             type="button"
             @click="changeOrder(item, -1)"
           >
-            <ChevronUpIcon />
+            <PrimerIcon octicon="chevron-up" />
           </button>
           <button
             class="btn-octicon"
             type="button"
             @click="changeOrder(item, 1)"
           >
-            <ChevronDownIcon />
+            <PrimerIcon octicon="chevron-down" />
           </button>
           <button
             class="btn-octicon btn-octicon-danger"
             type="button"
             @click="removeItem(item)"
           >
-            <XIcon/>
+            <PrimerIcon octicon="x" />
           </button>
         </div>
       </div>
@@ -69,15 +69,11 @@
 <script lang="ts">
 import { genericTextValidation } from '@/helpers/validators'
 import { defineComponent, ref } from 'vue'
-import XIcon from '@/components/octicons/XIcon.vue'
-import ChevronUpIcon from '@/components/octicons/ChevronUpIcon.vue'
-import ChevronDownIcon from '@/components/octicons/ChevronDownIcon.vue'
+import PrimerIcon from '@/components/PrimerIcon.vue'
 
 export default defineComponent({
   components: {
-    XIcon,
-    ChevronUpIcon,
-    ChevronDownIcon
+    PrimerIcon
   },
   props: {
     inputName: {

@@ -45,7 +45,7 @@ export default defineComponent({
       return new Promise<string>((resolve, reject) =>
       {
         const title = titleField.value.validateInput(2, 60)
-        const id = idField.value.validateInputCustom(/CC[\d]{3}/g)
+        const id = idField.value.validateInputCustom(/^CC[\d]{3}$/g)
 
         if (title && id)
         {

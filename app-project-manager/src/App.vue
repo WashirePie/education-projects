@@ -3,7 +3,11 @@
   <PrimerNav />
 
   <div class="mx-3 my-3">
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <keep-alive include="Planner">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
   </div>
 </template>
 

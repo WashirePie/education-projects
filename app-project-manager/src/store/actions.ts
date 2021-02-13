@@ -230,7 +230,7 @@ export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Act
   {
     return new Promise<string>((resolve, reject) =>
     {
-      if (state.newProject != null) reject(error.singleton('new project'))
+      if (state.newProject != null && nullableProject != null) reject(error.singleton('new project'))
       else
       {
         commit(MutationType.assignNewProject, nullableProject)

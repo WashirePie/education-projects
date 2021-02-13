@@ -6,13 +6,16 @@
           ref="modalMask"
         >
           <div class="Box Box--overlay my-5 container-lg d-flex flex-column modal-restrict">
-            <div class="Box-header p-1 bg-white">
+            <div 
+              class="Box-header p-1 bg-white"
+              v-if="displayHeader"
+            >
               <button 
                 class="btn-octicon btn-octicon-danger float-right" 
                 type="button" 
                 @click="closeModal"
               >
-                <XIcon class="octicon-x"/>
+                <PrimerIcon octicon="x" class="octicon-x"/>
               </button>
 
               <slot name="header">
@@ -42,17 +45,21 @@
 </template>
 
 <script lang="ts">
+import PrimerIcon from '@/components/PrimerIcon.vue'
 import { defineComponent } from "vue";
-import XIcon from '@/components/octicons/XIcon.vue'
 
 export default defineComponent({
   components: {
-    XIcon
+    PrimerIcon
   },
   props: {
     displayFooter: {
       type: Boolean,
       default: false
+    },
+    displayHeader: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['close'],
