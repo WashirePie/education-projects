@@ -1,4 +1,4 @@
-import FormNewEmployee from '@/views/FormNewEmployee.vue'
+import FormNewEmployee from '@/views/Create/FormNewEmployee.vue'
 import { mount } from '@vue/test-utils'
 
 describe('FormNewEmployee.vue', () => {

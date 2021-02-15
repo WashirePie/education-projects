@@ -21,7 +21,6 @@ export enum MutationType
   removeProject = "REMOVE_PROJECTS",
 
   assignProjectToBePlanned = "ASSIGN_PROJECT_TO_BE_PLANNED",
-  assignPhaseToBePlanned = "ASSIGN_PHASE_TO_BE_PLANNED"
 }
 
 export type Mutations = {
@@ -38,7 +37,6 @@ export type Mutations = {
   [MutationType.removeProject](state: ProjectManagerState, project: Project): void
 
   [MutationType.assignProjectToBePlanned](state: ProjectManagerState, nullableProject: Project | null): void
-  [MutationType.assignPhaseToBePlanned](state: ProjectManagerState, nullablePhase: Phase | null): void
 }
 
 export const mutations: MutationTree<ProjectManagerState> & Mutations = {
@@ -55,5 +53,4 @@ export const mutations: MutationTree<ProjectManagerState> & Mutations = {
   [MutationType.removeProject](state, project) { state.projects = state.projects.filter(p => p.id != project.id) },
 
   [MutationType.assignProjectToBePlanned](state, nullableProject) { state.projectToBePlanned = nullableProject },
-  [MutationType.assignPhaseToBePlanned](state, nullablePhase) { state.phaseToBePlanned = nullablePhase },
 }

@@ -1,4 +1,4 @@
-import FormNewProject from '@/views/FormNewProject.vue'
+import FormNewProject from '@/views/Dashboard/FormNewProject.vue'
 import { IPrimerSelectItem } from '@/interfaces/primerField';
 import { mount } from '@vue/test-utils'
 
@@ -23,6 +23,7 @@ describe('FormNewProject.vue', () => {
     await wrapper.findAll('select')[0].setValue(priority.name) 
     await wrapper.findAll('select')[1].setValue(model.name)
     await wrapper.findAll('select')[2].setValue(lead.name)
+    await wrapper.findAll('input')[2].setValue('30.12.2021')
     await wrapper.find('textarea').setValue('A sample description with more than 10 chars')
 
     await expect(wrapper.vm.validateForm())

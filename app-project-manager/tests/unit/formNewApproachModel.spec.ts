@@ -1,4 +1,4 @@
-import FormNewApproachModel from '@/views/FormNewApproachModel.vue'
+import FormNewApproachModel from '@/views/Create/FormNewApproachModel.vue'
 import { mount } from '@vue/test-utils'
 
 describe('FormNewApproachModel.vue', () => {

@@ -38,7 +38,7 @@ import { useStore } from "@/store";
 import { Employee } from '@/interfaces/employee';
 
 export default defineComponent({
-  name: 'PrimerWidgetEmployees',
+  name: 'WidgetEmployees',
   components: {
     PrimerIcon
   },

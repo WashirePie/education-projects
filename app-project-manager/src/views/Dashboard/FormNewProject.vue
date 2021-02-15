@@ -45,6 +45,13 @@
     :selectOptions="availableProjectLeads"
   />
 
+  <PrimerFieldText
+    ref="startDateField"
+    inputName="Start date"
+    inputDescription="Set the start date for your new project"
+    :placeHolder="new Date().toLocaleDateString()"
+  />
+
   <PrimerFieldTextArea
     ref="descField"
     inputName="Description"
@@ -83,6 +90,7 @@ export default defineComponent({
     const approachModelField  = ref<Ref | null>(null)
     const projectLeadField    = ref<Ref | null>(null)
     const priorityField       = ref<Ref | null>(null)
+    const startDateField      = ref<Ref | null>(null)
     const descField           = ref<Ref | null>(null)
 
     const approachModels: ComputedRef<Array<IPrimerSelectItem>> = computed(() =>
@@ -118,16 +126,17 @@ export default defineComponent({
         const model: ApproachModel        = approachModelField.value.validateInput()
         const projectLead: Employee       = projectLeadField.value.validateInput()
         const priority: EProjectPriority  = priorityField.value.validateInput()
+        const startDate: Date             = startDateField.value.validateInput(EValidationTypes.textDateValidation, null)
         const description: string         = descField.value.validateInput(EValidationTypes.textValidation, { minChar: 10, maxChar: 500, regex: /.*/g })
 
-        if (title && id && model && projectLead && priority && description)
+        if (title && id && model && projectLead && priority && startDate && description)
         {
           const newProject: Project = new Project(
             title, 
             id, 
             model, 
             description, 
-            new Date(), 
+            startDate, 
             priority, 
             projectLead 
           )
@@ -147,6 +156,7 @@ export default defineComponent({
       approachModelField,
       priorityField,
       projectLeadField,
+      startDateField,
       descField,
       approachModels,
       availableProjectLeads,

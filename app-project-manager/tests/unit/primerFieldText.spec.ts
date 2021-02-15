@@ -34,6 +34,6 @@ describe('PrimerFieldText.vue', () => {
     await wrapper.find('input').setValue('12.30.2000')
     wrapper.vm.validateInput(EValidationTypes.textDateValidation, null)
 
-    expect(wrapper.vm.errorMessage).toContain('valid')
+    expect(wrapper.vm.errorMessage).toContain('valid') // as in 'not valid'
   })
 });

@@ -15,9 +15,9 @@
 
     <!-- Widgets -->
     <hr class="mt-6">
-    <PrimerWidgetProjects/>
+    <WidgetProjects/>
     <hr>
-    <PrimerWidgetEmployees />
+    <WidgetEmployees />
     
   </div>
 
@@ -36,6 +36,7 @@
       </div>
     </template>
 
+    <!-- Plan this / cancel buttons -->
     <template v-slot:footer>
       <div class="container-md">
         <button
@@ -64,9 +65,9 @@
 </template>
 
 <script lang="ts">
-import FormNewProject from '@/views/FormNewProject.vue'
-import PrimerWidgetProjects from '@/components/PrimerWidgetProjects.vue'
-import PrimerWidgetEmployees from '@/components/PrimerWidgetEmployees.vue'
+import FormNewProject from './FormNewProject.vue'
+import WidgetProjects from './WidgetProjects.vue'
+import WidgetEmployees from './WidgetEmployees.vue'
 import PrimerIcon from '@/components/PrimerIcon.vue'
 import router from '@/router'
 import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
@@ -78,8 +79,8 @@ export default defineComponent({
   name: 'Dashboard',
   components: {
     FormNewProject,
-    PrimerWidgetProjects,
-    PrimerWidgetEmployees,
+    WidgetProjects,
+    WidgetEmployees,
     PrimerIcon,
   },
   setup() 

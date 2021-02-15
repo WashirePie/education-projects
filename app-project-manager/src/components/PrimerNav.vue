@@ -29,8 +29,8 @@
     <div class="Header-item">
       <router-link
         class="Header-link"
-        to="/new"
-      >New</router-link>
+        to="/create"
+      >Create</router-link>
     </div>
 
     <!-- Nav link 'Planner' -->

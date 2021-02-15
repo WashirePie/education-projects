@@ -23,7 +23,6 @@ export enum ActionTypes
   deleteProject = "DELETE_PROJECT",
 
   setProjectToBePlanned = "SET_PROJECT_TO_BE_PLANNED",
-  setPhaseToBePlanned = "SET_PHASE_TO_BE_PLANNED"
 }
 
 type ActionAugments = Omit<ActionContext<ProjectManagerState, ProjectManagerState>, 'commit'> &
@@ -50,7 +49,6 @@ export type Actions = {
   [ActionTypes.deleteProject](context: ActionAugments, project: Project): Promise<string>
 
   [ActionTypes.setProjectToBePlanned](context: ActionAugments, nullableProject: Project | null): Promise<string>
-  [ActionTypes.setPhaseToBePlanned](context: ActionAugments, nullablePhase: Phase | null): Promise<string>
 }
 
 // Message generators
@@ -242,17 +240,5 @@ export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Act
         resolve(success.generic('project to be planned', 'created'))
       }
     })  
-  },
-  [ActionTypes.setPhaseToBePlanned]({ commit }, nullablePhase)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
-      if (state.phaseToBePlanned != null && nullablePhase != null) reject(error.singleton('phase to be planned'))
-      else
-      {
-        commit(MutationType.assignPhaseToBePlanned, nullablePhase)
-        resolve(success.generic('phase to be planned', 'assigned'))
-      }
-    })
   }
 }

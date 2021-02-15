@@ -55,7 +55,7 @@ import { useStore } from "@/store";
 import { Project } from "@/interfaces/project";
 
 export default defineComponent({
-  name: 'PrimerWidgetProjects',
+  name: 'WidgetProjects',
   components: {
   },
   setup() 

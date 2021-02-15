@@ -62,7 +62,7 @@ interface PrimerForm {
 }
 
 export default defineComponent({
-  name: 'New',
+  name: 'Create',
   components: {
     FormNewApproachModel,
     FormNewEmployee,

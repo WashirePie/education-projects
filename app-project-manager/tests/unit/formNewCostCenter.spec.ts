@@ -1,4 +1,4 @@
-import FormNewCostCenter from '@/views/FormNewCostCenter.vue'
+import FormNewCostCenter from '@/views/Create/FormNewCostCenter.vue'
 import { mount } from '@vue/test-utils'
 
 describe('FormNewCostCenter.vue', () => {

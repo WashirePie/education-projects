@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Dashboard from '@/views/Dashboard.vue'
-import Planner from '@/views/Planner.vue'
-import New from '@/views/New.vue'
+import Dashboard from '@/views/Dashboard/Dashboard.vue'
+import Planner from '@/views/Planner/Planner.vue'
+import Create from '@/views/Create/Create.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -10,9 +10,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Dashboard
   },
   {
-    path: '/new',
-    name: 'New',
-    component: New
+    path: '/create',
+    name: 'Create',
+    component: Create
   },
   {
     path: '/plan',
