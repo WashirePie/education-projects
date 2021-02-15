@@ -27,10 +27,10 @@ const employeeFunctions: Array<IEmployeeFunction> = [
   { name: EEmployeeFunctions.Administrator, note: 'Available for administrative functions' }
 ]
 
-const costCenterOne   = new CostCenter('Education',             'CC000')
-const costCenterTwo   = new CostCenter('Software Development',  'CC200')
-const costCenterThree = new CostCenter('Software Testing',      'CC210')
-const costCenterFour  = new CostCenter('Software Documentation','CC220')
+const costCenterOne   = new CostCenter('Outsourced Development', 'CC000')
+const costCenterTwo   = new CostCenter('Outsourced Design',     'CC200')
+const costCenterThree = new CostCenter('Outsourced Testing',    'CC210')
+const costCenterFour  = new CostCenter('Consultancy Work',      'CC220')
 
 const HERMES: ApproachModel = new ApproachModel('HERMES', ['Initialization', 'Concept', 'Realization', 'Introduction'] )
 const IPDRCE: ApproachModel = new ApproachModel('IPDRCE', ['Inform', 'Plan', 'Decide', 'Realize', 'Control', 'Evaluate'] )

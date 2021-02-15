@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <!-- Phases  -->
+    <!-- Phases timeline  -->
     <div
       class="TimelineItem pt-4"
       v-for="phase in projectToBePlanned.phases" :key="phase.title"
@@ -42,6 +42,7 @@
         class="TimelineItem-badge"
         :class="phase.state == planningState ? 'anim-pulse bg-yellow' : 'text-white bg-green'"
       >
+        <!-- Phase state icon -->
         <PrimerIcon 
           v-if="phase.state == planningState" 
           octicon="alert"
@@ -53,17 +54,21 @@
       </div>
       <div class="TimelineItem-body">
 
+        <!-- Phase base data -->
         <p class="f5 d-inline">Phase </p>
         <p class="f5 d-inline text-bold">{{ phase.title }}</p>
         <p class="f6 d-block">{{ phase.startDate.toLocaleDateString() }} - {{ phase.endDate.toLocaleDateString() }}</p>
-        <button
-          class="btn mt-2 d-block"
-          type="button"
-          @click="setAsPhaseToBePlanned(phase)"
-        >
-          <PrimerIcon octicon="pencil" />
-          <span class="ml-1">Edit</span>
-        </button>
+
+        <!-- Phase form -->
+        <details class="details-reset">
+          <summary class="btn">Edit</summary>
+          <div class="border p-3 mt-2">
+            <FormPlanPhase 
+              :phaseToBePlanned="phase"
+              :projectStartDate="projectToBePlanned.startDate"
+            />
+          </div>
+        </details>
 
       </div>
     </div>
@@ -102,48 +107,6 @@
 
   </div>
 
-  <!-- Phase modal -->
-  <PrimerModal
-    v-if="selectedPhase"
-    :displayFooter="true"
-    :displayHeader="false"
-  >
-    <template v-slot:body>
-      <div class="container-md">
-        <FormPlanPhase 
-          ref="formPhase"
-          :phaseToBePlanned="selectedPhase"
-          :projectStartDate="projectToBePlanned.startDate"
-        />
-      </div>
-    </template>
-
-    <!-- Save / cancel buttons -->
-    <template v-slot:footer>
-      <div class="container-md">
-        <button
-          class="btn btn-primary mr-2"
-          type="button"
-          @click="validatePlannedPhase"
-        >
-          <PrimerIcon octicon="download" />
-          <span>Save</span>
-        </button>
-
-        <button
-          class="btn btn-danger mr-2"
-          type="button"
-          @click="selectedPhase = null"
-        >
-          <PrimerIcon octicon="trash" />
-          <span>Cancel</span>
-        </button>
-      </div>
-
-    </template>
-
-  </PrimerModal>
-
 </template>
 
 <script lang="ts">
@@ -156,8 +119,6 @@ import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } 
 import { useStore } from '@/store';
 import { EProjectState, Project } from '@/interfaces/project';
 import { ActionTypes } from '@/store/actions'
-import { Phase } from '@/interfaces/phase';
-import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'Planner',
@@ -173,12 +134,6 @@ export default defineComponent({
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
     const planningState = EProjectState.PLANNING
 
-    // Setup references for elements
-    const startDateField = ref<Ref | null>(null)
-    const formPhase      = ref<Ref | null>(null)
-
-    const selectedPhase  = ref<Phase | null>(null)
-
     const projectToBePlanned: ComputedRef<Project> = computed(() => store.state.projectToBePlanned! )
 
     const projectedEndDate: ComputedRef<Date | undefined> = computed(() => projectToBePlanned.value?.phases.reduce((a, c) => a.endDate > c.endDate ? a : c).endDate )
@@ -187,19 +142,17 @@ export default defineComponent({
     {
       return new Promise<string>((resolve, reject) =>
       {
-        const startDate         = startDateField.value.validateInput(EValidationTypes.textDateValidation, null)
         const phasesArePlanned  = projectToBePlanned.value!.phases.every(p => p.state == EProjectState.WAITING)
 
-        if (startDate && phasesArePlanned)
+        if (phasesArePlanned)
         {
-          projectToBePlanned!.value!.startDate = startDate
-          projectToBePlanned!.value!.state = EProjectState.WAITING
+          projectToBePlanned.value.state = EProjectState.WAITING
           // COMBAK
           // store.dispatch(ActionTypes.storeEmployee, newEmployee)
           //   .then((res: string) => resolve(res))
           //   .catch((err: string) => reject(err))
         }
-        else reject(new Error('Not valid'))
+        else reject(new Error('Not all phases are planned'))
       })
     }
 
@@ -209,34 +162,10 @@ export default defineComponent({
       store.dispatch(ActionTypes.setProjectToBePlanned, null)
     }
 
-    const setAsPhaseToBePlanned = (phase: Phase) =>
-    {
-      selectedPhase.value = phase
-    }
-
-    const validatePlannedPhase = () =>
-    {
-      loadingbar.start()
-      
-      formPhase.value.validateForm()
-        .then((res: Phase) => 
-        {
-          selectedPhase.value = null
-          // TODO: Store project in vuex?
-        })
-        .catch((err: string) => console.log(err))
-        .finally(() => loadingbar.finish())     
-    }
-
     return {
       validatePlannedProject,
-      validatePlannedPhase,
-      setAsPhaseToBePlanned,
       discardPlannedProject,
-      startDateField,
-      formPhase,
       planningState,
-      selectedPhase,
       projectToBePlanned,
       projectedEndDate
     }

@@ -25,14 +25,6 @@
       >Dash</router-link>
     </div>
 
-    <!-- Nav link 'New' -->
-    <div class="Header-item">
-      <router-link
-        class="Header-link"
-        to="/create"
-      >Create</router-link>
-    </div>
-
     <!-- Nav link 'Planner' -->
     <div 
       class="Header-item"

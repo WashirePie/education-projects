@@ -28,6 +28,9 @@ export default defineComponent({
   setup ()
   {
     // TODO: Remove all interfaces for the base classes (Project, Phase, etc.)
+    // TODO: Use type="number" on number PrimerFieldTexts -> Probably rename that component too...
+    // TODO: an <option> has the ability to use 'value', which is essentially what we're doing with the IPrimerSelectValue Interface... Maybe refactor this
+    // TODO: Rename CostCenter to CostType
     return { }
   }
 })

@@ -5,6 +5,7 @@ import { IResource } from "./resource";
 export interface IActivity
 {
   id: string;
+  title: string,
   progress: number;
   startDate: Date;
   endDate: Date;
@@ -16,6 +17,7 @@ export interface IActivity
 export class Activity implements IActivity
 {
   id: string
+  title: string
   startDate: Date
   endDate: Date
   resources: Array<IResource>
@@ -26,6 +28,7 @@ export class Activity implements IActivity
 
   constructor(
     _id: string,
+    _title: string,
     _startDate: Date,
     _endDate: Date,
     _resources: Array<IResource>,
@@ -33,6 +36,7 @@ export class Activity implements IActivity
   )
   {
     this.id = _id
+    this.title = _title
     this.startDate = _startDate
     this.endDate = _endDate
     this.resources = _resources

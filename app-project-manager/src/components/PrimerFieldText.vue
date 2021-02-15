@@ -18,7 +18,7 @@
     <input
       :class="`form-control ${darkMode ? 'input-dark' : ''} ${errorMessage ? 'border-red' : ''}`"
       :id="inputName"
-      type="text"
+      :type="inputType"
       v-model="inputValue"
       v-bind:placeholder="placeHolder"
     />
@@ -52,6 +52,10 @@ export default defineComponent({
     placeHolder: {
       type: String,
       default: 'Placeholder'
+    },
+    inputType: {
+      type: String,
+      default: 'text'
     }
   },
   setup(props)

@@ -7,12 +7,41 @@
       class="btn btn-primary mr-2"
       :aria-disabled="projectToBePlanned ? 'true' : 'false'"
       type="button"
-      @click="showProjectToBePlannedModal = true"
+      @click="showNewProjectModal = true"
     >
       <PrimerIcon octicon="plus" />
       <span>Plan a new Project</span>
     </button>
 
+    <!-- Create new approach model button -->
+    <button
+      class="btn mr-2"
+      type="button"
+      @click="showNewApproachModelModal = true"
+    >
+      <PrimerIcon octicon="plus" />
+      <span>Create a new approach model</span>
+    </button>
+
+    <!-- Create new cost center button -->
+    <button
+      class="btn mr-2"
+      type="button"
+      @click="showNewCostCenterModal = true"
+    >
+      <PrimerIcon octicon="plus" />
+      <span>Create a new cost center</span>
+    </button>
+
+    <!-- Register a new employee button -->
+    <button
+      class="btn mr-2"
+      type="button"
+      @click="showNewEmployeeModal = true"
+    >
+      <PrimerIcon octicon="plus" />
+      <span>Register a new employee</span>
+    </button>
     <!-- Widgets -->
     <hr class="mt-6">
     <WidgetProjects/>
@@ -22,50 +51,38 @@
   </div>
 
   <!-- New project modal -->
-  <PrimerModal
-    v-if="showProjectToBePlannedModal"
-    :displayFooter="true"
-    :displayHeader="false"
-    @close="showProjectToBePlannedModal = false"  
-  >
-    <template v-slot:body>
-      <div class="container-md">
-        <FormNewProject
-          ref="formProject"
-        />
-      </div>
-    </template>
+  <ModalFormNewProject
+    :show="showNewProjectModal"
+    @discard="showNewProjectModal = false"
+    @done="showNewProjectModal = false"
+  />
 
-    <!-- Plan this / cancel buttons -->
-    <template v-slot:footer>
-      <div class="container-md">
-        <button
-          class="btn btn-primary mr-2"
-          type="button"
-          @click="validateProjectToBePlanned"
-        >
-          <PrimerIcon octicon="download" />
-          <span>Plan This</span>
-        </button>
-
-        <button
-          class="btn btn-danger mr-2"
-          type="button"
-          @click="showProjectToBePlannedModal = false"
-        >
-          <PrimerIcon octicon="trash" />
-          <span>Cancel</span>
-        </button>
-      </div>
-
-    </template>
-
-  </PrimerModal>
+<!-- New approach model modal  -->
+  <ModalFormNewApproachModel
+    :show="showNewApproachModelModal"
+    @discard="showNewApproachModelModal = false"
+    @done="showNewApproachModelModal = false"
+  />
+<!-- New cost center modal -->
+  <ModalFormNewCostCenter
+    :show="showNewCostCenterModal"
+    @discard="showNewCostCenterModal = false"
+    @done="showNewCostCenterModal = false"
+  />
+<!-- New employee modal -->
+  <ModalFormNewEmployee
+    :show="showNewEmployeeModal"
+    @discard="showNewEmployeeModal = false"
+    @done="showNewEmployeeModal = false"
+  />
 
 </template>
 
 <script lang="ts">
-import FormNewProject from './FormNewProject.vue'
+import ModalFormNewProject from './ModalFormNewProject.vue'
+import ModalFormNewApproachModel from './ModalFormNewApproachModel.vue'
+import ModalFormNewCostCenter from './ModalFormNewCostCenter.vue'
+import ModalFormNewEmployee from './ModalFormNewEmployee.vue'
 import WidgetProjects from './WidgetProjects.vue'
 import WidgetEmployees from './WidgetEmployees.vue'
 import PrimerIcon from '@/components/PrimerIcon.vue'
@@ -78,7 +95,10 @@ import { Project } from '@/interfaces/project'
 export default defineComponent({
   name: 'Dashboard',
   components: {
-    FormNewProject,
+    ModalFormNewProject,
+    ModalFormNewApproachModel,
+    ModalFormNewCostCenter,
+    ModalFormNewEmployee,
     WidgetProjects,
     WidgetEmployees,
     PrimerIcon,
@@ -86,7 +106,10 @@ export default defineComponent({
   setup() 
   {
     const store = useStore()
-    const showProjectToBePlannedModal = ref(false)
+    const showNewProjectModal       = ref(false)
+    const showNewApproachModelModal = ref(false)
+    const showNewCostCenterModal    = ref(false)
+    const showNewEmployeeModal      = ref(false)
     const projectToBePlanned: ComputedRef<Project | null> = computed(() => store.state.projectToBePlanned )
 
     // Setup references for elements
@@ -105,7 +128,10 @@ export default defineComponent({
     }
 
     return { 
-      showProjectToBePlannedModal, 
+      showNewProjectModal, 
+      showNewApproachModelModal,
+      showNewCostCenterModal,
+      showNewEmployeeModal,
       validateProjectToBePlanned,
       projectToBePlanned,
       formProject

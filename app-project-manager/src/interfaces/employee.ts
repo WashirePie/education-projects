@@ -1,6 +1,6 @@
 export const enum EEmployeeFunctions
 {
-  Developer = "Devloper",
+  Developer = "Developer",
   Designer = "Designer",
   Administrator = "Administratior",
   ProjectLead = 'Project Lead',
