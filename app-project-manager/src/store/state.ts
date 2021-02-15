@@ -15,7 +15,8 @@ export type ProjectManagerState =
   phaseToBePlanned: Phase | null
 }
 
-/* TODO: Will be taken from db */
+// TODO: Take data from db
+// TODO: Move sample data to 'setupTests.ts'
 /*
  * ----------------------------- Sample Data -----------------------------
  */
