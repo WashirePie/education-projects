@@ -30,7 +30,7 @@ export const enum EProjectState
   FINISHED = 'Finished'
 }
 
-export const enum EProjectPriority
+export enum EProjectPriority
 {
   HIGH = 'High',
   ABOVE_AVERAGE = 'Above average',

@@ -1,10 +1,12 @@
 <template>
+  <!-- Title -->
   <div class="Subhead hx_Subhead--responsive mb-5">
     <h1 class="Subhead-heading ">
       Register a new cost center
     </h1>
   </div>
 
+  <!-- Form components -->
   <PrimerFieldText
     ref="titleField"
     inputName="Title"
@@ -25,6 +27,7 @@ import { CostCenter } from '@/interfaces/costCenter'
 import { defineComponent, Ref, ref } from 'vue'
 import { useStore } from '@/store'
 import { ActionTypes } from '@/store/actions'
+import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'FormNewCostCenter',
@@ -44,12 +47,14 @@ export default defineComponent({
     {
       return new Promise<string>((resolve, reject) =>
       {
-        const title = titleField.value.validateInput(2, 60)
-        const id = idField.value.validateInputCustom(/^CC[\d]{3}$/g)
+        const title = titleField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
+        const id    = idField.value.validateInput(EValidationTypes.textValidation, { regex: /^CC[\d]{3}$/g })
 
         if (title && id)
         {
-          store.dispatch(ActionTypes.storeCostCenter, <CostCenter>{ title, id })
+          const newCostCenter = new CostCenter(title, id)
+
+          store.dispatch(ActionTypes.storeCostCenter, newCostCenter)
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }

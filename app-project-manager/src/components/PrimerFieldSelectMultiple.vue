@@ -1,4 +1,5 @@
 <template>
+  <!-- Label & description -->
   <div class="form-group">
     <div class="form-group-header">
       <label :class="`${darkMode ? 'text-white' : ''}`">{{ inputName }}</label>
@@ -9,6 +10,7 @@
     >{{ inputDescription }}</span>
   </div>
 
+  <!-- Input field -->
   <div class="form-group-body">
     <div
       v-for="item in inputSource" :key="item.name"
@@ -25,9 +27,7 @@
       <p
         class="note"
         :id="item.name"
-      >
-        {{ item.note }}
-      </p>
+      >{{ item.note }}</p>
     </div>
 
     <p
@@ -68,7 +68,6 @@ export default defineComponent({
     // TODO: Make the errorMessage reset upon changes in inputSource (When the user selects an item)
     const validateInput = (minSelected = 1, maxSelected = props.inputSource.length): IPrimerSelectMultipleItem['payload'] =>
     {
-      /* eslint-disable indent */
       const selected = props.inputSource.filter(i => i.state).length
 
       const validation = selected < minSelected ? `'${props.inputName}' should have at least ${minSelected} item${minSelected == 1 ? '' : 's'} selected`
@@ -93,7 +92,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style>
-
-</style>

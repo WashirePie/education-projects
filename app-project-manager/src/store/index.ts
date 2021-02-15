@@ -11,6 +11,7 @@ import { Mutations, mutations } from "./mutations";
 import { Actions, actions } from "./actions";
 import { Getters, getters } from "./getters";
 
+// TODO: Does this need to export?
 export const store = createStore<ProjectManagerState>({
   plugins: process.env.NODE_ENV === 'development' ? [createLogger()] : [],
   state,
@@ -25,8 +26,7 @@ export function useStore()
 }
 
 export type Store = Omit<
-  VuexStore<ProjectManagerState>,
-  'getters' | 'commit' | 'dispatch'
+  VuexStore<ProjectManagerState>, 'getters' | 'commit' | 'dispatch'
 > & {
   commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
     key: K,

@@ -1,6 +1,7 @@
 <template>
   <div class="Header">
 
+    <!-- Nav icon -->
     <div class="Header-item">
       <a class="Header-link f4 d-flex flex-items-center">
         <PrimerIcon octicon="package" :size="24"/>
@@ -16,6 +17,7 @@
       Routes
     </div> -->
 
+    <!-- Nav link 'Dashboard' -->
     <div class="Header-item">
       <router-link
         class="Header-link"
@@ -23,6 +25,7 @@
       >Dash</router-link>
     </div>
 
+    <!-- Nav link 'New' -->
     <div class="Header-item">
       <router-link
         class="Header-link"
@@ -30,9 +33,10 @@
       >New</router-link>
     </div>
 
+    <!-- Nav link 'Planner' -->
     <div 
       class="Header-item"
-      v-if="hasNewProject"
+      v-if="hasProjectToBePlanned"
     >
       <router-link
         class="Header-link anim-pulse"
@@ -40,10 +44,7 @@
       >Planner</router-link>
     </div>
 
-    <div class="Header-item Header-item--full">
-      <!-- <a href="#" class="Header-link">About</a> -->
-    </div>
-
+    <!-- Nav avatar -->
     <div class="Header-item mr-0">
       <img
         class="avatar"
@@ -69,10 +70,10 @@ export default defineComponent({
   {
     const store = useStore()
 
-    const hasNewProject: ComputedRef<boolean> = computed(() => store.state.newProject != null )
+    const hasProjectToBePlanned: ComputedRef<boolean> = computed(() => store.state.projectToBePlanned != null )
 
     return {
-      hasNewProject
+      hasProjectToBePlanned
     }
   }
 })

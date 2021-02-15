@@ -1,5 +1,5 @@
 <template>
-
+  <!-- Label & description -->
   <div class="form-group">
     <div class="form-group-header">
       <label
@@ -13,6 +13,7 @@
     >{{ inputDescription }}</span>
   </div>
 
+  <!-- Input field -->
   <div class="form-group-body">
     <input
       :class="`form-control ${darkMode ? 'input-dark' : ''} ${errorMessage ? 'border-red' : ''}`"
@@ -31,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { customTextValidation, dateValidation, genericTextValidation } from '@/helpers/validators'
+import { EValidationTypes, useValidation, ValidationParams, ValidationReturns } from '@/helpers/validators'
 import { defineComponent, watch, ref } from 'vue'
 
 export default defineComponent({
@@ -58,65 +59,23 @@ export default defineComponent({
     const inputValue   = ref<string>('')
     const errorMessage = ref<string>('')
 
+    const validate = useValidation()
+
     // Reset Error message when typing continues
     watch(inputValue, () => errorMessage.value = '')
 
-    const validateInput = (minChar = 2, maxChar = 60) =>
+    const validateInput = <K extends EValidationTypes, P extends ValidationParams[K], R extends ValidationReturns[K]>(type: K, params: P): R['payload'] =>
     {
-      const validation = genericTextValidation(props.inputName, inputValue.value, minChar, maxChar)
-      if (!validation)
-      {
-        errorMessage.value = ''
-        return inputValue.value
-      }
-      else
-      {
-        errorMessage.value = validation
-        return null
-      }
-    }
-
-    const validateInputCustom = (regex: RegExp) =>
-    {
-      const validation = customTextValidation(props.inputName, inputValue.value, regex)
-      if (!validation)
-      {
-        errorMessage.value = ''
-        return inputValue.value
-      }
-      else
-      {
-        errorMessage.value = validation
-        return null
-      }
-    }
-
-    const validateInputDate = () =>
-    {
-      const validation = dateValidation(props.inputName, inputValue.value)
-      if (!validation)
-      {
-        errorMessage.value = ''
-        return new Date(inputValue.value)
-      }
-      else
-      {
-        errorMessage.value = validation
-        return null
-      }
+      let res = validate(type, {source: inputValue.value, sourceName: props.inputName}, params) as R
+      errorMessage.value = res.responseMessage
+      return res.payload
     }
 
     return { 
       inputValue, 
       errorMessage, 
-      validateInput, 
-      validateInputCustom,
-      validateInputDate
+      validateInput
     }
   }
 })
 </script>
-
-<style>
-
-</style>

@@ -1,6 +1,7 @@
 import { ApproachModel } from "@/interfaces/approachModel";
 import { CostCenter } from "@/interfaces/costCenter";
 import { Employee } from "@/interfaces/employee";
+import { Phase } from "@/interfaces/phase";
 import { Project } from "@/interfaces/project";
 import { MutationTree } from "vuex";
 import { ProjectManagerState } from "./state";
@@ -18,7 +19,9 @@ export enum MutationType
 
   addProject = "ADD_PROJECTS",
   removeProject = "REMOVE_PROJECTS",
-  assignNewProject = "ASSIGN_NEW_PROJECT",
+
+  assignProjectToBePlanned = "ASSIGN_PROJECT_TO_BE_PLANNED",
+  assignPhaseToBePlanned = "ASSIGN_PHASE_TO_BE_PLANNED"
 }
 
 export type Mutations = {
@@ -33,8 +36,9 @@ export type Mutations = {
 
   [MutationType.addProject](state: ProjectManagerState, project: Project): void
   [MutationType.removeProject](state: ProjectManagerState, project: Project): void
-  [MutationType.assignNewProject](state: ProjectManagerState, nullableProject: Project | null): void
 
+  [MutationType.assignProjectToBePlanned](state: ProjectManagerState, nullableProject: Project | null): void
+  [MutationType.assignPhaseToBePlanned](state: ProjectManagerState, nullablePhase: Phase | null): void
 }
 
 export const mutations: MutationTree<ProjectManagerState> & Mutations = {
@@ -49,5 +53,7 @@ export const mutations: MutationTree<ProjectManagerState> & Mutations = {
 
   [MutationType.addProject](state, project) { state.projects.push(project) },
   [MutationType.removeProject](state, project) { state.projects = state.projects.filter(p => p.id != project.id) },
-  [MutationType.assignNewProject](state, nullableProject) { state.newProject = nullableProject },
+
+  [MutationType.assignProjectToBePlanned](state, nullableProject) { state.projectToBePlanned = nullableProject },
+  [MutationType.assignPhaseToBePlanned](state, nullablePhase) { state.phaseToBePlanned = nullablePhase },
 }

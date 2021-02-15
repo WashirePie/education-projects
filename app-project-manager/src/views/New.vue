@@ -1,5 +1,5 @@
 <template>
-
+  <!-- Form navigator -->
   <nav
     class="UnderlineNav"
     aria-label="New"
@@ -14,8 +14,10 @@
     </div>
   </nav>
 
+  <!-- Main container -->
   <div class="container-lg my-6 px-lg-5">
       
+      <!-- Forms -->
       <FormNewApproachModel
         v-if="forms[0].isCurrent"
         ref="formApproachModel"
@@ -33,6 +35,7 @@
 
       <hr>
 
+      <!-- Store button -->
       <button
         class="btn btn-primary mr-2"
         type="button"

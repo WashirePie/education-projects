@@ -1,6 +1,7 @@
 import { ApproachModel } from "@/interfaces/approachModel";
 import { CostCenter } from "@/interfaces/costCenter";
 import { Employee } from "@/interfaces/employee";
+import { Phase } from "@/interfaces/phase";
 import { Project } from "@/interfaces/project";
 import { ActionContext, ActionTree } from "vuex";
 import { Mutations, MutationType } from "./mutations";
@@ -20,7 +21,9 @@ export enum ActionTypes
   storeProject = "STORE_PROJECT",
   updateProject = "UPDATE_PROJECT",
   deleteProject = "DELETE_PROJECT",
-  setNewProject = "SET_NEW_PROJECT",
+
+  setProjectToBePlanned = "SET_PROJECT_TO_BE_PLANNED",
+  setPhaseToBePlanned = "SET_PHASE_TO_BE_PLANNED"
 }
 
 type ActionAugments = Omit<ActionContext<ProjectManagerState, ProjectManagerState>, 'commit'> &
@@ -45,7 +48,9 @@ export type Actions = {
   [ActionTypes.storeProject](context: ActionAugments, project: Project): Promise<string>
   [ActionTypes.updateProject](context: ActionAugments, project: Project): Promise<string>
   [ActionTypes.deleteProject](context: ActionAugments, project: Project): Promise<string>
-  [ActionTypes.setNewProject](context: ActionAugments, nullableProject: Project | null): Promise<string>
+
+  [ActionTypes.setProjectToBePlanned](context: ActionAugments, nullableProject: Project | null): Promise<string>
+  [ActionTypes.setPhaseToBePlanned](context: ActionAugments, nullablePhase: Phase | null): Promise<string>
 }
 
 // Message generators
@@ -226,16 +231,28 @@ export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Act
     })  
   },
 
-  [ActionTypes.setNewProject]({ commit }, nullableProject)
+  [ActionTypes.setProjectToBePlanned]({ commit }, nullableProject)
   {
     return new Promise<string>((resolve, reject) =>
     {
-      if (state.newProject != null && nullableProject != null) reject(error.singleton('new project'))
+      if (state.projectToBePlanned != null && nullableProject != null) reject(error.singleton('project to be planned'))
       else
       {
-        commit(MutationType.assignNewProject, nullableProject)
-        resolve(success.generic('new project', 'created'))
+        commit(MutationType.assignProjectToBePlanned, nullableProject)
+        resolve(success.generic('project to be planned', 'created'))
       }
     })  
   },
+  [ActionTypes.setPhaseToBePlanned]({ commit }, nullablePhase)
+  {
+    return new Promise<string>((resolve, reject) =>
+    {
+      if (state.phaseToBePlanned != null && nullablePhase != null) reject(error.singleton('phase to be planned'))
+      else
+      {
+        commit(MutationType.assignPhaseToBePlanned, nullablePhase)
+        resolve(success.generic('phase to be planned', 'assigned'))
+      }
+    })
+  }
 }

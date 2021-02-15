@@ -1,10 +1,12 @@
 <template>
+  <!-- Title -->
   <div class="Subhead hx_Subhead--responsive mb-5">
     <h1 class="Subhead-heading ">
       Create a new project
     </h1>
   </div>
 
+  <!-- Form components -->
   <PrimerFieldText
     ref="titleField"
     inputName="Title"
@@ -60,7 +62,8 @@ import { IPrimerSelectItem } from '@/interfaces/primerField'
 import { EProjectPriority, Project } from '@/interfaces/project'
 import { ApproachModel } from '@/interfaces/approachModel'
 import { ActionTypes } from '@/store/actions'
-import { EEmployeeFunctions, Employee, IEmployeeFunction } from '@/interfaces/employee'
+import { Employee } from '@/interfaces/employee'
+import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'FormNewProject',
@@ -85,17 +88,15 @@ export default defineComponent({
     const approachModels: ComputedRef<Array<IPrimerSelectItem>> = computed(() =>
     {
       const models: Array<ApproachModel> = store.state.approachModels
-      const mapped: Array<IPrimerSelectItem> = models.map(a => <IPrimerSelectItem> { name: a.title, payload: a })
+      const mapped: Array<IPrimerSelectItem> = models.map(a => { return { name: a.title, payload: a } as IPrimerSelectItem })
       
       return mapped
     })
 
     const availableProjectLeads: ComputedRef<Array<IPrimerSelectItem>> = computed(() =>
     {    
-      const projectLeaders: Array<Employee> = 
-        store.state.employees.filter(e => 
-          e.possibleFunctions.some(f => f.name == EEmployeeFunctions.ProjectLead))
-      const mapped: Array<IPrimerSelectItem> = projectLeaders.map(pl => <IPrimerSelectItem> { name: `${pl.name} ${pl.lastName}`, payload: pl })
+      const projectLeaders: Array<Employee> = store.getters.availableProjectLeads
+      const mapped: Array<IPrimerSelectItem> = projectLeaders.map(pl => { return { name: `${pl.name} ${pl.lastName}`, payload: pl } as IPrimerSelectItem })
 
       return mapped
     })
@@ -112,18 +113,26 @@ export default defineComponent({
     {
       return new Promise<string>((resolve, reject) =>
       {
-        const title: string               = titleField.value.validateInput(2, 60)
-        const id: string                  = idField.value.validateInputCustom(/^P[\d]{3}$/g)
+        const title: string               = titleField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
+        const id: string                  = idField.value.validateInput(EValidationTypes.textValidation, { regex: /^P[\d]{3}$/g })
         const model: ApproachModel        = approachModelField.value.validateInput()
         const projectLead: Employee       = projectLeadField.value.validateInput()
         const priority: EProjectPriority  = priorityField.value.validateInput()
-        const description: string         = descField.value.validateInput(10, 500)
+        const description: string         = descField.value.validateInput(EValidationTypes.textValidation, { minChar: 10, maxChar: 500, regex: /.*/g })
 
         if (title && id && model && projectLead && priority && description)
         {
-          const newProject: Project = new Project(title, id, model, description, new Date(), priority, projectLead )
+          const newProject: Project = new Project(
+            title, 
+            id, 
+            model, 
+            description, 
+            new Date(), 
+            priority, 
+            projectLead 
+          )
 
-          store.dispatch(ActionTypes.setNewProject, newProject)
+          store.dispatch(ActionTypes.setProjectToBePlanned, newProject)
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }

@@ -1,5 +1,5 @@
 <template>
-
+  <!-- Label & description -->
   <div class="form-group">
     <div class="form-group-header">
       <label
@@ -13,6 +13,7 @@
     >{{ inputDescription }}</span>
   </div>
 
+  <!-- Input field -->
   <div class="form-group-body">
     <input
       :class="`form-control ${darkMode ? 'input-dark' : ''} ${errorMessage ? 'border-red' : ''}`"
@@ -30,6 +31,7 @@
 
     <div class="my-3"></div>
 
+    <!-- Items array -->
     <div class="Box">
       <div
         class="Box-row"
@@ -67,7 +69,7 @@
 </template>
 
 <script lang="ts">
-import { genericTextValidation } from '@/helpers/validators'
+import { EValidationTypes, useValidation } from '@/helpers/validators'
 import { defineComponent, ref } from 'vue'
 import PrimerIcon from '@/components/PrimerIcon.vue'
 
@@ -95,6 +97,8 @@ export default defineComponent({
   },
   setup(props)
   {
+    const validate = useValidation()
+
     const inputValue   = ref<string>('')
     const errorMessage = ref<string>('')
     const items        = ref<Array<string>>([])
@@ -108,19 +112,20 @@ export default defineComponent({
         const tempItem = inputValue.value.substr(0, inputValue.value.length - 1)
 
         // Validate phase titles
-        const validation = genericTextValidation(props.inputName, tempItem, 2, 60, true, items.value)
-
-        // Handle validation
-        if (validation)
-        {
-          errorMessage.value = validation
+        const res = validate(EValidationTypes.textValidation, { sourceName: props.inputName, source: tempItem }, { 
+          maxChar: 60,
+          minChar: 2,
+          duplicatesArray: items.value,
+          regex: 'default'
+        })
+        errorMessage.value = res.responseMessage
+        
+        if (!res.payload)
           inputValue.value = tempItem
-        }
         else
         {
-          errorMessage.value = ''
-          items.value.push(tempItem)
           inputValue.value = ''
+          items.value.push(tempItem)
         }
       }
       else

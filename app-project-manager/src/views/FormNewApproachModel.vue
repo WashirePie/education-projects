@@ -1,10 +1,12 @@
 <template>
+  <!-- Title -->
   <div class="Subhead hx_Subhead--responsive mb-5">
     <h1 class="Subhead-heading ">
       Create a new approach model
     </h1>
   </div>
 
+  <!-- Form components -->
   <PrimerFieldText
     ref="titleField"
     inputName="Title"
@@ -27,6 +29,7 @@ import { defineComponent, Ref, ref } from 'vue'
 import { useStore } from '@/store'
 import { ApproachModel } from '@/interfaces/approachModel'
 import { ActionTypes } from '@/store/actions'
+import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'FormNewApproachModel',
@@ -47,12 +50,14 @@ export default defineComponent({
     {
       return new Promise<string>((resolve, reject) =>
       {
-        const title = titleField.value.validateInput(2, 60)
+        const title       = titleField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
         const phaseTitles = phaseTitlesField.value.validateInput(1)
-
+                
         if (title && phaseTitles)
         {
-          store.dispatch(ActionTypes.storeApproachModel, <ApproachModel>{ title, phases: phaseTitles })
+          const newApproachModel = new ApproachModel(title, phaseTitles)
+
+          store.dispatch(ActionTypes.storeApproachModel, newApproachModel)
             .then((res: string) => resolve(res))
             .catch((err: string) => reject(err))
         }

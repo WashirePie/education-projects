@@ -1,7 +1,11 @@
 <template>
+  <!-- Webkit dragbar -->
   <div class="pm-dragbar" />
+
+  <!-- Navigation component -->
   <PrimerNav />
 
+  <!-- Views -->
   <div class="mx-3 my-3">
     <router-view v-slot="{ Component }">
       <keep-alive include="Planner">
@@ -9,6 +13,7 @@
       </keep-alive>
     </router-view>
   </div>
+
 </template>
 
 <script lang="ts">
@@ -22,6 +27,7 @@ export default defineComponent({
   },
   setup ()
   {
+    // TODO: Remove all interfaces for the base classes (Project, Phase, etc.)
     return { }
   }
 })

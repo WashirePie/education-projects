@@ -1,6 +1,7 @@
 import { ApproachModel } from "@/interfaces/approachModel";
 import { CostCenter, ICostCenter } from "@/interfaces/costCenter";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/interfaces/employee";
+import { Phase } from "@/interfaces/phase";
 import { EProjectPriority, EProjectState, Project } from "@/interfaces/project";
 
 export type ProjectManagerState =
@@ -10,12 +11,15 @@ export type ProjectManagerState =
   approachModels: Array<ApproachModel>
   costCenters: Array<CostCenter>
   projects: Array<Project>
-  newProject: Project | null
+  projectToBePlanned: Project | null
+  phaseToBePlanned: Phase | null
 }
 
 /* TODO: Will be taken from db */
-// Sample Data
-const employeeFunctions = <Array<IEmployeeFunction>>[
+/*
+ * ----------------------------- Sample Data -----------------------------
+ */
+const employeeFunctions: Array<IEmployeeFunction> = [
   { name: EEmployeeFunctions.Developer,     note: 'Available for developer functions' },
   { name: EEmployeeFunctions.Designer,      note: 'Available for designer functions' },
   { name: EEmployeeFunctions.ProjectLead,   note: 'Available as project lead' },
@@ -48,6 +52,20 @@ projectTwo.progress = 100
 projectThree.state = EProjectState.CANCELLED
 projectThree.progress = 23
 
+const sampleProjectToBePlanned = new Project(
+  'Sample Project', 
+  'P444', 
+  IPDRCE, 
+  'A sample project in the planning state. Used to implement the <Planner> component.', 
+  new Date(),
+  EProjectPriority.ABOVE_AVERAGE, 
+  employeeJil
+  )
+
+/*
+ * ----------------------------- /Sample Data -----------------------------
+ */
+
 
 export const state: ProjectManagerState = {
   /* 'employeeFunctions' are hardcoded and immutable. This could easily be moved to a database. */
@@ -78,5 +96,6 @@ export const state: ProjectManagerState = {
     projectThree,
   ],
 
-  newProject: null,
+  projectToBePlanned: sampleProjectToBePlanned,
+  phaseToBePlanned: null,
 }

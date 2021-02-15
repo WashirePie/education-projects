@@ -8,7 +8,7 @@ export interface IPhase
   title: string;
   progress: number;
   activities: Array<Activity>;
-  phasMilestone: Milestone;
+  phaseMilestone: Milestone;
   milestones: Array<Milestone>;
   startDate: Date;
   endDate: Date;
@@ -27,7 +27,7 @@ export class Phase implements IPhase
   approvalDate: Date | null = null
   state: EProjectState = EProjectState.PLANNING
   documents: Array<DocumentRef> = []
-  phasMilestone: Milestone = new Milestone('Phasemilestone', this.endDate, [])
+  phaseMilestone: Milestone = new Milestone('Phasemilestone', this.endDate, [])
   milestones: Array<Milestone> = []
 
   constructor(
@@ -45,7 +45,7 @@ export class Phase implements IPhase
   }
   addActivity(activity: Activity)
   {
-    this.phasMilestone.activities.push(activity.id)
+    this.phaseMilestone.activities.push(activity.id)
     this._activities.push(activity)
   }
   

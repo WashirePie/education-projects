@@ -1,11 +1,14 @@
 <template>
-
+  <!-- Modal teleport -->
   <teleport to="#modal">
+        <!-- Modal overlay -->
         <div 
           class="modal-mask"
           ref="modalMask"
         >
+          <!-- Main container -->
           <div class="Box Box--overlay my-5 container-lg d-flex flex-column modal-restrict">
+            <!-- Modal header -->
             <div 
               class="Box-header p-1 bg-white"
               v-if="displayHeader"
@@ -18,17 +21,17 @@
                 <PrimerIcon octicon="x" class="octicon-x"/>
               </button>
 
-              <slot name="header">
-              </slot>
+              <slot name="header"></slot>
             </div>
 
+            <!-- Modal body -->
             <div class="Box-body overflow-auto">
-
               <slot name="body">
                 Example Body
               </slot>
             </div>
 
+            <!-- Modal footer -->
             <div 
               class="Box-footer"
               v-if="displayFooter"

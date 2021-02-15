@@ -1,14 +1,17 @@
 <template>
+  <!-- Title -->
   <div class="Subhead hx_Subhead--responsive mb-5">
     <h1 class="Subhead-heading ">
       Register a new employee
     </h1>
   </div>
 
+  <!-- Form components -->
   <PrimerFieldText
     ref="nameField"
     inputName="Name"
-    placeHolder="Name"/>
+    placeHolder="Name"
+  />
 
   <PrimerFieldText
     ref="lastNameField"
@@ -20,7 +23,7 @@
     ref="departmentField"
     inputName="Department"
     inputDescription="Name of the department this employee is currently assigned to"
-    placeHolder="R&D"
+    placeHolder="R&amp;D"
   />
 
   <PrimerFieldText
@@ -53,6 +56,7 @@ import { useStore } from '@/store'
 import { Employee, IEmployeeFunction } from '@/interfaces/employee'
 import { IPrimerSelectMultipleItem } from '@/interfaces/primerField'
 import { ActionTypes } from '@/store/actions'
+import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'FormNewEmployee',
@@ -75,10 +79,10 @@ export default defineComponent({
 
     const employeeFunctions = computed(() =>
     {
-      let functions: Array<IEmployeeFunction> = store.state.employeeFunctions
-      let mapped: Array<IPrimerSelectMultipleItem> = functions.map(f => 
+      const functions: Array<IEmployeeFunction> = store.state.employeeFunctions
+      const mapped: Array<IPrimerSelectMultipleItem> = functions.map(f => 
       {
-        return <IPrimerSelectMultipleItem> { name: f.name, payload: f.name, note: f.note, state: false } 
+        return { name: f.name, payload: f.name, note: f.note, state: false } as IPrimerSelectMultipleItem
       })
       return mapped
     })
@@ -88,25 +92,26 @@ export default defineComponent({
     {
       return new Promise<string>((resolve, reject) =>
       {
-        const name = nameField.value.validateInput(2, 60)
-        const lastName = lastNameField.value.validateInput(2, 60)
-        const department = departmentField.value.validateInput(2, 60)
-        const id = persIdField.value.validateInputCustom(/^#[\d]{5}$/g)
-        const workload = workloadField.value.validateInputCustom(/^[\d]{1,2}(\.[\d]{2})?$/g)
+        const name: string         = nameField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
+        const lastName: string     = lastNameField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
+        const department: string   = departmentField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
+        const id: string           = persIdField.value.validateInput(EValidationTypes.textValidation, { regex: /^#[\d]{5}$/g })
+        const load: string         = workloadField.value.validateInput(EValidationTypes.textValidation, { regex: /^[\d]{1,2}(\.[\d]{1,2})?$/g })
         const funcs: Array<string> = functionsField.value.validateInput(1)
 
-        const possibleFunctions: Array<IEmployeeFunction> = funcs.map(f => { return <IEmployeeFunction>{ name: f } })
-
-        if (name && lastName && department && id && workload && possibleFunctions)
+        if (name && lastName && department && id && load && funcs)
         {
-          const newEmployee: Employee = {
+          const possibleFunctions: Array<IEmployeeFunction> = funcs.map(f => { return { name: f } as IEmployeeFunction })
+          const workload = parseFloat(load)
+
+          const newEmployee: Employee = new Employee(
             name, 
             lastName, 
             department, 
             id, 
             workload, 
             possibleFunctions,
-          }
+          )
 
           store.dispatch(ActionTypes.storeEmployee, newEmployee)
             .then((res: string) => resolve(res))

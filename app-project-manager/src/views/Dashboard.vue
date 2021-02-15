@@ -1,15 +1,19 @@
 <template>
+  <!-- Main container -->
   <div class="container-xl my-5 px-3 px-md-4 px-lg-5">
+
+    <!-- Plan new project button -->
     <button
       class="btn btn-primary mr-2"
-      :aria-disabled="newProject ? 'true' : 'false'"
+      :aria-disabled="projectToBePlanned ? 'true' : 'false'"
       type="button"
-      @click="showNewProjectModal = true"
+      @click="showProjectToBePlannedModal = true"
     >
       <PrimerIcon octicon="plus" />
       <span>Plan a new Project</span>
     </button>
 
+    <!-- Widgets -->
     <hr class="mt-6">
     <PrimerWidgetProjects/>
     <hr>
@@ -17,11 +21,12 @@
     
   </div>
 
+  <!-- New project modal -->
   <PrimerModal
-    v-if="showNewProjectModal"
+    v-if="showProjectToBePlannedModal"
     :displayFooter="true"
     :displayHeader="false"
-    @close="showNewProjectModal = false"  
+    @close="showProjectToBePlannedModal = false"  
   >
     <template v-slot:body>
       <div class="container-md">
@@ -36,7 +41,7 @@
         <button
           class="btn btn-primary mr-2"
           type="button"
-          @click="validateNewProject"
+          @click="validateProjectToBePlanned"
         >
           <PrimerIcon octicon="download" />
           <span>Plan This</span>
@@ -45,7 +50,7 @@
         <button
           class="btn btn-danger mr-2"
           type="button"
-          @click="showNewProjectModal = false"
+          @click="showProjectToBePlannedModal = false"
         >
           <PrimerIcon octicon="trash" />
           <span>Cancel</span>
@@ -80,15 +85,15 @@ export default defineComponent({
   setup() 
   {
     const store = useStore()
-    const showNewProjectModal = ref(false)
-    const newProject: ComputedRef<Project | null> = computed(() => store.state.newProject )
+    const showProjectToBePlannedModal = ref(false)
+    const projectToBePlanned: ComputedRef<Project | null> = computed(() => store.state.projectToBePlanned )
 
-    // Setup references for the form components
+    // Setup references for elements
     const formProject = ref<Ref | null>(null)
 
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
 
-    const validateNewProject = () =>
+    const validateProjectToBePlanned = () =>
     {
       loadingbar.start()
       
@@ -99,9 +104,9 @@ export default defineComponent({
     }
 
     return { 
-      showNewProjectModal, 
-      validateNewProject,
-      newProject,
+      showProjectToBePlannedModal, 
+      validateProjectToBePlanned,
+      projectToBePlanned,
       formProject
     }
   }

@@ -1,5 +1,5 @@
 <template>
-
+  <!-- Label & description -->
   <div class="form-group">
     <div class="form-group-header">
       <label
@@ -13,6 +13,7 @@
     >{{ inputDescription }}</span>
   </div>
 
+  <!-- Input field -->
   <div class="form-group-body">
     <select
       v-model="inputValue"
@@ -91,7 +92,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style>
-
-</style>
