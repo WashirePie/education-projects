@@ -1,5 +1,5 @@
 import { ApproachModel } from "@/interfaces/approachModel";
-import { CostCenter } from "@/interfaces/costCenter";
+import { CostType } from "@/interfaces/costType";
 import { Employee } from "@/interfaces/employee";
 import { Phase } from "@/interfaces/phase";
 import { Project } from "@/interfaces/project";
@@ -15,9 +15,9 @@ export enum ActionTypes
   storeApproachModel  = "STORE_APPROACHMODEL",
   updateApproachModel = "UPDATE_APPROACHMODEL",
   deleteApproachModel = "DELETE_APPROACHMODEL",
-  storeCostCenter = "STORE_COSTCENTER",
-  updateCostCenter = "UPDATE_COSTCENTER",
-  deleteCostCenter = "DELETE_COSTCENTER",
+  storeCostType = "STORE_COSTTYPE",
+  updateCostType = "UPDATE_COSTTYPE",
+  deleteCostType = "DELETE_COSTTYPE",
   storeProject = "STORE_PROJECT",
   updateProject = "UPDATE_PROJECT",
   deleteProject = "DELETE_PROJECT",
@@ -40,9 +40,9 @@ export type Actions = {
   [ActionTypes.updateApproachModel](context: ActionAugments, model: ApproachModel): Promise<string>
   [ActionTypes.deleteApproachModel](context: ActionAugments, model: ApproachModel): Promise<string>
 
-  [ActionTypes.storeCostCenter](context: ActionAugments, costCenter: CostCenter): Promise<string>
-  [ActionTypes.updateCostCenter](context: ActionAugments, costCenter: CostCenter): Promise<string>
-  [ActionTypes.deleteCostCenter](context: ActionAugments, costCenter: CostCenter): Promise<string>
+  [ActionTypes.storeCostType](context: ActionAugments, costType: CostType): Promise<string>
+  [ActionTypes.updateCostType](context: ActionAugments, costType: CostType): Promise<string>
+  [ActionTypes.deleteCostType](context: ActionAugments, costType: CostType): Promise<string>
 
   [ActionTypes.storeProject](context: ActionAugments, project: Project): Promise<string>
   [ActionTypes.updateProject](context: ActionAugments, project: Project): Promise<string>
@@ -70,8 +70,8 @@ const getEmployee = (state: ProjectManagerState, id: Employee['id']): Employee |
 const getApproachModel = (state: ProjectManagerState, title: ApproachModel['title']): ApproachModel | undefined => 
   state.approachModels.filter(a => a.title === title)[0]
 
-const getCostCenter = (state: ProjectManagerState, id: CostCenter['id']): CostCenter | undefined => 
-  state.costCenters.filter(c => c.id === id)[0]
+const getCostType = (state: ProjectManagerState, id: CostType['id']): CostType | undefined => 
+  state.costTypes.filter(c => c.id === id)[0]
 
 const getProject = (state: ProjectManagerState, id: Project['id']): Project | undefined => 
   state.projects.filter(p => p.id === id)[0]
@@ -153,39 +153,39 @@ export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Act
     })  
   },
 
-  [ActionTypes.storeCostCenter]({ commit }, costCenter)
+  [ActionTypes.storeCostType]({ commit }, costType)
   {
     return new Promise<string>((resolve, reject) =>
     {
-      if (getCostCenter(state, costCenter.id)) reject(error.duplicate('cost center', 'id'))
+      if (getCostType(state, costType.id)) reject(error.duplicate('cost center', 'id'))
       else
       {
-        commit(MutationType.addCostCenter, costCenter)
+        commit(MutationType.addCostType, costType)
         resolve(success.generic('cost center', 'stored'))
       }
     })  
   },
-  [ActionTypes.updateCostCenter]({ commit }, costCenter)
+  [ActionTypes.updateCostType]({ commit }, costType)
   {
     return new Promise<string>((resolve, reject) =>
     {
-      if (!getCostCenter(state, costCenter.id)) reject(error.inexists('cost center', 'id'))
+      if (!getCostType(state, costType.id)) reject(error.inexists('cost center', 'id'))
       else
       {
-        commit(MutationType.removeCostCenter, costCenter)
-        commit(MutationType.addCostCenter, costCenter)
+        commit(MutationType.removeCostType, costType)
+        commit(MutationType.addCostType, costType)
         resolve(success.generic('cost center', 'updated'))
       }
     })  
   },
-  [ActionTypes.deleteCostCenter]({ commit }, costCenter)
+  [ActionTypes.deleteCostType]({ commit }, costType)
   {
     return new Promise<string>((resolve, reject) =>
     {
-      if (!getCostCenter(state, costCenter.id)) reject(error.inexists('cost center', 'id'))
+      if (!getCostType(state, costType.id)) reject(error.inexists('cost center', 'id'))
       else
       {
-        commit(MutationType.removeCostCenter, costCenter)
+        commit(MutationType.removeCostType, costType)
         resolve(success.generic('cost center', 'removed'))
       }
     })  

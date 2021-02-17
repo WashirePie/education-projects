@@ -71,11 +71,11 @@
       class="mt-2"
     >
       <select
-        v-model="costCenterValue"
+        v-model="costTypeValue"
         class="form-select"
       >
         <option
-          v-for="cc in costCenters" :key="cc.id" 
+          v-for="cc in costTypes" :key="cc.id" 
           :value="cc"
         >
           {{ cc.id }}: {{ cc.title }} 
@@ -130,7 +130,7 @@
     class="Label mr-2 mt-3"
     :class="res.assignee != undefined ? 'Label--yellow' : 'Label--pink'"
   >
-    {{ res.title }} | {{ res.assignee?.name }} {{ res.assignee?.lastName }} {{ res.costCenter?.title }} | {{ res.plan }} {{ res.assignee != undefined ? 'h' : 'CHF'}}
+    {{ res.title }} | {{ res.assignee?.name }} {{ res.assignee?.lastName }} {{ res.costType?.title }} | {{ res.plan }} {{ res.assignee != undefined ? 'h' : 'CHF'}}
     <button
       class="btn-octicon"
       type="button"
@@ -145,7 +145,7 @@
 <script lang="ts">
 import PrimerIcon from '@/components/PrimerIcon.vue'
 import { EValidationTypes, useValidation } from '@/helpers/validators';
-import { CostCenter } from "@/interfaces/costCenter";
+import { CostType } from "@/interfaces/costType";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/interfaces/employee";
 import { IPrimerSelectItem } from "@/interfaces/primerField";
 import { EResourceTypes, ExternalCostResource, IResource, PersonnelResource } from "@/interfaces/resource";
@@ -186,8 +186,8 @@ export default defineComponent({
     const workloadErrorMessage = ref<string>('')
 
     // Refs for type external cost
-    const costCenterValue = ref<CostCenter>()
-    const costCenters: ComputedRef<Array<CostCenter>> = computed(() => store.state.costCenters )
+    const costTypeValue = ref<CostType>()
+    const costTypes: ComputedRef<Array<CostType>> = computed(() => store.state.costTypes )
     const costPlanField = ref<number>()
     const costErrorMessage = ref<string>('')
 
@@ -201,7 +201,7 @@ export default defineComponent({
     onMounted(() =>
     {
       // Set default values on mounted
-      costCenterValue.value = costCenters.value[0]
+      costTypeValue.value = costTypes.value[0]
       employeeFunctionValue.value = EEmployeeFunctions.Developer
       resourceTypeValue.value = EResourceTypes.externalCost
     })
@@ -245,7 +245,7 @@ export default defineComponent({
         const newExternalCostResource = new ExternalCostResource(
           titleValidation.payload!, 
           parseFloat(costValidation.payload!),
-          costCenterValue.value!
+          costTypeValue.value!
         )
 
         resources.value.push(newExternalCostResource)
@@ -304,8 +304,8 @@ export default defineComponent({
       availableEmployeeValue,
       availableEmployees,
       workloadPlanField,
-      costCenterValue,
-      costCenters,
+      costTypeValue,
+      costTypes,
       costPlanField,
       titleValue,
       resources,

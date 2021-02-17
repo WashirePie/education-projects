@@ -9,7 +9,7 @@ export interface IActivity
   progress: number;
   startDate: Date;
   endDate: Date;
-  documents: Array<DocumentRef> | null;
+  documents: Array<DocumentRef>;
   responsibility: Employee;
   resources: Array<IResource>;
 }

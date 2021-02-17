@@ -1,10 +1,10 @@
-export interface ICostCenter
+export interface ICostType
 {
   title: string;
   id: string;
 }
 
-export class CostCenter implements ICostCenter
+export class CostType implements ICostType
 {
   title: string
   id: string

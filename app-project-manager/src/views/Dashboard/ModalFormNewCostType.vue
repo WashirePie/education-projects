@@ -38,7 +38,7 @@
         <button
           class="btn btn-primary mr-2"
           type="button"
-          @click="saveNewCostCenter"
+          @click="saveNewCostType"
         >
           <PrimerIcon octicon="download" />
           <span>Save</span>
@@ -62,14 +62,14 @@
 <script lang="ts">
 import PrimerFieldText from '@/components/PrimerFieldText.vue'
 import PrimerIcon from '@/components/PrimerIcon.vue'
-import { CostCenter } from '@/interfaces/costCenter'
+import { CostType } from '@/interfaces/costType'
 import { defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
 import { ActionTypes } from '@/store/actions'
 import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
-  name: 'ModalFormNewCostCenter',
+  name: 'ModalFormNewCostType',
   components: {
     PrimerFieldText,
     PrimerIcon
@@ -91,16 +91,16 @@ export default defineComponent({
     const titleField  = ref<Ref | null>(null)
     const idField     = ref<Ref | null>(null)
 
-    const saveNewCostCenter = () =>
+    const saveNewCostType = () =>
     {
       const title = titleField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
       const id    = idField.value.validateInput(EValidationTypes.textValidation, { regex: /^CC[\d]{3}$/g })
 
       if (title && id)
       {
-        const newCostCenter = new CostCenter(title, id)
+        const newCostType = new CostType(title, id)
 
-        store.dispatch(ActionTypes.storeCostCenter, newCostCenter)
+        store.dispatch(ActionTypes.storeCostType, newCostType)
           .then((res: string) => console.log(res))
           .catch((err: string) => console.log(err))
           .finally(() => 
@@ -112,7 +112,7 @@ export default defineComponent({
     }
 
     return { 
-      saveNewCostCenter, 
+      saveNewCostType, 
       titleField, 
       idField 
     }

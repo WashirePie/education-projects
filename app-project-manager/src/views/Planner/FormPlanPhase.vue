@@ -57,15 +57,6 @@
     :parentPhase="phaseToBePlanned"
   />
 
-  
-  <!-- {{ phase.activities }}
-  {{ phase.phaseMilestone }}
-  {{ phase.milestones }}
-  // Done {{ phase.startDate }}
-  // Done {{ phase.endDate }}
-  // Done {{ phase.approvalDate }}
-  // Done {{ phase.state }}
-  {{ phase.documents }} -->
 </template>
 
 <script lang="ts">

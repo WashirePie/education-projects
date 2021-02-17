@@ -27,7 +27,7 @@
     <button
       class="btn mr-2"
       type="button"
-      @click="showNewCostCenterModal = true"
+      @click="showNewCostTypeModal = true"
     >
       <PrimerIcon octicon="plus" />
       <span>Create a new cost center</span>
@@ -64,10 +64,10 @@
     @done="showNewApproachModelModal = false"
   />
 <!-- New cost center modal -->
-  <ModalFormNewCostCenter
-    :show="showNewCostCenterModal"
-    @discard="showNewCostCenterModal = false"
-    @done="showNewCostCenterModal = false"
+  <ModalFormNewCostType
+    :show="showNewCostTypeModal"
+    @discard="showNewCostTypeModal = false"
+    @done="showNewCostTypeModal = false"
   />
 <!-- New employee modal -->
   <ModalFormNewEmployee
@@ -81,7 +81,7 @@
 <script lang="ts">
 import ModalFormNewProject from './ModalFormNewProject.vue'
 import ModalFormNewApproachModel from './ModalFormNewApproachModel.vue'
-import ModalFormNewCostCenter from './ModalFormNewCostCenter.vue'
+import ModalFormNewCostType from './ModalFormNewCostType.vue'
 import ModalFormNewEmployee from './ModalFormNewEmployee.vue'
 import WidgetProjects from './WidgetProjects.vue'
 import WidgetEmployees from './WidgetEmployees.vue'
@@ -97,7 +97,7 @@ export default defineComponent({
   components: {
     ModalFormNewProject,
     ModalFormNewApproachModel,
-    ModalFormNewCostCenter,
+    ModalFormNewCostType,
     ModalFormNewEmployee,
     WidgetProjects,
     WidgetEmployees,
@@ -108,7 +108,7 @@ export default defineComponent({
     const store = useStore()
     const showNewProjectModal       = ref(false)
     const showNewApproachModelModal = ref(false)
-    const showNewCostCenterModal    = ref(false)
+    const showNewCostTypeModal      = ref(false)
     const showNewEmployeeModal      = ref(false)
     const projectToBePlanned: ComputedRef<Project | null> = computed(() => store.state.projectToBePlanned )
 
@@ -130,7 +130,7 @@ export default defineComponent({
     return { 
       showNewProjectModal, 
       showNewApproachModelModal,
-      showNewCostCenterModal,
+      showNewCostTypeModal,
       showNewEmployeeModal,
       validateProjectToBePlanned,
       projectToBePlanned,

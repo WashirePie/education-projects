@@ -1,5 +1,5 @@
 import { ApproachModel } from "@/interfaces/approachModel";
-import { CostCenter, ICostCenter } from "@/interfaces/costCenter";
+import { CostType, ICostType } from "@/interfaces/costType";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/interfaces/employee";
 import { Phase } from "@/interfaces/phase";
 import { EProjectPriority, EProjectState, Project } from "@/interfaces/project";
@@ -9,7 +9,7 @@ export type ProjectManagerState =
   employeeFunctions: Array<IEmployeeFunction>
   employees: Array<Employee>
   approachModels: Array<ApproachModel>
-  costCenters: Array<CostCenter>
+  costTypes: Array<CostType>
   projects: Array<Project>
   projectToBePlanned: Project | null
   phaseToBePlanned: Phase | null
@@ -27,10 +27,10 @@ const employeeFunctions: Array<IEmployeeFunction> = [
   { name: EEmployeeFunctions.Administrator, note: 'Available for administrative functions' }
 ]
 
-const costCenterOne   = new CostCenter('Outsourced Development', 'CC000')
-const costCenterTwo   = new CostCenter('Outsourced Design',     'CC200')
-const costCenterThree = new CostCenter('Outsourced Testing',    'CC210')
-const costCenterFour  = new CostCenter('Consultancy Work',      'CC220')
+const costTypeOne   = new CostType('Outsourced Development', 'CC000')
+const costTypeTwo   = new CostType('Outsourced Design',     'CC200')
+const costTypeThree = new CostType('Outsourced Testing',    'CC210')
+const costTypeFour  = new CostType('Consultancy Work',      'CC220')
 
 const HERMES: ApproachModel = new ApproachModel('HERMES', ['Initialization', 'Concept', 'Realization', 'Introduction'] )
 const IPDRCE: ApproachModel = new ApproachModel('IPDRCE', ['Inform', 'Plan', 'Decide', 'Realize', 'Control', 'Evaluate'] )
@@ -84,11 +84,11 @@ export const state: ProjectManagerState = {
     IPDRCE,
   ],
 
-  costCenters: <Array<CostCenter>>[
-    costCenterOne,
-    costCenterTwo,
-    costCenterThree,
-    costCenterFour,
+  costTypes: <Array<CostType>>[
+    costTypeOne,
+    costTypeTwo,
+    costTypeThree,
+    costTypeFour,
   ],
 
   projects: <Array<Project>>[

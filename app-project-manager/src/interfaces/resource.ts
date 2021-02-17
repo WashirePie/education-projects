@@ -1,4 +1,4 @@
-import { CostCenter } from "./costCenter";
+import { CostType } from "./costType";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "./employee";
 
 export interface IResource
@@ -51,14 +51,14 @@ export class PersonnelResource implements IPersonnelResource
 
 export interface IExternalCostResource extends IResource
 {
-  costCenter: CostCenter;
+  costType: CostType;
 }
 
 export class ExternalCostResource implements IExternalCostResource
 {
   title: string
   plan: number
-  costCenter: CostCenter
+  costType: CostType
 
   actual: number = 0
   deviation: string = ''
@@ -66,11 +66,11 @@ export class ExternalCostResource implements IExternalCostResource
   constructor(
     _title: string,
     _plan: number,
-    _costCenter: CostCenter
+    _costType: CostType
   )
   {
     this.title = _title
     this.plan = _plan
-    this.costCenter = _costCenter
+    this.costType = _costType
   }
 }

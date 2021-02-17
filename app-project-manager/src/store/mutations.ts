@@ -1,5 +1,5 @@
 import { ApproachModel } from "@/interfaces/approachModel";
-import { CostCenter } from "@/interfaces/costCenter";
+import { CostType } from "@/interfaces/costType";
 import { Employee } from "@/interfaces/employee";
 import { Phase } from "@/interfaces/phase";
 import { Project } from "@/interfaces/project";
@@ -14,8 +14,8 @@ export enum MutationType
   addApproachModel = "ADD_APPROACHMODEL",
   removeApproachModel = "REMOVE_APPROACHMODEL",
 
-  addCostCenter = "ADD_COSTCENTER",
-  removeCostCenter = "REMOVE_COSTCENTER",
+  addCostType = "ADD_COSTTYPE",
+  removeCostType = "REMOVE_COSTTYPE",
 
   addProject = "ADD_PROJECTS",
   removeProject = "REMOVE_PROJECTS",
@@ -30,8 +30,8 @@ export type Mutations = {
   [MutationType.addApproachModel](state: ProjectManagerState, model: ApproachModel): void
   [MutationType.removeApproachModel](state: ProjectManagerState, model: ApproachModel): void
 
-  [MutationType.addCostCenter](state: ProjectManagerState, costCenter: CostCenter): void
-  [MutationType.removeCostCenter](state: ProjectManagerState, costCenter: CostCenter): void
+  [MutationType.addCostType](state: ProjectManagerState, costType: CostType): void
+  [MutationType.removeCostType](state: ProjectManagerState, costType: CostType): void
 
   [MutationType.addProject](state: ProjectManagerState, project: Project): void
   [MutationType.removeProject](state: ProjectManagerState, project: Project): void
@@ -46,8 +46,8 @@ export const mutations: MutationTree<ProjectManagerState> & Mutations = {
   [MutationType.addApproachModel](state, model) { state.approachModels.push(model) },
   [MutationType.removeApproachModel](state, model) { state.approachModels = state.approachModels.filter(a => a.title != model.title) },
 
-  [MutationType.addCostCenter](state, costCenter) { state.costCenters.push(costCenter) },
-  [MutationType.removeCostCenter](state, costCenter) { state.costCenters = state.costCenters.filter(c => c.id != costCenter.id) },
+  [MutationType.addCostType](state, costType) { state.costTypes.push(costType) },
+  [MutationType.removeCostType](state, costType) { state.costTypes = state.costTypes.filter(c => c.id != costType.id) },
 
   [MutationType.addProject](state, project) { state.projects.push(project) },
   [MutationType.removeProject](state, project) { state.projects = state.projects.filter(p => p.id != project.id) },

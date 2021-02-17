@@ -176,7 +176,7 @@ export default defineComponent({
           responsibility
         )
         
-        props.parentPhase.activities.push(newActivity)
+        props.parentPhase.addActivity(newActivity)
         emit('done')
       }
     }
