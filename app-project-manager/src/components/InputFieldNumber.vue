@@ -3,23 +3,23 @@
   <div class="form-group">
     <div class="form-group-header">
       <label
-        :class="`${darkMode ? 'text-white' : ''}`"
         :for="inputName"
       >{{ inputName }}</label>
     </div>
     <span
-      :class="`text-small ${darkMode ? 'text-white' : 'text-gray'}`"
+      class="text-small text-gray"
       v-if="inputDescription"
     >{{ inputDescription }}</span>
   </div>
 
   <!-- Input field -->
   <div class="form-group-body">
-    <textarea
-      v-model="inputValue"
-      :class="`form-control input-block ${darkMode ? 'input-dark' : ''} ${errorMessage ? 'border-red' : ''}`"
+    <input
+      :class="`form-control ${errorMessage ? 'border-red' : ''}`"
       :id="inputName"
-    ></textarea>
+      type="number"
+      v-model="inputValue"
+    />
 
     <p
       class="note text-red"
@@ -34,41 +34,42 @@ import { EValidationTypes, useValidation, ValidationParams, ValidationReturns } 
 import { defineComponent, watch, ref } from 'vue'
 
 export default defineComponent({
+  name: 'InputFieldNumber',
   props: {
     inputName: {
       type: String,
-      default: 'Generic Textarea Input'
+      default: 'Generic Text Input'
     },
     inputDescription: {
       type: String,
       default: ''
     },
-    darkMode: {
-      type: Boolean,
-      default: false
+    placeHolder: {
+      type: Number,
+      default: '100.000'
     }
   },
   setup(props)
   {
-    const validate = useValidation()
-
-    const inputValue   = ref<string>('')
+    const inputValue   = ref<number>(props.placeHolder)
     const errorMessage = ref<string>('')
+
+    const validate = useValidation()
 
     // Reset Error message when typing continues
     watch(inputValue, () => errorMessage.value = '')
 
-    const validateInput = <K extends EValidationTypes, P extends ValidationParams[K], R extends ValidationReturns[K]>(type: K, params: P): R['payload'] =>
+    const validateInput = (params: ValidationParams[EValidationTypes.numberValidation]): ValidationReturns[EValidationTypes.numberValidation]['payload'] =>
     {
-      const res = validate(type, {source: inputValue.value, sourceName: props.inputName}, params) as R
+      let res = validate(EValidationTypes.numberValidation, {source: inputValue.value, sourceName: props.inputName}, params) as ValidationReturns[EValidationTypes.numberValidation]
       errorMessage.value = res.responseMessage
       return res.payload
     }
 
     return { 
-      validateInput,
+      inputValue, 
       errorMessage, 
-      inputValue 
+      validateInput
     }
   }
 })

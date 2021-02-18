@@ -16,14 +16,14 @@
         </div>
 
         <!-- Form components -->
-        <PrimerFieldText
+        <InputFieldText
           ref="titleField"
           inputName="Title"
           placeHolder="Title"
           inputDescription="Set a unique title for your new approach model"
         />
 
-        <PrimerFieldArrayText
+        <InputFieldOrderableText
           ref="phaseTitlesField"
           inputName="Phases"
           placeHolder="Phasetitle"
@@ -40,7 +40,7 @@
           type="button"
           @click="saveNewApproachModel"
         >
-          <PrimerIcon octicon="download" />
+          <Octicon octicon="download" />
           <span>Save</span>
         </button>
 
@@ -49,7 +49,7 @@
           type="button"
           @click="$emit('discard')"
         >
-          <PrimerIcon octicon="trash" />
+          <Octicon octicon="trash" />
           <span>Discard</span>
         </button>
       </div>
@@ -61,9 +61,9 @@
 </template>
 
 <script lang="ts">
-import PrimerFieldArrayText from '@/components/PrimerFieldArrayText.vue'
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import InputFieldOrderableText from '@/components/InputFieldOrderableText.vue'
+import InputFieldText from '@/components/InputFieldText.vue'
+import Octicon from '@/components/Octicon.vue'
 import { defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
 import { ApproachModel } from '@/interfaces/approachModel'
@@ -73,9 +73,9 @@ import { EValidationTypes } from '@/helpers/validators'
 export default defineComponent({
   name: 'ModalFormNewApproachModel',
   components: {
-    PrimerFieldText,
-    PrimerFieldArrayText,
-    PrimerIcon
+    InputFieldText,
+    InputFieldOrderableText,
+    Octicon
   },
   props: {
     show: {
@@ -91,13 +91,13 @@ export default defineComponent({
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
 
     // Setup references for the form fields
-    const titleField        = ref<Ref | null>(null)
-    const phaseTitlesField  = ref<Ref | null>(null)
+    const titleField       = ref<InstanceType<typeof InputFieldText>>()
+    const phaseTitlesField = ref<InstanceType<typeof InputFieldOrderableText>>()
 
     const saveNewApproachModel = () =>
     {
-      const title       = titleField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
-      const phaseTitles = phaseTitlesField.value.validateInput(1)
+      const title       = titleField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default' })
+      const phaseTitles = phaseTitlesField.value!.validateInput(1)
               
       if (title && phaseTitles)
       {

@@ -13,7 +13,7 @@
 import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
-  name: 'PrimerIcon',
+  name: 'Octicon',
   props: {
     octicon: {
       type: String as PropType<'pencil' | 'alert' | 'package' | 'check' | 'chevron-up' | 'chevron-down' | 'download' | 'person' | 'pin' | 'plus' | 'trash' | 'x'>,

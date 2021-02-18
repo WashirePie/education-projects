@@ -1,15 +1,18 @@
-import FormNewEmployee from '@/views/Create/FormNewEmployee.vue'
+import ModalFormNewEmployee from '@/views/Dashboard/ModalFormNewEmployee.vue'
 import { mount } from '@vue/test-utils'
 
-describe('FormNewEmployee.vue', () => {
+describe('ModalFormNewEmployee.vue', () => {
   it('validates its input', async () =>
   {
-    const wrapper = mount(FormNewEmployee)
+    const wrapper = mount(ModalFormNewEmployee, {
+      props: {
+        show: true
+      }
+    })
 
     // Validate without input
-    await expect(wrapper.vm.validateForm())
-      .rejects
-      .toThrow('Not valid')
+    wrapper.vm.saveNewEmployee()
+    expect(wrapper.emitted().done[0]).toBeUndefined()
 
     // Fill form, invalid id
     await wrapper.findAll('input')[0].setValue('John')

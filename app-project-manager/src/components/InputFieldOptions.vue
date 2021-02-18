@@ -2,10 +2,10 @@
   <!-- Label & description -->
   <div class="form-group">
     <div class="form-group-header">
-      <label :class="`${darkMode ? 'text-white' : ''}`">{{ inputName }}</label>
+      <label>{{ inputName }}</label>
     </div>
     <span
-      :class="`text-small ${darkMode ? 'text-white' : 'text-gray'}`"
+      class="text-small text-gray"
       v-if="inputDescription"
     >{{ inputDescription }}</span>
   </div>
@@ -14,7 +14,7 @@
   <div class="form-group-body">
     <div
       v-for="item in inputSource" :key="item.name"
-      :class="`form-checkbox ${darkMode ? 'input-dark' : ''}`"
+      class="form-checkbox"
     >
       <label :class="`${errorMessage ? 'text-red' : ''}`">
         <input
@@ -40,9 +40,17 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue'
-import { IPrimerSelectMultipleItem } from '@/interfaces/primerField'
+
+export interface IOptionItem
+{
+  name: string
+  payload: any
+  note: string
+  state: false
+}
 
 export default defineComponent({
+  name: 'InputFieldOptions',
   props: {
     inputName: {
       type: String,
@@ -53,12 +61,8 @@ export default defineComponent({
       default: ''
     },
     inputSource: {
-      type: Array as PropType<Array<IPrimerSelectMultipleItem>>,
+      type: Array as PropType<Array<IOptionItem>>,
       default: () => ([{ name: 'Option 1', note: 'Available', state: true, payload: 1 }, { name: 'Option 2', note: 'Available', state: false, payload: 1 }])
-    },
-    darkMode: {
-      type: Boolean,
-      default: false
     }
   },
   setup(props)
@@ -66,7 +70,7 @@ export default defineComponent({
     const errorMessage = ref<string>('')
 
     // TODO: Make the errorMessage reset upon changes in inputSource (When the user selects an item)
-    const validateInput = (minSelected = 1, maxSelected = props.inputSource.length): IPrimerSelectMultipleItem['payload'] =>
+    const validateInput = (minSelected = 1, maxSelected = props.inputSource.length): IOptionItem['payload'] =>
     {
       const selected = props.inputSource.filter(i => i.state).length
 

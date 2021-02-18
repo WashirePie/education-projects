@@ -7,7 +7,7 @@
             color == 'primary' ? 'bg-blue text-white'       : 
             ''"
   >
-    <slot>PrimerLabel</slot>
+    <slot>Label</slot>
   </span>
 </template>
 
@@ -15,7 +15,7 @@
 import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
-  name: 'PrimerLabel',
+  name: 'Label',
   props: {
     color: {
       type: String as PropType<'primary' | 'green' | 'yellow' | 'red'>,

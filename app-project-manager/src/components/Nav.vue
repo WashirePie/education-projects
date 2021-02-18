@@ -4,18 +4,10 @@
     <!-- Nav icon -->
     <div class="Header-item">
       <a class="Header-link f4 d-flex flex-items-center">
-        <PrimerIcon octicon="package" :size="24"/>
+        <Octicon octicon="package" :size="24"/>
         <span>ProjectManager</span>
       </a>
     </div>
-
-    <!-- <div class="Header-item">
-      <input type="search" class="form-control input-dark" />
-    </div> -->
-
-    <!-- <div class="Header-item">
-      Routes
-    </div> -->
 
     <!-- Nav link 'Dashboard' -->
     <div class="Header-item">
@@ -31,9 +23,9 @@
       v-if="hasProjectToBePlanned"
     >
       <router-link
-        class="Header-link anim-pulse"
+        class="Header-link"
         to="/plan"
-      >Planner</router-link>
+      >&gt; Planner</router-link>
     </div>
 
     <!-- Nav avatar -->
@@ -50,13 +42,14 @@
 </template>
 
 <script lang="ts">
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import Octicon from '@/components/Octicon.vue'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useStore } from '@/store'
 
 export default defineComponent({
+  name: 'Nav',
   components: {
-    PrimerIcon
+    Octicon
   },
   setup()
   {

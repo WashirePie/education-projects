@@ -18,7 +18,7 @@
                 type="button" 
                 @click="closeModal"
               >
-                <PrimerIcon octicon="x" class="octicon-x"/>
+                <Octicon octicon="x" class="octicon-x"/>
               </button>
 
               <slot name="header"></slot>
@@ -48,12 +48,12 @@
 </template>
 
 <script lang="ts">
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import Octicon from '@/components/Octicon.vue'
 import { defineComponent } from "vue";
 
 export default defineComponent({
   components: {
-    PrimerIcon
+    Octicon
   },
   props: {
     displayFooter: {

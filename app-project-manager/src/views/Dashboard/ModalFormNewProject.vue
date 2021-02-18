@@ -16,21 +16,21 @@
         </div>
 
         <!-- Form components -->
-        <PrimerFieldText
+        <InputFieldText
           ref="titleField"
           inputName="Title"
           placeHolder="Title"
           inputDescription="Set a unique title for your new project"
         />
 
-        <PrimerFieldText
+        <InputFieldText
           ref="idField"
           inputName="Identifier"
           placeHolder="P123"
           inputDescription="Set a unique project identifier starting with 'P' followed by a 3 digit code"
         />
 
-        <PrimerFieldSelect
+        <InputFieldSelect
           ref="priorityField"
           inputName="Priority"
           inputDescription="Set the project priority"
@@ -38,7 +38,7 @@
           :selectOptions="priorities"
         />
 
-        <PrimerFieldSelect
+        <InputFieldSelect
           ref="approachModelField"
           inputName="Approach Model"
           inputDescription="Select an approach model to scaffold your new project"
@@ -46,7 +46,7 @@
           :selectOptions="approachModels"
         />
 
-        <PrimerFieldSelect
+        <InputFieldSelect
           ref="projectLeadField"
           inputName="Project Lead"
           inputDescription="Select an employee as project lead"
@@ -54,14 +54,14 @@
           :selectOptions="availableProjectLeads"
         />
 
-        <PrimerFieldText
+        <InputFieldDate
           ref="startDateField"
           inputName="Start date"
           inputDescription="Set the start date for your new project"
-          :placeHolder="new Date().toLocaleDateString()"
+          :placeHolder="new Date()"
         />
 
-        <PrimerFieldTextArea
+        <InputFieldTextArea
           ref="descField"
           inputName="Description"
           inputDescription="Enter a description for your new project"
@@ -77,7 +77,7 @@
           type="button"
           @click="saveNewProject"
         >
-          <PrimerIcon octicon="download" />
+          <Octicon octicon="download" />
           <span>Plan This</span>
         </button>
 
@@ -86,7 +86,7 @@
           type="button"
           @click="$emit('discard')"
         >
-          <PrimerIcon octicon="trash" />
+          <Octicon octicon="trash" />
           <span>Discard</span>
         </button>
       </div>
@@ -98,14 +98,14 @@
 </template>
 
 <script lang="ts">
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
-import PrimerFieldSelect from '@/components/PrimerFieldSelect.vue'
-import PrimerFieldTextArea from '@/components/PrimerFieldTextArea.vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import InputFieldText from '@/components/InputFieldText.vue'
+import InputFieldDate from '@/components/InputFieldDate.vue'
+import InputFieldSelect, { ISelectItem } from '@/components/InputFieldSelect.vue'
+import InputFieldTextArea from '@/components/InputFieldTextArea.vue'
+import Octicon from '@/components/Octicon.vue'
 import router from '@/router'
 import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
-import { IPrimerSelectItem } from '@/interfaces/primerField'
 import { EProjectPriority, Project } from '@/interfaces/project'
 import { ApproachModel } from '@/interfaces/approachModel'
 import { ActionTypes } from '@/store/actions'
@@ -116,10 +116,11 @@ import { RouteLocationRaw } from 'vue-router'
 export default defineComponent({
   name: 'ModalFormNewProject',
   components: {
-    PrimerFieldText,
-    PrimerFieldSelect,
-    PrimerFieldTextArea,
-    PrimerIcon
+    InputFieldText,
+    InputFieldDate,
+    InputFieldSelect,
+    InputFieldTextArea,
+    Octicon
   },
   props: {
     show: {
@@ -135,31 +136,31 @@ export default defineComponent({
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
 
     // Setup references for the form fields
-    const titleField          = ref<Ref | null>(null)
-    const idField             = ref<Ref | null>(null)
-    const approachModelField  = ref<Ref | null>(null)
-    const projectLeadField    = ref<Ref | null>(null)
-    const priorityField       = ref<Ref | null>(null)
-    const startDateField      = ref<Ref | null>(null)
-    const descField           = ref<Ref | null>(null)
+    const titleField          = ref<InstanceType<typeof InputFieldText>>()
+    const idField             = ref<InstanceType<typeof InputFieldText>>()
+    const approachModelField  = ref<InstanceType<typeof InputFieldSelect>>()
+    const projectLeadField    = ref<InstanceType<typeof InputFieldSelect>>()
+    const priorityField       = ref<InstanceType<typeof InputFieldSelect>>()
+    const startDateField      = ref<InstanceType<typeof InputFieldDate>>()
+    const descField           = ref<InstanceType<typeof InputFieldTextArea>>()
 
-    const approachModels: ComputedRef<Array<IPrimerSelectItem>> = computed(() =>
+    const approachModels: ComputedRef<Array<ISelectItem>> = computed(() =>
     {
       const models: Array<ApproachModel> = store.state.approachModels
-      const mapped: Array<IPrimerSelectItem> = models.map(a => { return { name: a.title, payload: a } as IPrimerSelectItem })
+      const mapped: Array<ISelectItem> = models.map(a => { return { name: a.title, payload: a } as ISelectItem })
       
       return mapped
     })
 
-    const availableProjectLeads: ComputedRef<Array<IPrimerSelectItem>> = computed(() =>
+    const availableProjectLeads: ComputedRef<Array<ISelectItem>> = computed(() =>
     {    
       const projectLeaders: Array<Employee> = store.getters.availableProjectLeads
-      const mapped: Array<IPrimerSelectItem> = projectLeaders.map(pl => { return { name: `${pl.name} ${pl.lastName}`, payload: pl } as IPrimerSelectItem })
+      const mapped: Array<ISelectItem> = projectLeaders.map(pl => { return { name: `${pl.name} ${pl.lastName}`, payload: pl } as ISelectItem })
 
       return mapped
     })
 
-    const priorities: Array<IPrimerSelectItem> = [
+    const priorities: Array<ISelectItem> = [
       { name: EProjectPriority.HIGH,          payload: EProjectPriority.HIGH },
       { name: EProjectPriority.ABOVE_AVERAGE, payload: EProjectPriority.ABOVE_AVERAGE },
       { name: EProjectPriority.NORMAL,        payload: EProjectPriority.NORMAL },
@@ -169,14 +170,16 @@ export default defineComponent({
 
     const saveNewProject = () =>
     {
-      const title: string               = titleField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
-      const id: string                  = idField.value.validateInput(EValidationTypes.textValidation, { regex: /^P[\d]{3}$/g })
-      const model: ApproachModel        = approachModelField.value.validateInput()
-      const projectLead: Employee       = projectLeadField.value.validateInput()
-      const priority: EProjectPriority  = priorityField.value.validateInput()
-      const startDate: Date             = startDateField.value.validateInput(EValidationTypes.textDateValidation, null)
-      const description: string         = descField.value.validateInput(EValidationTypes.textValidation, { minChar: 10, maxChar: 500, regex: /.*/g })
+      const title       = titleField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default' })
+      const id          = idField.value!.validateInput({ regex: /^P[\d]{3}$/g })
+      const model       = approachModelField.value!.validateInput()
+      const projectLead = projectLeadField.value!.validateInput()
+      const priority    = priorityField.value!.validateInput()
+      const startDate   = startDateField.value!.validateInput({})
+      const description = descField.value!.validateInput(EValidationTypes.textValidation, { minChar: 10, maxChar: 500, regex: /.*/g })
 
+      console.log(startDate);
+      
       if (title && id && model && projectLead && priority && startDate && description)
       {
         const newProject: Project = new Project(

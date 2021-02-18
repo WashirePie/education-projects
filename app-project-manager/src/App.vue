@@ -3,7 +3,7 @@
   <div class="pm-dragbar" />
 
   <!-- Navigation component -->
-  <PrimerNav />
+  <Nav />
 
   <!-- Views -->
   <div class="mx-3 my-3">
@@ -18,12 +18,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import PrimerNav from './components/PrimerNav.vue'
+import Nav from './components/Nav.vue'
 
 export default defineComponent({
   name: 'Dashboard',
   components: {
-    PrimerNav
+    Nav
   },
   setup ()
   {
@@ -32,8 +32,6 @@ export default defineComponent({
     // TODO: Add 'DocumentRefs' to ModalFormPlanActivity
     // TODO: Refactor 'FieldResources'
     // TODO: Remove all interfaces for the base classes (Project, Phase, etc.)
-    // TODO: Use type="number" on number PrimerFieldTexts -> Probably rename that component too...
-    // TODO: an <option> has the ability to use 'value', which is essentially what we're doing with the IPrimerSelectValue Interface... Maybe refactor this
     return { }
   }
 })

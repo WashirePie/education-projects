@@ -3,12 +3,11 @@
   <div class="form-group">
     <div class="form-group-header">
       <label
-        :class="`${darkMode ? 'text-white' : ''}`"
         :for="inputName"
       >{{ inputName }}</label>
     </div>
     <span
-      :class="`text-small ${darkMode ? 'text-white' : 'text-gray'}`"
+      class="text-small text-gray"
       v-if="inputDescription"
     >{{ inputDescription }}</span>
   </div>
@@ -17,7 +16,7 @@
   <div class="form-group-body">
     <select
       v-model="inputValue"
-      :class="`form-select ${darkMode ? 'input-dark' : ''} ${errorMessage ? 'border-red' : ''}`"
+      :class="`form-select ${errorMessage ? 'border-red' : ''}`"
       :id="inputName"
     >
       <option>{{ placeHolder }}</option>
@@ -35,10 +34,16 @@
 </template>
 
 <script lang="ts">
-import { IPrimerSelectItem } from '@/interfaces/primerField'
 import { defineComponent, onMounted, watch, ref, PropType } from 'vue'
 
+export interface ISelectItem
+{
+  name: string
+  payload: any
+}
+
 export default defineComponent({
+  name: 'InputFieldSelect',
   props: {
     inputName: {
       type: String,
@@ -49,12 +54,8 @@ export default defineComponent({
       default: ''
     },
     selectOptions: {
-      type: Array as PropType<Array<IPrimerSelectItem>>,
+      type: Array as PropType<Array<ISelectItem>>,
       default: () => ([{ name: 'Low', payload: 1 }, { name: 'Medium', payload: 2 }, { name: 'High', payload: 3 }])
-    },
-    darkMode: {
-      type: Boolean,
-      default: false
     },
     placeHolder: {
       type: String,
@@ -70,7 +71,7 @@ export default defineComponent({
 
     watch(inputValue, () => errorMessage.value = '')
 
-    const validateInput = (): IPrimerSelectItem['payload'] =>
+    const validateInput = (): ISelectItem['payload'] =>
     {
       if (inputValue.value == props.placeHolder)
       {

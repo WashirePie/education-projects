@@ -7,18 +7,18 @@
   </div>
 
   <!-- Form components -->
-  <PrimerFieldText
+  <InputFieldDate
     ref="phaseStartDateField"
     inputName="Start date"
     inputDescription="Set the start date of this phase"
-    :placeHolder="phaseToBePlanned.startDate.toLocaleDateString()"
+    :placeHolder="phaseToBePlanned.startDate"
   />
 
-  <PrimerFieldText
+  <InputFieldDate
     ref="phaseEndDateField"
     inputName="End date"
     inputDescription="Set the end date of this phase"
-    :placeHolder="phaseToBePlanned.endDate.toLocaleDateString()"
+    :placeHolder="phaseToBePlanned.endDate"
   />
 
   <button
@@ -26,7 +26,7 @@
     type="button"
     @click="showActivityPlanner = true"
   >
-    <PrimerIcon octicon="plus" />
+    <Octicon octicon="plus" />
     <span>Add Activities</span>
   </button>
 
@@ -35,7 +35,7 @@
     type="button"
     @click="savePlannedPhase"
   >
-    <PrimerIcon octicon="download" />
+    <Octicon octicon="download" />
     <span>Save</span>
   </button>
 
@@ -51,7 +51,8 @@
 
   <!-- Activity modal -->
   <ModalFormPlanActivity 
-    :show="showActivityPlanner"
+    v-if="showActivityPlanner"
+    :show="true"
     @discard="showActivityPlanner = false"
     @done="showActivityPlanner = false"
     :parentPhase="phaseToBePlanned"
@@ -60,21 +61,22 @@
 </template>
 
 <script lang="ts">
-import PrimerFieldArrayText from '@/components/PrimerFieldArrayText.vue'
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import InputFieldText from '@/components/InputFieldText.vue'
+import InputFieldDate from '@/components/InputFieldDate.vue'
+import InputFieldOrderableText from '@/components/InputFieldOrderableText.vue'
+import Octicon from '@/components/Octicon.vue'
 import ModalFormPlanActivity from './ModalFormPlanActivity.vue'
 import { defineComponent, onMounted, PropType, Ref, ref, watch } from 'vue'
 import { Phase } from '@/interfaces/phase'
 import { EProjectState } from '@/interfaces/project'
-import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'FormPlanPhase',
   components: {
-    PrimerFieldText,
-    PrimerFieldArrayText,
-    PrimerIcon,
+    InputFieldText,
+    InputFieldDate,
+    InputFieldOrderableText,
+    Octicon,
     ModalFormPlanActivity
   },
   props: {
@@ -111,8 +113,8 @@ export default defineComponent({
 
     const savePlannedPhase = () =>
     {
-      const startDate: Date = phaseStartDateField.value.validateInput(EValidationTypes.textDateValidation, null)
-      const endDate: Date   = phaseEndDateField.value.validateInput(EValidationTypes.textDateValidation, null)
+      const startDate: Date = phaseStartDateField.value.validateInput()
+      const endDate: Date   = phaseEndDateField.value.validateInput()
       
       let valid = false
 

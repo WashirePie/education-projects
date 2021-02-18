@@ -1,13 +1,14 @@
 export enum EValidationTypes
 {
   textValidation = 'TEXT_VALIDATION',
-  textDateValidation = 'TEXT_DATE_VALIDATION'
+  numberValidation = 'NUMBER_VALIDATION',
+  dateValidation = 'TEXT_DATE_VALIDATION'
 }
 
 export interface IValidationBaseParams
 {
   sourceName: string
-  source: string
+  source: string | number | Date
 }
 
 export type ValidationParams = {
@@ -17,7 +18,15 @@ export type ValidationParams = {
     maxChar?: number,
     duplicatesArray?: Array<string>
   },
-  [EValidationTypes.textDateValidation]: null
+  [EValidationTypes.dateValidation]: {
+    minDate?: Date | null,
+    maxDate?: Date | null,
+  },
+  [EValidationTypes.numberValidation]: {
+    max?: number,
+    min?: number
+  },
+
 }
 
 export type ValidationReturns = {
@@ -25,27 +34,33 @@ export type ValidationReturns = {
     responseMessage: string,
     payload: string | null,
   },
-  [EValidationTypes.textDateValidation]: {
+  [EValidationTypes.dateValidation]: {
     responseMessage: string,
     payload: Date | null,
+  },
+  [EValidationTypes.numberValidation]: {
+    responseMessage: string,
+    payload: number | null,
   }
 }
 
 export type Validations = {
-  [EValidationTypes.textValidation] (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.textValidation]): ValidationReturns[EValidationTypes.textValidation]
-  [EValidationTypes.textDateValidation] (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.textDateValidation]): ValidationReturns[EValidationTypes.textDateValidation]
+  [EValidationTypes.textValidation]   (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.textValidation]):   ValidationReturns[EValidationTypes.textValidation]
+  [EValidationTypes.dateValidation]   (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.dateValidation]):   ValidationReturns[EValidationTypes.dateValidation]
+  [EValidationTypes.numberValidation] (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.numberValidation]): ValidationReturns[EValidationTypes.numberValidation]
 }
 
 const validations: Validations = {
   [EValidationTypes.textValidation] (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.textValidation]): ValidationReturns[EValidationTypes.textValidation]
   {
+    let text = s.source as string
     let res: string = ''
     const appendMessage = (message: string) => res += res ? `, ${message}` : message
       
     // Validate length
-    if (p.minChar != undefined && s.source.length < p.minChar) 
+    if (p.minChar != undefined && text.length < p.minChar) 
       appendMessage(`should contain at least ${p.minChar} characters`)
-    if (p.maxChar != undefined && s.source.length > p.maxChar) 
+    if (p.maxChar != undefined && text.length > p.maxChar) 
       appendMessage(`should not exceed ${p.maxChar} characters`)
 
     // Validate content
@@ -53,12 +68,12 @@ const validations: Validations = {
     {
       if (p.regex == 'default') 
       {
-        if (!/^[a-z\-_\s\döäü]*$/i.test(s.source)) 
+        if (!/^[a-z\-_\s\döäü]*$/i.test(text)) 
           appendMessage(`should only contain letters, numbers, spaces, underscores or hyphens`)
       }
       else
       {
-        if (!p.regex.test(s.source)) 
+        if (!p.regex.test(text)) 
           appendMessage(`should match ${p.regex.toString()}`)
       }
     }
@@ -66,7 +81,7 @@ const validations: Validations = {
     // Validate no-duplicate. To handle case-sensitivity, values are compared in uppercase
     if (p.duplicatesArray != undefined && p.duplicatesArray.length)
     {
-      if (p.duplicatesArray.map(i => i = i.toUpperCase()).includes(s.source.toUpperCase()))
+      if (p.duplicatesArray.map(i => i = i.toUpperCase()).includes(text.toUpperCase()))
         appendMessage('should not contain duplicates')
 
     }
@@ -78,32 +93,64 @@ const validations: Validations = {
       }
     return {
       responseMessage: '',
-      payload: s.source
+      payload: text
     }
   },
-  [EValidationTypes.textDateValidation] (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.textDateValidation]): ValidationReturns[EValidationTypes.textDateValidation]
+
+  [EValidationTypes.dateValidation] (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.dateValidation]): ValidationReturns[EValidationTypes.dateValidation]
   {
-    // Validate date format
-    const match = (/^([\d]{1,2})\.([\d]{1,2})\.([\d]{4})$/g).exec(s.source)
-    if (match)
-    {
-      // Validate date, swap month and day
-      const d = new Date(`${match[2]}.${match[1]}.${match[3]}`)
+    let date = s.source as Date
+    let res: string = ''
+    const appendMessage = (message: string) => res += res ? `, ${message}` : message
+
+    // // Validate date format
+    // const match = (/^([\d]{1,2})\.([\d]{1,2})\.([\d]{4})$/g).exec(s.source)
+    // if (match)
+    // {
+    //   // Validate date, swap month and day
+    //   const d = new Date(`${match[2]}.${match[1]}.${match[3]}`)
  
-      if (isValidDate(d)) 
-        return {
-          responseMessage: '',
-          payload: d
-        }
-        return {
-        responseMessage: `'${s.sourceName}' shoule be a valid date`,
+    if (!isValidDate(date)) 
+      appendMessage('shoule be a valid date')
+
+    if (p.maxDate && date > p.maxDate)
+      appendMessage(`should not be later than ${p.maxDate.toLocaleDateString()}`)
+
+    if (p.minDate && date < p.minDate)
+      appendMessage(`should not be before ${p.minDate.toLocaleDateString()}`)
+
+    if (res)
+      return {
+        responseMessage: `'${s.sourceName}' ${res}`,
         payload: null
       }
-    }
     return {
-      responseMessage: `'${s.sourceName}' should match 'dd-mm-YYYY'`,
-      payload: null
+      responseMessage: '',
+      payload: date
     }
+  },
+
+  [EValidationTypes.numberValidation] (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.numberValidation]): ValidationReturns[EValidationTypes.numberValidation]
+  {
+    let number = s.source as number
+    let res: string = ''
+    const appendMessage = (message: string) => res += res ? `, ${message}` : message
+    
+    if (p.max && number > p.max)
+    appendMessage(`should not be greater than ${p.max}`)
+
+    if (p.min && number < p.min)
+      appendMessage(`should not be less than ${p.min}`)
+
+    if (res)
+      return {
+        responseMessage: `'${s.sourceName}' ${res}`,
+        payload: null
+      }
+    return {
+      responseMessage: '',
+      payload: number
+    }  
   }
 }
 

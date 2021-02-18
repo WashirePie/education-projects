@@ -25,7 +25,7 @@
     <!-- Start date item -->
     <div class="TimelineItem TimelineItem--condensed">
       <div class="TimelineItem-badge">
-        <PrimerIcon octicon="pin" />
+        <Octicon octicon="pin" />
       </div>
       <div class="TimelineItem-body ">
         <p class="f5 text-bold mt-3">Start date</p>
@@ -40,14 +40,14 @@
     >
       <div 
         class="TimelineItem-badge"
-        :class="phase.state == planningState ? 'anim-pulse bg-yellow' : 'text-white bg-green'"
+        :class="phase.state == planningState ? 'bg-yellow' : 'text-white bg-green'"
       >
         <!-- Phase state icon -->
-        <PrimerIcon 
+        <Octicon 
           v-if="phase.state == planningState" 
           octicon="alert"
         />
-        <PrimerIcon 
+        <Octicon 
           v-else 
           octicon="check"
         />
@@ -76,7 +76,7 @@
     <!-- End date item -->
     <div class="TimelineItem TimelineItem--condensed">
       <div class="TimelineItem-badge">
-        <PrimerIcon octicon="pin" />
+        <Octicon octicon="pin" />
       </div>
       <div class="TimelineItem-body ">
         <p class="f5 text-bold mt-3">Projected end date</p>
@@ -91,7 +91,7 @@
         type="button"
         @click="validatePlannedProject"
       >
-        <PrimerIcon octicon="download" />
+        <Octicon octicon="download" />
         <span>Release Proposal</span>
       </button>
 
@@ -100,7 +100,7 @@
         type="button"
         @click="discardPlannedProject"
       >
-        <PrimerIcon octicon="trash" />
+        <Octicon octicon="trash" />
         <span>Discard</span>
       </button>
     </div>
@@ -111,9 +111,9 @@
 
 <script lang="ts">
 import FormPlanPhase from './FormPlanPhase.vue'
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
-import PrimerLabel from '@/components/PrimerLabel.vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import InputFieldText from '@/components/InputFieldText.vue'
+import Label from '@/components/Label.vue'
+import Octicon from '@/components/Octicon.vue'
 import router from '@/router'
 import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } from "vue";
 import { useStore } from '@/store';
@@ -124,9 +124,9 @@ export default defineComponent({
   name: 'Planner',
   components: {
     FormPlanPhase,
-    PrimerFieldText,
-    PrimerLabel,
-    PrimerIcon,
+    InputFieldText,
+    Label,
+    Octicon,
   },
   setup()
   {

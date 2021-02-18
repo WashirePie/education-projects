@@ -9,7 +9,7 @@
       class="p-3 border rounded-1"
       v-for="emp in employees" :key="emp.id"
     >
-      <PrimerIcon octicon="person" class="circle d-inlin my-1" />
+      <Octicon octicon="person" class="circle d-inlin my-1" />
       
       <p class="f5 d-inline ml-2">
         {{ emp.name }} {{ emp.lastName }} ({{ emp.department }})
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import Octicon from '@/components/Octicon.vue'
 import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "@/store";
 import { Employee } from '@/interfaces/employee';
@@ -40,7 +40,7 @@ import { Employee } from '@/interfaces/employee';
 export default defineComponent({
   name: 'WidgetEmployees',
   components: {
-    PrimerIcon
+    Octicon
   },
   setup() 
   {

@@ -9,7 +9,7 @@
       type="button"
       @click="showNewProjectModal = true"
     >
-      <PrimerIcon octicon="plus" />
+      <Octicon octicon="plus" />
       <span>Plan a new Project</span>
     </button>
 
@@ -19,7 +19,7 @@
       type="button"
       @click="showNewApproachModelModal = true"
     >
-      <PrimerIcon octicon="plus" />
+      <Octicon octicon="plus" />
       <span>Create a new approach model</span>
     </button>
 
@@ -29,8 +29,8 @@
       type="button"
       @click="showNewCostTypeModal = true"
     >
-      <PrimerIcon octicon="plus" />
-      <span>Create a new cost center</span>
+      <Octicon octicon="plus" />
+      <span>Create a new cost type</span>
     </button>
 
     <!-- Register a new employee button -->
@@ -39,7 +39,7 @@
       type="button"
       @click="showNewEmployeeModal = true"
     >
-      <PrimerIcon octicon="plus" />
+      <Octicon octicon="plus" />
       <span>Register a new employee</span>
     </button>
     <!-- Widgets -->
@@ -52,26 +52,30 @@
 
   <!-- New project modal -->
   <ModalFormNewProject
-    :show="showNewProjectModal"
+    v-if="showNewProjectModal"
+    :show="true"
     @discard="showNewProjectModal = false"
     @done="showNewProjectModal = false"
   />
 
 <!-- New approach model modal  -->
   <ModalFormNewApproachModel
-    :show="showNewApproachModelModal"
+    v-if="showNewApproachModelModal"
+    :show="true"
     @discard="showNewApproachModelModal = false"
     @done="showNewApproachModelModal = false"
   />
 <!-- New cost center modal -->
   <ModalFormNewCostType
-    :show="showNewCostTypeModal"
+    v-if="showNewCostTypeModal"
+    :show="true"
     @discard="showNewCostTypeModal = false"
     @done="showNewCostTypeModal = false"
   />
 <!-- New employee modal -->
   <ModalFormNewEmployee
-    :show="showNewEmployeeModal"
+    v-if="showNewEmployeeModal"
+    :show="true"
     @discard="showNewEmployeeModal = false"
     @done="showNewEmployeeModal = false"
   />
@@ -85,7 +89,7 @@ import ModalFormNewCostType from './ModalFormNewCostType.vue'
 import ModalFormNewEmployee from './ModalFormNewEmployee.vue'
 import WidgetProjects from './WidgetProjects.vue'
 import WidgetEmployees from './WidgetEmployees.vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import Octicon from '@/components/Octicon.vue'
 import router from '@/router'
 import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
@@ -101,7 +105,7 @@ export default defineComponent({
     ModalFormNewEmployee,
     WidgetProjects,
     WidgetEmployees,
-    PrimerIcon,
+    Octicon,
   },
   setup() 
   {

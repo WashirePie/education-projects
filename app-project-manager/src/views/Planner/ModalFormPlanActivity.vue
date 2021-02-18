@@ -16,28 +16,28 @@
         </div>
 
         <!-- Form components -->
-        <PrimerFieldText
+        <InputFieldText
           ref="activityTitleField"
           inputName="Title"
           inputDescription="Set the title of this activity"
           placeHolder="Title"
         />
 
-        <PrimerFieldText
+        <InputFieldDate
           ref="activityStartDateField"
           inputName="Start date"
           inputDescription="Set the start date of this activity"
-          :placeHolder="parentPhase.startDate.toLocaleDateString()"
+          :placeHolder="parentPhase.startDate"
         />
 
-        <PrimerFieldText
+        <InputFieldDate
           ref="activityEndDateField"
           inputName="End date"
           inputDescription="Set the end date of this activity"
-          :placeHolder="parentPhase.endDate.toLocaleDateString()"
+          :placeHolder="parentPhase.endDate"
         />
         
-        <PrimerFieldSelect
+        <InputFieldSelect
           ref="activityResponsibilityField"
           inputName="Responibility"
           inputDescription="Assign an employee who is responsible for this activity"
@@ -60,7 +60,7 @@
           type="button"
           @click="savePlannedActivity"
         >
-          <PrimerIcon octicon="plus" />
+          <Octicon octicon="plus" />
           <span>Add Activity</span>
         </button>
 
@@ -69,7 +69,7 @@
           type="button"
           @click="$emit('discard')"
         >
-          <PrimerIcon octicon="trash" />
+          <Octicon octicon="trash" />
           <span>Discard</span>
         </button>
       </div>
@@ -81,15 +81,13 @@
 </template>
 
 <script lang="ts">
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
-import PrimerFieldSelect from '@/components/PrimerFieldSelect.vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import InputFieldText from '@/components/InputFieldText.vue'
+import InputFieldDate from '@/components/InputFieldDate.vue'
+import InputFieldSelect, { ISelectItem } from '@/components/InputFieldSelect.vue'
+import Octicon from '@/components/Octicon.vue'
 import FieldResources from './FieldResources.vue'
 import { Phase } from "@/interfaces/phase";
 import { computed, ComputedRef, defineComponent, PropType, Ref, ref } from "vue";
-import { EValidationTypes } from '@/helpers/validators';
-import { IResource } from '@/interfaces/resource';
-import { IPrimerSelectItem } from '@/interfaces/primerField';
 import { Employee } from '@/interfaces/employee';
 import { useStore } from '@/store';
 import { Activity } from '@/interfaces/activity';
@@ -97,9 +95,10 @@ import { Activity } from '@/interfaces/activity';
 export default defineComponent({
   name: 'ModalFormPlanActivity',
   components: {
-    PrimerFieldText,
-    PrimerFieldSelect,
-    PrimerIcon,
+    InputFieldText,
+    InputFieldDate,
+    InputFieldSelect,
+    Octicon,
     FieldResources
   },
   props: {
@@ -121,18 +120,18 @@ export default defineComponent({
   {
     const store = useStore()
 
-    const activityTitleField           = ref<Ref | null>(null)
-    const activityStartDateField      = ref<Ref | null>(null)
-    const activityEndDateField        = ref<Ref | null>(null)
-    const activityResponsibilityField = ref<Ref | null>(null)
-    const activityResourcesField       = ref<Ref | null>(null)
+    const activityTitleField          = ref<InstanceType<typeof InputFieldText>>()
+    const activityStartDateField      = ref<InstanceType<typeof InputFieldDate>>()
+    const activityEndDateField        = ref<InstanceType<typeof InputFieldDate>>()
+    const activityResponsibilityField = ref<InstanceType<typeof InputFieldSelect>>()
+    const activityResourcesField      = ref<InstanceType<typeof FieldResources>>()
 
     const errorMessage  = ref<string>('')
 
-    const availableEmployees: ComputedRef<Array<IPrimerSelectItem>> = computed(() =>
+    const availableEmployees: ComputedRef<Array<ISelectItem>> = computed(() =>
     {    
       const employees: Array<Employee> = store.state.employees
-      const mapped: Array<IPrimerSelectItem> = employees.map(e => { return { name: `${e.name} ${e.lastName}`, payload: e } as IPrimerSelectItem })
+      const mapped: Array<ISelectItem> = employees.map(e => { return { name: `${e.name} ${e.lastName}`, payload: e } as ISelectItem })
 
       return mapped
     })
@@ -140,26 +139,14 @@ export default defineComponent({
     const savePlannedActivity = () =>
     {
       
-      const title: string               = activityTitleField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default'})  
-      const startDate: Date             = activityStartDateField.value.validateInput(EValidationTypes.textDateValidation, null)
-      const endDate: Date               = activityEndDateField.value.validateInput(EValidationTypes.textDateValidation, null)
-      const responsibility: Employee    = activityResponsibilityField.value.validateInput()
-      const resources: Array<IResource> = activityResourcesField.value.validateInput(1)
+      const title          = activityTitleField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default'})  
+      const startDate      = activityStartDateField.value!.validateInput({ minDate: props.parentPhase.startDate })
+      const endDate        = activityEndDateField.value!.validateInput({ minDate: startDate})
+      const responsibility = activityResponsibilityField.value!.validateInput()
+      const resources      = activityResourcesField.value!.validateInput(1)
 
       if (title && startDate && endDate && responsibility && resources)
       {
-        if (startDate > endDate)
-        {
-          activityStartDateField.value.errorMessage = 'Start date must be before end date'
-          return
-        }
-        
-        if (startDate < props.parentPhase.startDate)
-        {
-          activityStartDateField.value.errorMessage = 'Start date cannot be before project start date'
-          return
-        }
-
         if (!resources.length)
         {
           errorMessage.value = 'An activity needs at least one resource assigned'

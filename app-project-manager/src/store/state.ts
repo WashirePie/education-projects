@@ -27,10 +27,10 @@ const employeeFunctions: Array<IEmployeeFunction> = [
   { name: EEmployeeFunctions.Administrator, note: 'Available for administrative functions' }
 ]
 
-const costTypeOne   = new CostType('Outsourced Development', 'CC000')
-const costTypeTwo   = new CostType('Outsourced Design',     'CC200')
-const costTypeThree = new CostType('Outsourced Testing',    'CC210')
-const costTypeFour  = new CostType('Consultancy Work',      'CC220')
+const costTypeOne   = new CostType('Outsourced Development', 'CT000')
+const costTypeTwo   = new CostType('Outsourced Design',      'CT200')
+const costTypeThree = new CostType('Outsourced Testing',     'CT210')
+const costTypeFour  = new CostType('Consultancy Work',       'CT220')
 
 const HERMES: ApproachModel = new ApproachModel('HERMES', ['Initialization', 'Concept', 'Realization', 'Introduction'] )
 const IPDRCE: ApproachModel = new ApproachModel('IPDRCE', ['Inform', 'Plan', 'Decide', 'Realize', 'Control', 'Evaluate'] )

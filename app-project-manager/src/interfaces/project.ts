@@ -76,5 +76,7 @@ export class Project implements IProject
     this.endDate = _startDate
 
     this.phases = this.model.scaffold()
+    this.phases.forEach(p => p.startDate = p.endDate = this.startDate)
+
   }
 }

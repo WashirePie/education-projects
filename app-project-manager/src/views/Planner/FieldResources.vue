@@ -119,7 +119,7 @@
       type="button"
       @click="addResource"
     >
-      <PrimerIcon octicon="plus" />
+      <Octicon octicon="plus" />
       <span>Add</span>
     </button>
   </div>
@@ -136,18 +136,18 @@
       type="button"
       @click="removeResource(res)"
     >
-      <PrimerIcon octicon="x" />
+      <Octicon octicon="x" />
     </button>
   </span>
 
 </template>
 
 <script lang="ts">
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import Octicon from '@/components/Octicon.vue'
+import { ISelectItem } from '@/components/InputFieldSelect.vue'
 import { EValidationTypes, useValidation } from '@/helpers/validators';
 import { CostType } from "@/interfaces/costType";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/interfaces/employee";
-import { IPrimerSelectItem } from "@/interfaces/primerField";
 import { EResourceTypes, ExternalCostResource, IResource, PersonnelResource } from "@/interfaces/resource";
 import { useStore } from "@/store";
 import { computed, ComputedRef, defineComponent, onMounted, ref, watch } from "vue";
@@ -155,7 +155,7 @@ import { computed, ComputedRef, defineComponent, onMounted, ref, watch } from "v
 export default defineComponent({
   name: 'FieldResources',
   components: {
-    PrimerIcon
+    Octicon
   },
   props: {
     inputName: {
@@ -193,7 +193,7 @@ export default defineComponent({
 
     const resources = ref<Array<PersonnelResource | ExternalCostResource>>([])
 
-    const resourceTypes     = <Array<IPrimerSelectItem>>([
+    const resourceTypes     = <Array<ISelectItem>>([
       { name: 'Personnel',     payload: EResourceTypes.personnel },
       { name: 'External Cost', payload: EResourceTypes.externalCost }
     ]) 

@@ -16,41 +16,40 @@
         </div>
 
         <!-- Form components -->
-        <PrimerFieldText
+        <InputFieldText
           ref="nameField"
           inputName="Name"
           placeHolder="Name"
         />
 
-        <PrimerFieldText
+        <InputFieldText
           ref="lastNameField"
           inputName="Lastname"
           placeHolder="Lastname"
         />
 
-        <PrimerFieldText
+        <InputFieldText
           ref="departmentField"
           inputName="Department"
           inputDescription="Name of the department this employee is currently assigned to"
           placeHolder="R&amp;D"
         />
 
-        <PrimerFieldText
+        <InputFieldText
           ref="persIdField"
           inputName="Personell Identifier"
           inputDescription="Set a unique personell identifier starting with '#' followed by a 5 digit code"
           placeHolder="#12345"
         />
 
-        <PrimerFieldText
+        <InputFieldNumber
           ref="workloadField"
           inputName="Workload"
           inputDescription="Available work hours per week"
-          inputType="number"
-          placeHolder="42.5"
+          :placeHolder="42.5"
         />
 
-        <PrimerFieldSelectMultiple
+        <InputFieldOptions
           ref="functionsField"
           inputName="Functions"
           inputDescription="Select the possible functions this employee can occupy"
@@ -67,7 +66,7 @@
           type="button"
           @click="saveNewEmployee"
         >
-          <PrimerIcon octicon="download" />
+          <Octicon octicon="download" />
           <span>Plan This</span>
         </button>
 
@@ -76,7 +75,7 @@
           type="button"
           @click="$emit('discard')"
         >
-          <PrimerIcon octicon="trash" />
+          <Octicon octicon="trash" />
           <span>Discard</span>
         </button>
       </div>
@@ -88,22 +87,22 @@
 </template>
 
 <script lang="ts">
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
-import PrimerFieldSelectMultiple from '@/components/PrimerFieldSelectMultiple.vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import InputFieldText from '@/components/InputFieldText.vue'
+import InputFieldNumber from '@/components/InputFieldNumber.vue'
+import InputFieldOptions, { IOptionItem } from '@/components/InputFieldOptions.vue'
+import Octicon from '@/components/Octicon.vue'
 import { computed, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
 import { Employee, IEmployeeFunction } from '@/interfaces/employee'
-import { IPrimerSelectMultipleItem } from '@/interfaces/primerField'
 import { ActionTypes } from '@/store/actions'
-import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'ModalFormNewEmployee',
   components: {
-    PrimerFieldText,
-    PrimerFieldSelectMultiple,
-    PrimerIcon
+    InputFieldText,
+    InputFieldNumber,
+    InputFieldOptions,
+    Octicon
   },
   props: {
     show: {
@@ -120,37 +119,35 @@ export default defineComponent({
 
 
     // Setup references for the form fields
-    const nameField       = ref<Ref | null>(null)
-    const lastNameField   = ref<Ref | null>(null)
-    const departmentField = ref<Ref | null>(null)
-    const persIdField     = ref<Ref | null>(null)
-    const workloadField   = ref<Ref | null>(null)
-    const functionsField  = ref<Ref | null>(null)
+    const nameField       = ref<InstanceType<typeof InputFieldText>>()
+    const lastNameField   = ref<InstanceType<typeof InputFieldText>>()
+    const departmentField = ref<InstanceType<typeof InputFieldText>>()
+    const persIdField     = ref<InstanceType<typeof InputFieldText>>()
+    const workloadField   = ref<InstanceType<typeof InputFieldNumber>>()
+    const functionsField  = ref<InstanceType<typeof InputFieldOptions>>()
 
     const employeeFunctions = computed(() =>
     {
       const functions: Array<IEmployeeFunction> = store.state.employeeFunctions
-      const mapped: Array<IPrimerSelectMultipleItem> = functions.map(f => 
+      const mapped: Array<IOptionItem> = functions.map(f => 
       {
-        return { name: f.name, payload: f.name, note: f.note, state: false } as IPrimerSelectMultipleItem
+        return { name: f.name, payload: f.name, note: f.note, state: false } as IOptionItem
       })
       return mapped
     })
 
-
     const saveNewEmployee = () =>
     {
-      const name: string         = nameField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
-      const lastName: string     = lastNameField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
-      const department: string   = departmentField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
-      const id: string           = persIdField.value.validateInput(EValidationTypes.textValidation, { regex: /^#[\d]{5}$/g })
-      const load: string         = workloadField.value.validateInput(EValidationTypes.textValidation, { regex: /^[\d]{1,2}(\.[\d]{1,2})?$/g })
-      const funcs: Array<string> = functionsField.value.validateInput(1)
+      const name       = nameField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default' })
+      const lastName   = lastNameField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default' })
+      const department = departmentField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default' })
+      const id         = persIdField.value!.validateInput({ regex: /^#[\d]{5}$/g })
+      const workload   = workloadField.value!.validateInput({ min: 0, max: 70 })
+      const funcs      = functionsField.value!.validateInput(1) as Array<string>
 
-      if (name && lastName && department && id && load && funcs)
+      if (name && lastName && department && id && workload && funcs)
       {
         const possibleFunctions: Array<IEmployeeFunction> = funcs.map(f => { return { name: f } as IEmployeeFunction })
-        const workload = parseFloat(load)
 
         const newEmployee: Employee = new Employee(
           name, 

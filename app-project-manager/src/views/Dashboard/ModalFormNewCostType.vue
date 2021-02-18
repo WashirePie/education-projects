@@ -11,23 +11,23 @@
         <!-- Title -->
         <div class="Subhead hx_Subhead--responsive mb-5">
           <h1 class="Subhead-heading ">
-            Register a new cost center
+            Register a new cost type
           </h1>
         </div>
 
         <!-- Form components -->
-        <PrimerFieldText
+        <InputFieldText
           ref="titleField"
           inputName="Title"
           placeHolder="Title"
-          inputDescription="Set a unique title for your new cost center"
+          inputDescription="Set a unique title for your new cost type"
         />
 
-        <PrimerFieldText
+        <InputFieldText
           ref="idField"
           inputName="Identifier"
-          placeHolder="CC123"
-          inputDescription="Set a unique identifier starting with 'CC' followed by a 3 digit code"
+          placeHolder="CT123"
+          inputDescription="Set a unique identifier starting with 'CT' followed by a 3 digit code"
         />      
       </div>
     </template>
@@ -40,7 +40,7 @@
           type="button"
           @click="saveNewCostType"
         >
-          <PrimerIcon octicon="download" />
+          <Octicon octicon="download" />
           <span>Save</span>
         </button>
 
@@ -49,7 +49,7 @@
           type="button"
           @click="$emit('discard')"
         >
-          <PrimerIcon octicon="trash" />
+          <Octicon octicon="trash" />
           <span>Discard</span>
         </button>
       </div>
@@ -60,19 +60,18 @@
 
 </template>
 <script lang="ts">
-import PrimerFieldText from '@/components/PrimerFieldText.vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import InputFieldText from '@/components/InputFieldText.vue'
+import Octicon from '@/components/Octicon.vue'
 import { CostType } from '@/interfaces/costType'
 import { defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
 import { ActionTypes } from '@/store/actions'
-import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'ModalFormNewCostType',
   components: {
-    PrimerFieldText,
-    PrimerIcon
+    InputFieldText,
+    Octicon
   },
   props: {
     show: {
@@ -88,13 +87,13 @@ export default defineComponent({
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
 
     // Setup references for the form fields
-    const titleField  = ref<Ref | null>(null)
-    const idField     = ref<Ref | null>(null)
+    const titleField = ref<InstanceType<typeof InputFieldText>>()
+    const idField    = ref<InstanceType<typeof InputFieldText>>()
 
     const saveNewCostType = () =>
     {
-      const title = titleField.value.validateInput(EValidationTypes.textValidation, { minChar: 2, maxChar: 60, regex: 'default' })
-      const id    = idField.value.validateInput(EValidationTypes.textValidation, { regex: /^CC[\d]{3}$/g })
+      const title = titleField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default' })
+      const id    = idField.value!.validateInput({ regex: /^CT[\d]{3}$/g })
 
       if (title && id)
       {

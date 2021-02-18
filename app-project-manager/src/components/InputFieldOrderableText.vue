@@ -3,12 +3,11 @@
   <div class="form-group">
     <div class="form-group-header">
       <label
-        :class="`${darkMode ? 'text-white' : ''}`"
         :for="inputName"
       >{{ inputName }}</label>
     </div>
     <span
-      :class="`text-small ${darkMode ? 'text-white' : 'text-gray'}`"
+      class="text-small text-gray"
       v-if="inputDescription"
     >{{ inputDescription }}</span>
   </div>
@@ -16,12 +15,12 @@
   <!-- Input field -->
   <div class="form-group-body">
     <input
-      :class="`form-control ${darkMode ? 'input-dark' : ''} ${errorMessage ? 'border-red' : ''}`"
+      :class="`form-control ${errorMessage ? 'border-red' : ''}`"
       :id="inputName"
       @keyup="addItem"
       type="text"
       v-model="inputValue"
-      v-bind:placeholder="placeHolder"
+      :placeholder="placeHolder"
     />
 
     <p
@@ -45,21 +44,21 @@
             type="button"
             @click="changeOrder(item, -1)"
           >
-            <PrimerIcon octicon="chevron-up" />
+            <Octicon octicon="chevron-up" />
           </button>
           <button
             class="btn-octicon"
             type="button"
             @click="changeOrder(item, 1)"
           >
-            <PrimerIcon octicon="chevron-down" />
+            <Octicon octicon="chevron-down" />
           </button>
           <button
             class="btn-octicon btn-octicon-danger"
             type="button"
             @click="removeItem(item)"
           >
-            <PrimerIcon octicon="x" />
+            <Octicon octicon="x" />
           </button>
         </div>
       </div>
@@ -71,24 +70,21 @@
 <script lang="ts">
 import { EValidationTypes, useValidation } from '@/helpers/validators'
 import { defineComponent, ref } from 'vue'
-import PrimerIcon from '@/components/PrimerIcon.vue'
+import Octicon from '@/components/Octicon.vue'
 
 export default defineComponent({
+  name: 'InputFieldOrderableText',
   components: {
-    PrimerIcon
+    Octicon
   },
   props: {
     inputName: {
       type: String,
-      default: 'Generic Array Text Input'
+      default: 'Generic Orderable Text Input'
     },
     inputDescription: {
       type: String,
       default: ''
-    },
-    darkMode: {
-      type: Boolean,
-      default: false
     },
     placeHolder: {
       type: String,
@@ -118,6 +114,7 @@ export default defineComponent({
           duplicatesArray: items.value,
           regex: 'default'
         })
+
         errorMessage.value = res.responseMessage
         
         if (!res.payload)
