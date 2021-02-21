@@ -1,13 +1,6 @@
 import { Activity } from "./activity";
 
-export interface IMilestone
-{
-  title: string
-  reviewDate: Date
-  activities: Array<Activity['id']>;
-}
-
-export class Milestone implements IMilestone
+export class Milestone
 {
   title: string
   reviewDate: Date

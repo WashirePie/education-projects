@@ -64,8 +64,8 @@
           <summary class="btn">Edit</summary>
           <div class="border p-3 mt-2">
             <FormPlanPhase 
-              :phaseToBePlanned="phase"
-              :projectStartDate="projectToBePlanned.startDate"
+              :phase="phase"
+              :project="projectToBePlanned"
             />
           </div>
         </details>
@@ -89,7 +89,7 @@
       <button
         class="btn btn-primary mr-2"
         type="button"
-        @click="validatePlannedProject"
+        @click="savePlannedProject"
       >
         <Octicon octicon="download" />
         <span>Release Proposal</span>
@@ -115,9 +115,9 @@ import InputFieldText from '@/components/InputFieldText.vue'
 import Label from '@/components/Label.vue'
 import Octicon from '@/components/Octicon.vue'
 import router from '@/router'
-import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } from "vue";
+import { computed, ComputedRef, defineComponent, getCurrentInstance } from "vue";
 import { useStore } from '@/store';
-import { EProjectState, Project } from '@/interfaces/project';
+import { EProjectState, Project } from '@/classes/project';
 import { ActionTypes } from '@/store/actions'
 
 export default defineComponent({
@@ -136,24 +136,18 @@ export default defineComponent({
 
     const projectToBePlanned: ComputedRef<Project> = computed(() => store.state.projectToBePlanned! )
 
-    const projectedEndDate: ComputedRef<Date | undefined> = computed(() => projectToBePlanned.value?.phases.reduce((a, c) => a.endDate > c.endDate ? a : c).endDate )
+    const projectedEndDate: ComputedRef<Date> = computed(() => projectToBePlanned.value.endDate )
 
-    const validatePlannedProject = (): Promise<string> =>
+    const savePlannedProject = () =>
     {
-      return new Promise<string>((resolve, reject) =>
+      try 
       {
-        const phasesArePlanned  = projectToBePlanned.value!.phases.every(p => p.state == EProjectState.WAITING)
-
-        if (phasesArePlanned)
-        {
-          projectToBePlanned.value.state = EProjectState.WAITING
-          // COMBAK
-          // store.dispatch(ActionTypes.storeEmployee, newEmployee)
-          //   .then((res: string) => resolve(res))
-          //   .catch((err: string) => reject(err))
-        }
-        else reject(new Error('Not all phases are planned'))
-      })
+        projectToBePlanned.value.plan()
+      } 
+      catch (error) 
+      {
+        console.error(error)
+      }
     }
 
     const discardPlannedProject = () =>
@@ -163,7 +157,7 @@ export default defineComponent({
     }
 
     return {
-      validatePlannedProject,
+      savePlannedProject,
       discardPlannedProject,
       planningState,
       projectToBePlanned,

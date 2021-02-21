@@ -27,34 +27,99 @@
           ref="activityStartDateField"
           inputName="Start date"
           inputDescription="Set the start date of this activity"
-          :placeHolder="parentPhase.startDate"
+          :placeHolder="phase.startDate"
         />
 
         <InputFieldDate
           ref="activityEndDateField"
           inputName="End date"
           inputDescription="Set the end date of this activity"
-          :placeHolder="parentPhase.endDate"
+          :placeHolder="phase.startDate"
         />
         
         <InputFieldSelect
           ref="activityResponsibilityField"
-          inputName="Responibility"
+          inputName="Responsibility"
           inputDescription="Assign an employee who is responsible for this activity"
+          placeHolder="Choose an employee"
           :selectOptions="availableEmployees"
         />
 
-        <FieldResources 
-          ref="activityResourcesField"
-          inputName="Resources"
-          inputDescription="Plan resources for this activity"
-        />
+        <nav class="UnderlineNav">
+          <div class="UnderlineNav-body" role="tablist">
+            <button 
+              class="UnderlineNav-item" 
+              role="tab" 
+              type="button" 
+              @click="toggleResourceType = true"
+              :aria-selected="toggleResourceType"
+            >
+              Personnel
+            </button>
+            <button 
+              class="UnderlineNav-item" 
+              role="tab" 
+              type="button"
+              @click="toggleResourceType = false"
+              :aria-selected="!toggleResourceType"
+            >
+              External Cost
+            </button>
+          </div>
+        </nav>
+
+        <!-- Resource fields -->
+        <div class="d-flex  Box Box-header pl-4">
+
+          <div class="flex-1">
+            <FieldPersonnelResource
+              v-if="toggleResourceType"
+              :resources="resources"
+            />
+            <FieldExternalCostResource
+              v-if="!toggleResourceType"
+              :resources="resources"
+            />
+          </div>
+
+          <!-- Resources list -->
+          <div class="flex-1">
+            <div class="Box mt-2">
+              <div
+                class="Box-row"
+                v-for="rsc in resources"
+                :key="rsc.title"
+              >
+                <span>{{ formatResourceAsString(rsc) }}</span>
+                <div class="float-right ">
+                  <button
+                    class="btn-octicon btn-octicon-danger"
+                    type="button"
+                    @click="removeResource(rsc)"
+                  >
+                    <Octicon octicon="x" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
       </div>
     </template>
 
-    <!-- Save / cancel buttons -->
     <template v-slot:footer>
+
       <div class="container-md">
+        <!-- Error message -->
+        <p
+          class="note text-red my-2"
+          v-if="errorMessage"
+        >{{ errorMessage }}</p>
+        
+        <!-- Save / cancel buttons -->
         <button
           class="btn btn-primary mr-2"
           type="button"
@@ -83,14 +148,15 @@
 <script lang="ts">
 import InputFieldText from '@/components/InputFieldText.vue'
 import InputFieldDate from '@/components/InputFieldDate.vue'
+import FieldPersonnelResource from '@/components/FieldPersonnelResource.vue'
+import FieldExternalCostResource from '@/components/FieldExternalCostResource.vue'
 import InputFieldSelect, { ISelectItem } from '@/components/InputFieldSelect.vue'
 import Octicon from '@/components/Octicon.vue'
-import FieldResources from './FieldResources.vue'
-import { Phase } from "@/interfaces/phase";
-import { computed, ComputedRef, defineComponent, PropType, Ref, ref } from "vue";
-import { Employee } from '@/interfaces/employee';
+import { Phase } from "@/classes/phase";
+import { computed, ComputedRef, defineComponent, PropType, ref } from "vue";
+import { Employee } from '@/classes/employee';
 import { useStore } from '@/store';
-import { Activity } from '@/interfaces/activity';
+import { ExternalCostResource, IResource, PersonnelResource } from '@/classes/resource'
 
 export default defineComponent({
   name: 'ModalFormPlanActivity',
@@ -98,21 +164,18 @@ export default defineComponent({
     InputFieldText,
     InputFieldDate,
     InputFieldSelect,
-    Octicon,
-    FieldResources
+    FieldPersonnelResource,
+    FieldExternalCostResource,
+    Octicon
   },
   props: {
     show: {
       type: Boolean,
       default: false
     },
-    parentPhase: {
+    phase: {
       type: Object as PropType<Phase>,
       required: true
-    },
-    darkMode: {
-      type: Boolean,
-      default: false
     }
   },
   emits: ['discard', 'done'],
@@ -124,9 +187,10 @@ export default defineComponent({
     const activityStartDateField      = ref<InstanceType<typeof InputFieldDate>>()
     const activityEndDateField        = ref<InstanceType<typeof InputFieldDate>>()
     const activityResponsibilityField = ref<InstanceType<typeof InputFieldSelect>>()
-    const activityResourcesField      = ref<InstanceType<typeof FieldResources>>()
 
-    const errorMessage  = ref<string>('')
+    const errorMessage                = ref<string>('')
+    const toggleResourceType          = ref<boolean>(false)
+    const resources                   = ref<Array<IResource>>([])
 
     const availableEmployees: ComputedRef<Array<ISelectItem>> = computed(() =>
     {    
@@ -136,47 +200,51 @@ export default defineComponent({
       return mapped
     })
 
+    const removeResource = (resource: IResource) => { resources.value = resources.value.filter(r => r.title != resource.title)}
+
+    const formatResourceAsString = (resource: IResource) =>
+    {
+      let r = `'${resource.title}' - ${resource.plan}`
+      if (resource instanceof PersonnelResource) 
+        return r + ` hours - ${resource.assignee.name} ${resource.assignee.lastName}`
+      if (resource instanceof ExternalCostResource)
+        return r + `CHF - ${resource.costType.title}`
+    }
+
     const savePlannedActivity = () =>
     {
-      
       const title          = activityTitleField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default'})  
-      const startDate      = activityStartDateField.value!.validateInput({ minDate: props.parentPhase.startDate })
+      const startDate      = activityStartDateField.value!.validateInput({ minDate: props.phase.startDate })
       const endDate        = activityEndDateField.value!.validateInput({ minDate: startDate})
       const responsibility = activityResponsibilityField.value!.validateInput()
-      const resources      = activityResourcesField.value!.validateInput(1)
 
-      if (title && startDate && endDate && responsibility && resources)
+      if (title && startDate && endDate && responsibility && resources.value)
       {
-        if (!resources.length)
+        try
         {
-          errorMessage.value = 'An activity needs at least one resource assigned'
-          return
+          props.phase.addActivity(title, startDate, endDate, resources.value, responsibility)
+          errorMessage.value = ''
+          emit('done')
         }
-
-        const newId = props.parentPhase.activities.length.toString()
-        const newActivity = new Activity(
-          newId, 
-          title,
-          startDate,
-          endDate,
-          resources,
-          responsibility
-        )
-        
-        props.parentPhase.addActivity(newActivity)
-        emit('done')
+        catch (error)
+        {
+          errorMessage.value = error.message
+        }
       }
     }
 
     return {
       errorMessage,
+      toggleResourceType,
+      resources,
       activityTitleField,
       activityStartDateField,
       activityEndDateField,
       activityResponsibilityField,
-      activityResourcesField,
       availableEmployees,
-      savePlannedActivity
+      savePlannedActivity,
+      formatResourceAsString,
+      removeResource
     }
   }
 })

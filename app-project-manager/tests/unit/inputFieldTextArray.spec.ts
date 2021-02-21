@@ -1,11 +1,28 @@
-import PrimerFieldArrayText from '@/components/PrimerFieldArrayText.vue'
+import InputFieldOrderableText from '@/components/InputFieldOrderableText.vue'
 import { mount } from '@vue/test-utils'
 
-describe('PrimerFieldArrayText.vue', () => {
+describe('InputFieldOrderableText.vue', () => 
+{
+  const inputName = 'TestInput'
+  const inputDescription = 'Sample description'
+  const wrapper = mount(InputFieldOrderableText, {
+    props: {
+      inputName,
+      inputDescription
+    }
+  })
+
+  it('should display its title and description', async () => 
+  {
+    const name = await wrapper.find('label').text()    
+    expect(name).toEqual(inputName)
+
+    const desc = await wrapper.find('span').text()
+    expect(desc).toEqual(inputDescription)
+  })
+
   it('validates too short / too long input', async () =>
   {
-    const wrapper = mount(PrimerFieldArrayText)
-
     // Too short
     await wrapper.find('input').setValue('d,')
     await wrapper.find('input').trigger('keyup', { code: 'Comma' })
@@ -17,14 +34,12 @@ describe('PrimerFieldArrayText.vue', () => {
     await wrapper.find('input').trigger('keyup', { code: 'Comma' })
 
     expect(wrapper.vm.errorMessage).toContain('not exceed')
-  }),
+  })
 
   it('validates amount of items', async () =>
   {
-    const wrapper = mount(PrimerFieldArrayText)
-
     // Valid amount
-    await wrapper.find('input').setValue('phase 1,')
+    await wrapper.find('input').setValue('Phase 1,')
     await wrapper.find('input').trigger('keyup', { code: 'Comma' })
 
     wrapper.vm.validateInput(1)
@@ -32,30 +47,28 @@ describe('PrimerFieldArrayText.vue', () => {
 
     // Invalid amount
     wrapper.vm.validateInput(2)
-    expect(wrapper.vm.errorMessage).toContain('at least')
-  }),
+    expect(wrapper.vm.errorMessage).toContain(inputName)
+  })
 
   it('can change the order of its items and delete items', async () =>
   {
-    const wrapper = mount(PrimerFieldArrayText)
-
-    await wrapper.find('input').setValue('Phase 1,')
+    await wrapper.find('input').setValue('Phase 3,')
     await wrapper.find('input').trigger('keyup', { code: 'Comma' })
     await wrapper.find('input').setValue('Phase 2,')
     await wrapper.find('input').trigger('keyup', { code: 'Comma' })
 
     // Initial order
     wrapper.vm.validateInput(1)
+    expect(wrapper.vm.items).toEqual(['Phase 1', 'Phase 3', 'Phase 2'])
+
+    // Swap 3 & 2
+    await wrapper.findAll('button')[4].trigger('click')
+    wrapper.vm.validateInput(1)
+    expect(wrapper.vm.items).toEqual(['Phase 1', 'Phase 2', 'Phase 3'])
+
+    // Delete 3rd item (Phase 3)
+    await wrapper.findAll('button')[8].trigger('click')
+    wrapper.vm.validateInput(1)
     expect(wrapper.vm.items).toEqual(['Phase 1', 'Phase 2'])
-
-    // Swap 1 & 2
-    await wrapper.findAll('button')[3].trigger('click')
-    wrapper.vm.validateInput(1)
-    expect(wrapper.vm.items).toEqual(['Phase 2', 'Phase 1'])
-
-    // Delete 1st item (Phase 2)
-    await wrapper.findAll('button')[2].trigger('click')
-    wrapper.vm.validateInput(1)
-    expect(wrapper.vm.items).toEqual(['Phase 1'])
   })
-});
+})

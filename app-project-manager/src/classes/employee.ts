@@ -12,18 +12,7 @@ export interface IEmployeeFunction
   note?: string
 }
 
-
-export interface IEmployee 
-{
-  name: string,
-  lastName: string,
-  department: string,
-  id: string,
-  workload: number,
-  possibleFunctions: Array<IEmployeeFunction>
-}
-
-export class Employee implements IEmployee
+export class Employee
 {
   name: string
   lastName: string

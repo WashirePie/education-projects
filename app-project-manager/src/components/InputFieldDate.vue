@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { EValidationTypes, useValidation, ValidationParams, ValidationReturns } from '@/helpers/validators'
-import { defineComponent, watch, ref, onMounted, PropType } from 'vue'
+import { defineComponent, watch, ref, PropType } from 'vue'
 
 export default defineComponent({
   name: 'InputFieldDate',
@@ -49,7 +49,8 @@ export default defineComponent({
       default: () => (new Date()),
     }
   },
-  setup(props)
+  emits: ['valueChanged'],
+  setup(props, { emit })
   {
     let placeHolderISODate = props.placeHolder.toISOString()
     placeHolderISODate = placeHolderISODate.substring(0, placeHolderISODate.split('').indexOf('T'))
@@ -66,7 +67,11 @@ export default defineComponent({
     }
     
     // Reset Error message when typing continues
-    watch(inputValue, () => errorMessage.value = '')
+    watch(inputValue, () => 
+    {
+      errorMessage.value = ''
+      emit('valueChanged')
+    })
 
     const validateInput = (params: ValidationParams[EValidationTypes.dateValidation]): ValidationReturns[EValidationTypes.dateValidation]['payload'] =>
     {

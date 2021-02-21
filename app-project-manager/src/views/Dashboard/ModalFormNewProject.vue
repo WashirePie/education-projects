@@ -106,11 +106,10 @@ import Octicon from '@/components/Octicon.vue'
 import router from '@/router'
 import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
-import { EProjectPriority, Project } from '@/interfaces/project'
-import { ApproachModel } from '@/interfaces/approachModel'
+import { EProjectPriority, Project } from '@/classes/project'
+import { ApproachModel } from '@/classes/approachModel'
 import { ActionTypes } from '@/store/actions'
-import { Employee } from '@/interfaces/employee'
-import { EValidationTypes } from '@/helpers/validators'
+import { Employee } from '@/classes/employee'
 import { RouteLocationRaw } from 'vue-router'
 
 export default defineComponent({
@@ -176,9 +175,7 @@ export default defineComponent({
       const projectLead = projectLeadField.value!.validateInput()
       const priority    = priorityField.value!.validateInput()
       const startDate   = startDateField.value!.validateInput({})
-      const description = descField.value!.validateInput(EValidationTypes.textValidation, { minChar: 10, maxChar: 500, regex: /.*/g })
-
-      console.log(startDate);
+      const description = descField.value!.validateInput({ minChar: 10, maxChar: 500, regex: /.*/g })
       
       if (title && id && model && projectLead && priority && startDate && description)
       {

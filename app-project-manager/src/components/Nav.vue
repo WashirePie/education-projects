@@ -25,7 +25,7 @@
       <router-link
         class="Header-link"
         to="/plan"
-      >&gt; Planner</router-link>
+      >Planner</router-link>
     </div>
 
     <!-- Nav avatar -->

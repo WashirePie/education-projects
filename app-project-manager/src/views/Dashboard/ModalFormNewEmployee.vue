@@ -67,7 +67,7 @@
           @click="saveNewEmployee"
         >
           <Octicon octicon="download" />
-          <span>Plan This</span>
+          <span>Save</span>
         </button>
 
         <button
@@ -91,9 +91,9 @@ import InputFieldText from '@/components/InputFieldText.vue'
 import InputFieldNumber from '@/components/InputFieldNumber.vue'
 import InputFieldOptions, { IOptionItem } from '@/components/InputFieldOptions.vue'
 import Octicon from '@/components/Octicon.vue'
-import { computed, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
+import { computed, defineComponent, getCurrentInstance, ref } from 'vue'
 import { useStore } from '@/store'
-import { Employee, IEmployeeFunction } from '@/interfaces/employee'
+import { Employee, IEmployeeFunction } from '@/classes/employee'
 import { ActionTypes } from '@/store/actions'
 
 export default defineComponent({
@@ -165,7 +165,8 @@ export default defineComponent({
           {
             loadingbar.finish()
             emit('done')
-          })       }
+          })       
+        }
     }
 
     return { 

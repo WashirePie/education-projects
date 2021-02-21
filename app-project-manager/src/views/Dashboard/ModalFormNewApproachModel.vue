@@ -66,9 +66,8 @@ import InputFieldText from '@/components/InputFieldText.vue'
 import Octicon from '@/components/Octicon.vue'
 import { defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
-import { ApproachModel } from '@/interfaces/approachModel'
+import { ApproachModel } from '@/classes/approachModel'
 import { ActionTypes } from '@/store/actions'
-import { EValidationTypes } from '@/helpers/validators'
 
 export default defineComponent({
   name: 'ModalFormNewApproachModel',

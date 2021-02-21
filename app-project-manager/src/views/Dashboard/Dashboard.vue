@@ -53,26 +53,26 @@
   <!-- New project modal -->
   <ModalFormNewProject
     v-if="showNewProjectModal"
-    :show="true"
+    :show="true && !projectToBePlanned"
     @discard="showNewProjectModal = false"
     @done="showNewProjectModal = false"
   />
 
-<!-- New approach model modal  -->
+  <!-- New approach model modal  -->
   <ModalFormNewApproachModel
     v-if="showNewApproachModelModal"
     :show="true"
     @discard="showNewApproachModelModal = false"
     @done="showNewApproachModelModal = false"
   />
-<!-- New cost center modal -->
+  <!-- New cost center modal -->
   <ModalFormNewCostType
     v-if="showNewCostTypeModal"
     :show="true"
     @discard="showNewCostTypeModal = false"
     @done="showNewCostTypeModal = false"
   />
-<!-- New employee modal -->
+  <!-- New employee modal -->
   <ModalFormNewEmployee
     v-if="showNewEmployeeModal"
     :show="true"
@@ -94,7 +94,7 @@ import router from '@/router'
 import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
 import { useStore } from '@/store'
 import { RouteLocationRaw } from 'vue-router'
-import { Project } from '@/interfaces/project'
+import { Project } from '@/classes/project'
 
 export default defineComponent({
   name: 'Dashboard',

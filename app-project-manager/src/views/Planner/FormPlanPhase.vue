@@ -2,46 +2,101 @@
   <!-- Title -->
   <div class="Subhead hx_Subhead--responsive mb-5">
     <h1 class="Subhead-heading ">
-      Plan Phase '<b>{{ phaseToBePlanned?.title }}</b>'
+      Plan Phase '<b>{{ phase?.title }}</b>'
     </h1>
   </div>
 
-  <!-- Form components -->
-  <InputFieldDate
-    ref="phaseStartDateField"
-    inputName="Start date"
-    inputDescription="Set the start date of this phase"
-    :placeHolder="phaseToBePlanned.startDate"
-  />
+  <!-- Start date field -->
+  <div v-if="!phase.activities.length">
+    <InputFieldDate
+      ref="phaseStartDateField"
+      inputName="Start date"
+      inputDescription="Set the start date of this phase"
+      :placeHolder="phase.startDate"
+      @valueChanged="setStartDate"
+    />
+  </div>
+  <div v-else>
+    <p class="f5 text-bold mt-3">Start date</p>
+    <p class="f5 d-block">{{ phase.startDate.toLocaleDateString() }}</p>
+    <p class="note">(Cannot change start date when activities were added)</p>
+  </div>
 
-  <InputFieldDate
-    ref="phaseEndDateField"
-    inputName="End date"
-    inputDescription="Set the end date of this phase"
-    :placeHolder="phaseToBePlanned.endDate"
-  />
+  <!-- End date paragraph -->
+  <span class="f5 text-bold mt-3 d-block">Projected end date</span>
+  <span class="text-small text-gray mt-2 d-block">Computed from the assigned activities. This date will also mark the review date of this phase</span>
+  <p class="f5 d-block mt-2">{{ projectedEndDate.toLocaleDateString() }}</p>
 
+  <!-- Lists -->
+  <div v-if="phase.activities.length">
+    <p class="f5 text-bold mt-3">Activities</p>
+      <div class="Box Box--condensed mt-2">
+        <div
+          class="Box-row"
+          v-for="activity in phase.activities" :key="activity.id"
+        >
+          <span><b>{{ activity.title }}</b>&nbsp;&nbsp;</span>
+          <span> total cost </span>
+          <span class="Counter ml-1">💰 {{ activity.getTotalCost() }}CHF</span>
+          <span> total workhours </span>
+          <span class="Counter ml-1">⌛ {{ activity.getTotalWorkload() }} hours</span>
+          <div class="float-right ">
+            <button
+              class="btn-octicon btn-octicon-danger v-align-top"
+              type="button"
+              @click="removeActivity(activity)"
+            >
+              <Octicon octicon="x" />
+            </button>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div v-if="phase.milestones.length">
+    <p class="f5 text-bold mt-3">Milestones</p>
+    <p class="f5 my-3 d-block" v-for="activity in phase.activities" :key="activity.id">
+      {{ activity.id }} | {{ activity.title }} Resource Count: {{ activity.resources.length }}
+    </p>
+  </div>
+  
+  <div v-if="phase.documents.length">
+    <p class="f5 text-bold mt-3">Documents</p>
+    <p class="f5 my-3 d-block" v-for="activity in phase.activities" :key="activity.id">
+      {{ activity.id }} | {{ activity.title }} Resource Count: {{ activity.resources.length }}
+    </p>
+  </div>
+
+  <hr>
+
+  <!-- Add - Activity, Milestone or Documents buttons -->
   <button
-    class="btn d-block mt-3"
+    class="btn"
     type="button"
     @click="showActivityPlanner = true"
   >
     <Octicon octicon="plus" />
-    <span>Add Activities</span>
+    <span>Add Activity</span>
   </button>
 
   <button
-    class="btn btn-primary mt-4"
+    class="btn ml-2"
     type="button"
-    @click="savePlannedPhase"
+    @click="showMilestonePlanner = true"
   >
-    <Octicon octicon="download" />
-    <span>Save</span>
+    <Octicon octicon="plus" />
+    <span>Add Milestone</span>
   </button>
 
-  <p class="f5 my-3 d-block" v-for="activity in phaseToBePlanned.activities" :key="activity.id">
-    {{ activity.id }} | {{ activity.title }} Resource Count: {{ activity.resources.length }}
-  </p>
+  <button
+    class="btn ml-2"
+    type="button"
+    @click="showDocumentPlanner = true"
+  >
+    <Octicon octicon="plus" />
+    <span>Add Document</span>
+  </button>
+
 
   <!-- Error message -->
   <p
@@ -55,104 +110,96 @@
     :show="true"
     @discard="showActivityPlanner = false"
     @done="showActivityPlanner = false"
-    :parentPhase="phaseToBePlanned"
+    :phase="phase"
   />
 
 </template>
 
 <script lang="ts">
-import InputFieldText from '@/components/InputFieldText.vue'
 import InputFieldDate from '@/components/InputFieldDate.vue'
 import InputFieldOrderableText from '@/components/InputFieldOrderableText.vue'
 import Octicon from '@/components/Octicon.vue'
 import ModalFormPlanActivity from './ModalFormPlanActivity.vue'
-import { defineComponent, onMounted, PropType, Ref, ref, watch } from 'vue'
-import { Phase } from '@/interfaces/phase'
-import { EProjectState } from '@/interfaces/project'
+import { computed, ComputedRef, defineComponent, onMounted, PropType, ref, watch } from 'vue'
+import { Phase } from '@/classes/phase'
+import { Project } from '@/classes/project'
+import { Activity } from '@/classes/activity'
 
 export default defineComponent({
   name: 'FormPlanPhase',
   components: {
-    InputFieldText,
     InputFieldDate,
     InputFieldOrderableText,
     Octicon,
     ModalFormPlanActivity
   },
   props: {
-    phaseToBePlanned: {
+    phase: {
       type: Object as PropType<Phase>,
       required: true
     },
-    projectStartDate: {
-      type: Date as PropType<Date>,
+    project: {
+      type: Object as PropType<Project>,
       required: true
-    }
+    },
   },
   setup(props)
   {
     // Setup references for the form fields
-    const phaseStartDateField  = ref<Ref | null>(null)
-    const phaseEndDateField    = ref<Ref | null>(null)
+    const phaseStartDateField  = ref<InstanceType<typeof InputFieldDate>>()
 
     const showActivityPlanner  = ref<boolean>(false)
-    const errorMessage = ref<string>('')
+    const showMilestonePlanner = ref<boolean>(false)
+    const showDocumentPlanner  = ref<boolean>(false)
+    const errorMessage         = ref<string>('')
 
-    onMounted(() =>
+    const projectedEndDate: ComputedRef<Date> = computed(() => props.phase.endDate)
+
+    const validatePhase = () =>
     {
-      // Prefill inputs if phase has already been planned
-      if (props.phaseToBePlanned.state == EProjectState.WAITING)
+      try 
       {
-        phaseStartDateField.value.inputValue = props.phaseToBePlanned.startDate.toLocaleDateString()
-        phaseEndDateField.value.inputValue = props.phaseToBePlanned.endDate.toLocaleDateString()
+        props.phase.plan(props.project)
+        errorMessage.value = ''
       }
-    })
-
-    // Reset error message when the activity planner was opened / closed
-    watch(showActivityPlanner, () => errorMessage.value = '')
-
-    const savePlannedPhase = () =>
-    {
-      const startDate: Date = phaseStartDateField.value.validateInput()
-      const endDate: Date   = phaseEndDateField.value.validateInput()
-      
-      let valid = false
-
-      if (startDate && endDate)
-        valid = true
-
-      if (startDate > endDate) 
+      catch (error)
       {
-        phaseStartDateField.value.errorMessage = 'Start date must be before end date'
-        valid = false
+        errorMessage.value = error.message
       }
-      
-      if (startDate < props.projectStartDate)
-      {
-        phaseStartDateField.value.errorMessage = 'Start date cannot be before project start date'
-        valid = false
-      }
-
-      if (!props.phaseToBePlanned.activities.length)
-      {
-        errorMessage.value = 'A phase needs at least one activity'
-        valid = false
-      }
-
-      if (valid)
-      {
-        props.phaseToBePlanned.startDate = startDate
-        props.phaseToBePlanned.endDate = endDate
-        props.phaseToBePlanned.state = EProjectState.WAITING
-      }
-      else
-        props.phaseToBePlanned.state = EProjectState.PLANNING
     }
 
+    const setStartDate = () =>
+    {
+      const startDate = phaseStartDateField.value!.validateInput({ minDate: props.project.startDate })
+
+      if (startDate)
+      {
+        props.phase.setStartDate(startDate, props.project)
+        validatePhase()
+      }
+    }
+
+    const removeActivity = (activity: Activity) => 
+    {
+      props.phase.removeActivity(activity)
+      validatePhase()
+    }
+    
+    watch([showActivityPlanner, showMilestonePlanner, showDocumentPlanner], () => 
+    {
+      validatePhase()
+    })
+
+    onMounted(() => 
+    {
+      validatePhase()
+    })
+
     return { 
-      savePlannedPhase, 
+      setStartDate,
+      removeActivity,
+      projectedEndDate,
       phaseStartDateField, 
-      phaseEndDateField,
       showActivityPlanner,
       errorMessage,
     }

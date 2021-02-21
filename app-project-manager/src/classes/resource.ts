@@ -15,13 +15,7 @@ export enum EResourceTypes
   personnel = 'PERSONNEL'
 }
 
-export interface IPersonnelResource extends IResource 
-{
-  function: EEmployeeFunctions;
-  assignee: Employee
-}
-
-export class PersonnelResource implements IPersonnelResource
+export class PersonnelResource implements IResource
 {
   title: string
   plan: number
@@ -49,12 +43,7 @@ export class PersonnelResource implements IPersonnelResource
   }
 }
 
-export interface IExternalCostResource extends IResource
-{
-  costType: CostType;
-}
-
-export class ExternalCostResource implements IExternalCostResource
+export class ExternalCostResource implements IResource
 {
   title: string
   plan: number

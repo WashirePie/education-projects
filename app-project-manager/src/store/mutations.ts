@@ -1,8 +1,8 @@
-import { ApproachModel } from "@/interfaces/approachModel";
-import { CostType } from "@/interfaces/costType";
-import { Employee } from "@/interfaces/employee";
-import { Phase } from "@/interfaces/phase";
-import { Project } from "@/interfaces/project";
+import { ApproachModel } from "@/classes/approachModel";
+import { CostType } from "@/classes/costType";
+import { Employee } from "@/classes/employee";
+import { Phase } from "@/classes/phase";
+import { Project } from "@/classes/project";
 import { MutationTree } from "vuex";
 import { ProjectManagerState } from "./state";
 

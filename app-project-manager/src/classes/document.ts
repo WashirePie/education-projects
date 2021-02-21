@@ -1,10 +1,4 @@
-export interface IDocumentRef
-{
-  name: string;
-  path: string;
-}
-
-export class DocumentRef implements IDocumentRef
+export class DocumentRef
 {
   name: string
   path: string

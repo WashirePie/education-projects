@@ -1,10 +1,4 @@
-export interface ICostType
-{
-  title: string;
-  id: string;
-}
-
-export class CostType implements ICostType
+export class CostType
 {
   title: string
   id: string

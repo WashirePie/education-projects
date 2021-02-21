@@ -52,7 +52,7 @@
 <script lang="ts">
 import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "@/store";
-import { Project } from "@/interfaces/project";
+import { Project } from "@/classes/project";
 
 export default defineComponent({
   name: 'WidgetProjects',

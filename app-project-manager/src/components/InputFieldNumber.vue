@@ -46,7 +46,7 @@ export default defineComponent({
     },
     placeHolder: {
       type: Number,
-      default: '100.000'
+      default: 100
     }
   },
   setup(props)

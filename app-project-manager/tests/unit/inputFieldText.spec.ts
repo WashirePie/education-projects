@@ -4,11 +4,22 @@ import { mount } from '@vue/test-utils'
 describe('InputFieldText.vue', () => 
 {
   const inputName = 'TestInput'
+  const inputDescription = 'Sample description'
   const wrapper = mount(InputFieldText, {
     props: {
-      inputName
+      inputName,
+      inputDescription
     }
   })
+
+  it('should display its title and description', async () => 
+  {
+    const name = await wrapper.find('label').text()    
+    expect(name).toEqual(inputName)
+
+    const desc = await wrapper.find('span').text()
+    expect(desc).toEqual(inputDescription)
+  })  
 
   it('validates generic text', async () =>
   {
@@ -88,4 +99,4 @@ describe('InputFieldText.vue', () =>
     expect(wrapper.vm.errorMessage).toEqual('')
     expect(res).toEqual('d')  
   })
-});
+})

@@ -1,8 +1,9 @@
-import { ApproachModel } from "@/interfaces/approachModel";
-import { CostType, ICostType } from "@/interfaces/costType";
-import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/interfaces/employee";
-import { Phase } from "@/interfaces/phase";
-import { EProjectPriority, EProjectState, Project } from "@/interfaces/project";
+import { ApproachModel } from "@/classes/approachModel";
+import { CostType } from "@/classes/costType";
+import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/classes/employee";
+import { Phase } from "@/classes/phase";
+import { EProjectPriority, Project } from "@/classes/project";
+import { ExternalCostResource, PersonnelResource } from "@/classes/resource";
 
 export type ProjectManagerState =
 {
@@ -44,15 +45,6 @@ const projectOne   = new Project('Sample Project',  'P999', HERMES, 'A very basi
 const projectTwo   = new Project('Another Project', 'P998', IPDRCE, 'Another basic sample Project', new Date(), EProjectPriority.HIGH, employeeJil)
 const projectThree = new Project('A third Project',  'P997', HERMES, 'A third basic sample Project', new Date(), EProjectPriority.LOW, employeeBob)
 
-projectOne.state = EProjectState.EXECUTION
-projectOne.progress = 68
-
-projectTwo.state = EProjectState.FINISHED
-projectTwo.progress = 100
-
-projectThree.state = EProjectState.CANCELLED
-projectThree.progress = 23
-
 const sampleProjectToBePlanned = new Project(
   'Sample Project', 
   'P444', 
@@ -61,7 +53,18 @@ const sampleProjectToBePlanned = new Project(
   new Date(),
   EProjectPriority.ABOVE_AVERAGE, 
   employeeJil
-  )
+)
+
+sampleProjectToBePlanned.phases[0].addActivity(
+  'Sample Activity',
+  new Date(),
+  new Date(),
+  [
+    new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax),
+    new ExternalCostResource('Rewiev Timetable', 500, costTypeFour)
+  ],
+  employeeJil
+)
 
 /*
  * ----------------------------- /Sample Data -----------------------------

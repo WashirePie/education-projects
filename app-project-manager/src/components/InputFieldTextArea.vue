@@ -54,9 +54,9 @@ export default defineComponent({
     // Reset Error message when typing continues
     watch(inputValue, () => errorMessage.value = '')
 
-    const validateInput = <K extends EValidationTypes, P extends ValidationParams[K], R extends ValidationReturns[K]>(type: K, params: P): R['payload'] =>
+    const validateInput = (params: ValidationParams[EValidationTypes.textValidation]): ValidationReturns[EValidationTypes.textValidation]['payload'] =>
     {
-      const res = validate(type, {source: inputValue.value, sourceName: props.inputName}, params) as R
+      let res = validate(EValidationTypes.textValidation, {source: inputValue.value, sourceName: props.inputName}, params) as ValidationReturns[EValidationTypes.textValidation]
       errorMessage.value = res.responseMessage
       return res.payload
     }

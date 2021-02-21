@@ -1,4 +1,4 @@
-import { EEmployeeFunctions, Employee } from "@/interfaces/employee";
+import { EEmployeeFunctions, Employee } from "@/classes/employee";
 import { GetterTree } from "vuex";
 import { ProjectManagerState } from "./state";
 

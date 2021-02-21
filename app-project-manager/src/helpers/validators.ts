@@ -113,11 +113,19 @@ const validations: Validations = {
     if (!isValidDate(date)) 
       appendMessage('shoule be a valid date')
 
-    if (p.maxDate && date > p.maxDate)
-      appendMessage(`should not be later than ${p.maxDate.toLocaleDateString()}`)
+    if (p.maxDate)
+    {
+      p.maxDate.setHours(12,0,0,0)
+      if (date > p.maxDate)
+        appendMessage(`should not be later than ${p.maxDate.toLocaleDateString()}`)
+    }
 
-    if (p.minDate && date < p.minDate)
-      appendMessage(`should not be before ${p.minDate.toLocaleDateString()}`)
+    if (p.minDate)
+    {
+      p.minDate.setHours(12,0,0,0)
+      if (date < p.minDate)
+        appendMessage(`should not be before ${p.minDate.toLocaleDateString()}`)
+    }
 
     if (res)
       return {
@@ -132,7 +140,7 @@ const validations: Validations = {
 
   [EValidationTypes.numberValidation] (s: IValidationBaseParams, p: ValidationParams[EValidationTypes.numberValidation]): ValidationReturns[EValidationTypes.numberValidation]
   {
-    let number = s.source as number
+    let number = parseFloat(s.source as string)
     let res: string = ''
     const appendMessage = (message: string) => res += res ? `, ${message}` : message
     

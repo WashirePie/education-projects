@@ -1,13 +1,6 @@
 import { Phase } from "./phase";
-import { EProjectState } from "./project";
 
-export interface IApproachModel 
-{
-  title: string;
-  phases: Array<string>;
-}
-
-export class ApproachModel implements IApproachModel
+export class ApproachModel
 {
   title: string
   phases: Array<string>

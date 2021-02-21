@@ -62,8 +62,8 @@
 <script lang="ts">
 import InputFieldText from '@/components/InputFieldText.vue'
 import Octicon from '@/components/Octicon.vue'
-import { CostType } from '@/interfaces/costType'
-import { defineComponent, getCurrentInstance, Ref, ref } from 'vue'
+import { CostType } from '@/classes/costType'
+import { defineComponent, getCurrentInstance, ref } from 'vue'
 import { useStore } from '@/store'
 import { ActionTypes } from '@/store/actions'
 

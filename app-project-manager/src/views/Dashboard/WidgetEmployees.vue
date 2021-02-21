@@ -35,7 +35,7 @@
 import Octicon from '@/components/Octicon.vue'
 import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "@/store";
-import { Employee } from '@/interfaces/employee';
+import { Employee } from '@/classes/employee';
 
 export default defineComponent({
   name: 'WidgetEmployees',

@@ -30,8 +30,7 @@ export default defineComponent({
     // TODO: Add 'Milestones' to FormPlanPhase
     // TODO: Add 'DocumentRefs' to FormPlanPhase
     // TODO: Add 'DocumentRefs' to ModalFormPlanActivity
-    // TODO: Refactor 'FieldResources'
-    // TODO: Remove all interfaces for the base classes (Project, Phase, etc.)
+    // TODO: Add 'DocumentRefs' to ProjectModal
     return { }
   }
 })

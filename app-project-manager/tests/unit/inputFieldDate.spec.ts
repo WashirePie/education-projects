@@ -4,10 +4,21 @@ import { mount } from '@vue/test-utils'
 describe('InputFieldDate.vue', () => 
 {
   const inputName = 'TestInput'
+  const inputDescription = 'Sample description'
   const wrapper = mount(InputFieldDate, {
     props: {
-      inputName
+      inputName,
+      inputDescription
     }
+  })
+
+  it('should display its title and description', async () => 
+  {
+    const name = await wrapper.find('label').text()    
+    expect(name).toEqual(inputName)
+
+    const desc = await wrapper.find('span').text()
+    expect(desc).toEqual(inputDescription)
   })
 
   it('validates dates in the CH locale format', async () =>
@@ -43,8 +54,6 @@ describe('InputFieldDate.vue', () =>
     const futureDate = new Date()
     futureDate.setDate(date.getDate() + 1)
 
-    console.log(toISODate(date), toISODate(pastDate), toISODate(futureDate));
-    
     // Invalid, date < minDate
     await wrapper.find('input').setValue(toISODate(date))
     let res: Date = wrapper.vm.validateInput({ minDate: futureDate })
@@ -72,4 +81,4 @@ describe('InputFieldDate.vue', () =>
     expect(res.getDate()).toEqual(date.getDate())
     expect(res.getMonth()).toEqual(date.getMonth())
     expect(res.getFullYear()).toEqual(date.getFullYear())  })
-});
+})
