@@ -19,7 +19,7 @@
   <div v-else>
     <p class="f5 text-bold mt-3">Start date</p>
     <p class="f5 d-block">{{ phase.startDate.toLocaleDateString() }}</p>
-    <p class="note">(Cannot change start date when activities were added)</p>
+    <p class="note">(Cannot change start date when there are activities assigned to this phase)</p>
   </div>
 
   <!-- End date paragraph -->

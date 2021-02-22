@@ -72,23 +72,33 @@
     <!-- Plan this / cancel buttons -->
     <template v-slot:footer>
       <div class="container-md">
-        <button
-          class="btn btn-primary mr-2"
-          type="button"
-          @click="saveNewProject"
-        >
-          <Octicon octicon="download" />
-          <span>Plan This</span>
-        </button>
+        
+        <!-- Error message -->
+        <p
+          class="note text-red d-block"
+          v-if="errorMessage"
+        >{{ errorMessage }}</p>
 
-        <button
-          class="btn btn-danger mr-2"
-          type="button"
-          @click="$emit('discard')"
-        >
-          <Octicon octicon="trash" />
-          <span>Discard</span>
-        </button>
+        <!-- 'Save' / 'Discard' buttons -->
+        <div class="mt-2">
+          <button
+            class="btn btn-primary mr-2"
+            type="button"
+            @click="saveNewProject"
+          >
+            <Octicon octicon="download" />
+            <span>Plan This</span>
+          </button>
+
+          <button
+            class="btn btn-danger mr-2"
+            type="button"
+            @click="$emit('discard')"
+          >
+            <Octicon octicon="trash" />
+            <span>Discard</span>
+          </button>
+        </div>
       </div>
 
     </template>
@@ -130,9 +140,10 @@ export default defineComponent({
   emits: ['discard', 'done'],
   setup (props, { emit })
   {
-    // Grab Vuex store, Equal's Loadingbar and Notification
     const store = useStore()
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
+
+    const errorMessage = ref<string>('')
 
     // Setup references for the form fields
     const titleField          = ref<InstanceType<typeof InputFieldText>>()
@@ -192,17 +203,19 @@ export default defineComponent({
         loadingbar.start()
 
         store.dispatch(ActionTypes.setProjectToBePlanned, newProject)
-          .then((res: string) => router.push( <RouteLocationRaw>{ path: '/plan'}))
-          .catch((err: string) => console.log(err))
-          .finally(() => 
+          .then((res: string) => 
           {
-            loadingbar.finish()
             emit('done')
-          })     
+            router.push( <RouteLocationRaw>{ path: '/plan'})
+            errorMessage.value = ''
+          })
+          .catch((err: Error) => errorMessage.value = err.message)
+          .finally(() => loadingbar.finish())     
       }
     }
 
     return {
+      errorMessage,
       saveNewProject,
       titleField,
       idField,

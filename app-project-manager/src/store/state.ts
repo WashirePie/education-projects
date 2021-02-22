@@ -51,20 +51,27 @@ const sampleProjectToBePlanned = new Project(
   'P444', 
   IPDRCE, 
   'A sample project in the planning state. Used to implement the <Planner> component.', 
-  new Date(),
+  new Date('1-1-2021'),
   EProjectPriority.ABOVE_AVERAGE, 
   employeeJil
 )
 
-sampleProjectToBePlanned.phases[0].addActivity( 'Sample Activity 0', new Date(), new Date(), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[0].addActivity( 'Sample Activity 1', new Date(), new Date(), [ new PersonnelResource('Stakeholder Analysis', 120, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Analysis', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[1].addActivity( 'Sample Activity 2', new Date(), new Date(), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[2].addActivity( 'Sample Activity 3', new Date(), new Date(), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[3].addActivity( 'Sample Activity 4', new Date(), new Date(), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[4].addActivity( 'Sample Activity 5', new Date(), new Date(), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[5].addActivity( 'Sample Activity 6', new Date(), new Date(), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
+sampleProjectToBePlanned.phases[0].setStartDate(new Date('1-2-21'), sampleProjectToBePlanned)
+sampleProjectToBePlanned.phases[1].setStartDate(new Date('1-14-21'), sampleProjectToBePlanned)
+sampleProjectToBePlanned.phases[2].setStartDate(new Date('2-1-21'), sampleProjectToBePlanned)
+sampleProjectToBePlanned.phases[3].setStartDate(new Date('2-15-21'), sampleProjectToBePlanned)
+sampleProjectToBePlanned.phases[4].setStartDate(new Date('3-1-21'), sampleProjectToBePlanned)
+sampleProjectToBePlanned.phases[5].setStartDate(new Date('4-2-21'), sampleProjectToBePlanned)
 
-sampleProjectToBePlanned.phases[0].addMilestone('Sample Milestone', new Date(), [sampleProjectToBePlanned.phases[0].activities[0].id])
+sampleProjectToBePlanned.phases[0].addActivity( 'Sample Activity 0', new Date('1-3-21'), new Date('2-1-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
+sampleProjectToBePlanned.phases[0].addActivity( 'Sample Activity 1', new Date('1-4-21'), new Date('1-9-21'), [ new PersonnelResource('Stakeholder Analysis', 120, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Analysis', 500, costTypeFour) ], employeeJil )
+sampleProjectToBePlanned.phases[1].addActivity( 'Sample Activity 2', new Date('1-15-21'), new Date('1-29-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
+sampleProjectToBePlanned.phases[2].addActivity( 'Sample Activity 3', new Date('2-1-21'), new Date('2-20-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
+sampleProjectToBePlanned.phases[3].addActivity( 'Sample Activity 4', new Date('2-15-21'), new Date('2-28-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
+sampleProjectToBePlanned.phases[4].addActivity( 'Sample Activity 5', new Date('3-1-21'), new Date('3-25-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
+sampleProjectToBePlanned.phases[5].addActivity( 'Sample Activity 6', new Date('4-2-21'), new Date('4-20-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
+
+sampleProjectToBePlanned.phases[0].addMilestone('Sample Milestone', new Date('1-10-21'), [sampleProjectToBePlanned.phases[0].activities[0].id])
 sampleProjectToBePlanned.phases[0].documents.push(new DocumentRef('MyFile', 'C:/Home/user/me/MyFile.md', '.md'))
 /*
  * ----------------------------- /Sample Data -----------------------------

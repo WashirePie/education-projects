@@ -234,6 +234,7 @@ export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Act
     return new Promise<string>((resolve, reject) =>
     {
       if (state.projectToBePlanned != null && nullableProject != null) reject(error.singleton('project to be planned'))
+      else if (nullableProject && getProject(state, nullableProject.id)) reject(error.duplicate('project', 'id'))
       else
       {
         commit(MutationType.assignProjectToBePlanned, nullableProject)

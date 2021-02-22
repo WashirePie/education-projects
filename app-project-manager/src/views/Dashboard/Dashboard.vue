@@ -47,6 +47,10 @@
     <WidgetProjects/>
     <hr>
     <WidgetEmployees />
+    <hr>
+    <WidgetApproachModels />
+    <hr>
+    <WidgetCostTypes />
     
   </div>
 
@@ -87,8 +91,10 @@ import ModalFormNewProject from './ModalFormNewProject.vue'
 import ModalFormNewApproachModel from './ModalFormNewApproachModel.vue'
 import ModalFormNewCostType from './ModalFormNewCostType.vue'
 import ModalFormNewEmployee from './ModalFormNewEmployee.vue'
-import WidgetProjects from './WidgetProjects.vue'
-import WidgetEmployees from './WidgetEmployees.vue'
+import WidgetProjects from '@/components/WidgetProjects.vue'
+import WidgetEmployees from '@/components/WidgetEmployees.vue'
+import WidgetApproachModels from '@/components/WidgetApproachModels.vue'
+import WidgetCostTypes from '@/components/WidgetCostTypes.vue'
 import Octicon from '@/components/Octicon.vue'
 import router from '@/router'
 import { computed, ComputedRef, defineComponent, getCurrentInstance, Ref, ref } from 'vue'
@@ -105,6 +111,8 @@ export default defineComponent({
     ModalFormNewEmployee,
     WidgetProjects,
     WidgetEmployees,
+    WidgetApproachModels,
+    WidgetCostTypes,
     Octicon,
   },
   setup() 
