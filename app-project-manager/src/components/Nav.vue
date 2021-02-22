@@ -5,7 +5,7 @@
     <div class="Header-item">
       <a class="Header-link f4 d-flex flex-items-center">
         <Octicon octicon="package" :size="24"/>
-        <span>ProjectManager</span>
+        <span class="ml-2">ProjectManager</span>
       </a>
     </div>
 

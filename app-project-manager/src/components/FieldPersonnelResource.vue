@@ -49,7 +49,7 @@
         <option
           v-for="empl in availableEmployees" :key="empl.id" 
           :value="empl"
-        >{{ empl.id}}: {{ empl.name }} {{ empl.lastName }}</option>
+        >{{ empl.id}}: {{ empl.fullName }}</option>
       </select>
     </div>
   </div>

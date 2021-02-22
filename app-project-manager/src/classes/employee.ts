@@ -37,4 +37,8 @@ export class Employee
     this.workload = _workload
     this.possibleFunctions = _possibleFunctions
   }
+
+  get fullName(): string {
+    return `${this.name} ${this.lastName}`
+  }
 }

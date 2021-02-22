@@ -91,7 +91,7 @@ import InputFieldText from '@/components/InputFieldText.vue'
 import InputFieldNumber from '@/components/InputFieldNumber.vue'
 import InputFieldOptions, { IOptionItem } from '@/components/InputFieldOptions.vue'
 import Octicon from '@/components/Octicon.vue'
-import { computed, defineComponent, getCurrentInstance, ref } from 'vue'
+import { computed, ComputedRef, defineComponent, getCurrentInstance, ref } from 'vue'
 import { useStore } from '@/store'
 import { Employee, IEmployeeFunction } from '@/classes/employee'
 import { ActionTypes } from '@/store/actions'
@@ -126,7 +126,7 @@ export default defineComponent({
     const workloadField   = ref<InstanceType<typeof InputFieldNumber>>()
     const functionsField  = ref<InstanceType<typeof InputFieldOptions>>()
 
-    const employeeFunctions = computed(() =>
+    const employeeFunctions: ComputedRef<Array<IOptionItem>> = computed(() =>
     {
       const functions: Array<IEmployeeFunction> = store.state.employeeFunctions
       const mapped: Array<IOptionItem> = functions.map(f => 

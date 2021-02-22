@@ -12,15 +12,14 @@ export class Activity
   resources: Array<IResource>
   responsibility: Employee
   
-  documents: Array<DocumentRef> = []
-
   constructor(
     _id: string,
     _title: string,
     _startDate: Date,
     _endDate: Date,
     _resources: Array<IResource>,
-    _responsibility: Employee
+    _responsibility: Employee,
+    _documents: Array<DocumentRef> = []
   )
   {
     this.id = _id
@@ -29,6 +28,7 @@ export class Activity
     this.endDate = _endDate
     this.resources = _resources
     this.responsibility = _responsibility
+    this._documents = _documents
     
     this._progress = 0
   }
@@ -40,6 +40,21 @@ export class Activity
   public set progress(v : number) {
     this._progress = v;
   }  
+
+  private _documents : Array<DocumentRef>;
+  public get documents() : Array<DocumentRef> {
+    return this._documents;
+  }
+  public async addDocuments()
+  {
+    // Remove dupes
+    let selected: Array<DocumentRef> = await DocumentRef.promptSelection()
+    this._documents = [...this._documents, ...selected].filter((v,i,a) => a.findIndex(t => (t.path === v.path)) === i)
+  }
+  public removeDocument(doc: DocumentRef)
+  {
+    this._documents = this._documents.filter(d => d.path != doc.path)
+  }
 
   getExternalCostResources = (): Array<ExternalCostResource> => this.resources.filter(r => r instanceof ExternalCostResource) as Array<ExternalCostResource>
   getPersonnelResources = (): Array<PersonnelResource> => this.resources.filter(r => r instanceof PersonnelResource) as Array<PersonnelResource>

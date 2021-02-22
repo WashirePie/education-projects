@@ -2,13 +2,13 @@ import { Activity } from "./activity";
 
 export class Milestone
 {
-  title: string
+  name: string
   reviewDate: Date
   activities: Array<Activity['id']>
 
-  constructor(_title: string, _reviewDate: Date, watch: Array<Activity['id']>)
+  constructor(_name: string, _reviewDate: Date, watch: Array<Activity['id']>)
   {
-    this.title = _title
+    this.name = _name
     this.reviewDate = _reviewDate
     this.activities = watch
   }

@@ -70,7 +70,7 @@ export default defineComponent({
     const errorMessage = ref<string>('')
 
     // TODO: Make the errorMessage reset upon changes in inputSource (When the user selects an item)
-    const validateInput = (minSelected = 1, maxSelected = props.inputSource.length): IOptionItem['payload'] =>
+    const validateInput = (minSelected = 1, maxSelected = props.inputSource.length): Array<IOptionItem['payload']> | null =>
     {
       const selected = props.inputSource.filter(i => i.state).length
 

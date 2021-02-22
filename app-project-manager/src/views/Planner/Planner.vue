@@ -13,14 +13,38 @@
     </div>
 
     <!-- Project overview -->
+    <p class="f3 mt-5">Project Overview</p>
     <p class="f5 d-block">
       Project title is set to <b>{{ projectToBePlanned?.title }}</b> and the id to <b>{{ projectToBePlanned?.id }}</b>. <br>
-      <b>{{ projectToBePlanned?.projectLead.name }} {{ projectToBePlanned?.projectLead.lastName }}</b> is assigned as project lead. <br>
+      <b>{{ projectToBePlanned?.projectLead.fullName }}</b> is assigned as project lead. <br>
       <br>
       This project is based on the <b>'{{ projectToBePlanned?.model.title }}'</b> approach model. <br>
       Project priority is set to <b>'{{ projectToBePlanned?.priority }}'</b>. <br>
       The project description is <i>{{ projectToBePlanned?.description }}</i>.
     </p>
+
+
+    <!-- Add Project docs button -->
+    <p class="f3 mt-5">Project Documents</p>
+    <hr>
+    
+    <button
+      class="btn ml-2"
+      type="button"
+      @click="projectToBePlanned.addDocuments()"
+    >
+      <Octicon octicon="plus" />
+      <span>Add Documents</span>
+    </button>
+
+    <ListDocuments
+      :documents="projectToBePlanned.documents"
+      @removeDocument="removeDocument"
+    />
+
+
+    <p class="f3 mt-5">Project Phases</p>
+    <hr>
 
     <!-- Start date item -->
     <div class="TimelineItem TimelineItem--condensed">
@@ -86,8 +110,15 @@
 
     <!-- Release / discard buttons -->
     <div class="mt-4">
+
+      <!-- Error message -->
+      <p
+        class="note text-red"
+        v-if="errorMessage"
+      >{{ errorMessage }}</p>
+
       <button
-        class="btn btn-primary mr-2"
+        class="btn btn-primary mr-2 mt-2"
         type="button"
         @click="savePlannedProject"
       >
@@ -112,19 +143,22 @@
 <script lang="ts">
 import FormPlanPhase from './FormPlanPhase.vue'
 import InputFieldText from '@/components/InputFieldText.vue'
+import ListDocuments from '@/components/ListDocuments.vue'
 import Label from '@/components/Label.vue'
 import Octicon from '@/components/Octicon.vue'
 import router from '@/router'
-import { computed, ComputedRef, defineComponent, getCurrentInstance } from "vue";
+import { computed, ComputedRef, defineComponent, getCurrentInstance, ref } from "vue";
 import { useStore } from '@/store';
 import { EProjectState, Project } from '@/classes/project';
 import { ActionTypes } from '@/store/actions'
+import { DocumentRef } from '@/classes/document'
 
 export default defineComponent({
   name: 'Planner',
   components: {
     FormPlanPhase,
     InputFieldText,
+    ListDocuments,
     Label,
     Octicon,
   },
@@ -134,19 +168,26 @@ export default defineComponent({
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
     const planningState = EProjectState.PLANNING
 
+    const errorMessage = ref<string>('')
+
     const projectToBePlanned: ComputedRef<Project> = computed(() => store.state.projectToBePlanned! )
 
     const projectedEndDate: ComputedRef<Date> = computed(() => projectToBePlanned.value.endDate )
+
+    const removeDocument = (document: DocumentRef) => projectToBePlanned.value.removeDocument(document)
 
     const savePlannedProject = () =>
     {
       try 
       {
         projectToBePlanned.value.plan()
+        console.log(projectToBePlanned.value);
+        
+        errorMessage.value = ''
       } 
       catch (error) 
       {
-        console.error(error)
+        errorMessage.value = error.message
       }
     }
 
@@ -158,6 +199,8 @@ export default defineComponent({
 
     return {
       savePlannedProject,
+      removeDocument,
+      errorMessage,
       discardPlannedProject,
       planningState,
       projectToBePlanned,

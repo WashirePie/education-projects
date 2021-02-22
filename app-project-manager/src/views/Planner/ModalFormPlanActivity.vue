@@ -45,6 +45,11 @@
           :selectOptions="availableEmployees"
         />
 
+        
+        <!-- Add Activity resources inline form -->
+        <p class="f3 mt-5">Activity Resources</p>
+        <hr>
+        
         <nav class="UnderlineNav">
           <div class="UnderlineNav-body" role="tablist">
             <button 
@@ -90,6 +95,7 @@
                 v-for="rsc in resources"
                 :key="rsc.title"
               >
+                <!-- TODO: formatResourceAsString sometimes results in a too long string which moves the close button to an awkward spot -->
                 <span>{{ formatResourceAsString(rsc) }}</span>
                 <div class="float-right ">
                   <button
@@ -105,6 +111,24 @@
           </div>
 
         </div>
+
+        <!-- 'Add' Project docs button -->
+        <p class="f3 mt-5">Project Documents</p>
+        <hr>
+
+        <button
+          class="btn ml-2"
+          type="button"
+          @click="addDocuments"
+        >
+          <Octicon octicon="plus" />
+          <span>Add Documents</span>
+        </button>
+
+        <ListDocuments
+          :documents="documents"
+          @removeDocument="removeDocument"
+        />
 
 
       </div>
@@ -151,12 +175,14 @@ import InputFieldDate from '@/components/InputFieldDate.vue'
 import FieldPersonnelResource from '@/components/FieldPersonnelResource.vue'
 import FieldExternalCostResource from '@/components/FieldExternalCostResource.vue'
 import InputFieldSelect, { ISelectItem } from '@/components/InputFieldSelect.vue'
+import ListDocuments from '@/components/ListDocuments.vue'
 import Octicon from '@/components/Octicon.vue'
 import { Phase } from "@/classes/phase";
 import { computed, ComputedRef, defineComponent, PropType, ref } from "vue";
 import { Employee } from '@/classes/employee';
 import { useStore } from '@/store';
 import { ExternalCostResource, IResource, PersonnelResource } from '@/classes/resource'
+import { DocumentRef } from '@/classes/document'
 
 export default defineComponent({
   name: 'ModalFormPlanActivity',
@@ -166,6 +192,7 @@ export default defineComponent({
     InputFieldSelect,
     FieldPersonnelResource,
     FieldExternalCostResource,
+    ListDocuments,
     Octicon
   },
   props: {
@@ -191,11 +218,22 @@ export default defineComponent({
     const errorMessage                = ref<string>('')
     const toggleResourceType          = ref<boolean>(false)
     const resources                   = ref<Array<IResource>>([])
+    const documents                   = ref<Array<DocumentRef>>([])
+
+    const addDocuments = async () => 
+    {
+      let selected: Array<DocumentRef> = await DocumentRef.promptSelection()
+      documents.value = [...documents.value, ...selected].filter((v,i,a) => a.findIndex(t => (t.path === v.path)) === i)
+    }
+    const removeDocument = (document: DocumentRef) =>
+    {
+      documents.value = documents.value.filter(d => d.path != document.path)
+    }
 
     const availableEmployees: ComputedRef<Array<ISelectItem>> = computed(() =>
     {    
       const employees: Array<Employee> = store.state.employees
-      const mapped: Array<ISelectItem> = employees.map(e => { return { name: `${e.name} ${e.lastName}`, payload: e } as ISelectItem })
+      const mapped: Array<ISelectItem> = employees.map(e => { return { name: `${e.fullName }`, payload: e } as ISelectItem })
 
       return mapped
     })
@@ -222,7 +260,7 @@ export default defineComponent({
       {
         try
         {
-          props.phase.addActivity(title, startDate, endDate, resources.value, responsibility)
+          props.phase.addActivity(title, startDate, endDate, resources.value, responsibility, documents.value)
           errorMessage.value = ''
           emit('done')
         }
@@ -237,6 +275,9 @@ export default defineComponent({
       errorMessage,
       toggleResourceType,
       resources,
+      addDocuments,
+      removeDocument,
+      documents,
       activityTitleField,
       activityStartDateField,
       activityEndDateField,

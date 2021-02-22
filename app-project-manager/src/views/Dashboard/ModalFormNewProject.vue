@@ -154,7 +154,7 @@ export default defineComponent({
     const availableProjectLeads: ComputedRef<Array<ISelectItem>> = computed(() =>
     {    
       const projectLeaders: Array<Employee> = store.getters.availableProjectLeads
-      const mapped: Array<ISelectItem> = projectLeaders.map(pl => { return { name: `${pl.name} ${pl.lastName}`, payload: pl } as ISelectItem })
+      const mapped: Array<ISelectItem> = projectLeaders.map(pl => { return { name: pl.fullName, payload: pl } as ISelectItem })
 
       return mapped
     })

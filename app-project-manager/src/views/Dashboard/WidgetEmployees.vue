@@ -12,7 +12,7 @@
       <Octicon octicon="person" class="circle d-inlin my-1" />
       
       <p class="f5 d-inline ml-2">
-        {{ emp.name }} {{ emp.lastName }} ({{ emp.department }})
+        {{ emp.fullName }} ({{ emp.department }})
       </p>
 
       <span class="Label Label--gray-darker mx-2 d-inline">

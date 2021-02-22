@@ -24,7 +24,6 @@ export enum EProjectPriority
 export class Project 
 {
   approvalDate: Date | null = null
-  documents: Array<DocumentRef> = []
 
   constructor(
     title: string,
@@ -49,6 +48,7 @@ export class Project
     this._phases.forEach(p => p.setStartDate(this.startDate, this))
 
     this._progress = 0
+    this._documents = []
     this._state = EProjectState.PLANNING
   }
 
@@ -109,6 +109,21 @@ export class Project
   public get endDate() : Date {
     this._endDate = this.phases.reduce((a, c) => a.endDate > c.endDate ? a : c).endDate
     return this._endDate;
+  }
+
+  private _documents : Array<DocumentRef>;
+  public get documents() : Array<DocumentRef> {
+    return this._documents;
+  }
+  public async addDocuments()
+  {
+    // Remove dupes
+    let selected: Array<DocumentRef> = await DocumentRef.promptSelection()
+    this._documents = [...this._documents, ...selected].filter((v,i,a) => a.findIndex(t => (t.path === v.path)) === i)
+  }
+  public removeDocument(doc: DocumentRef)
+  {
+    this._documents = this._documents.filter(d => d.path != doc.path)
   }
 
   public plan() 

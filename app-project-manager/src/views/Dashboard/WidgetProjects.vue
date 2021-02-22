@@ -22,7 +22,7 @@
       </span>
 
       <span class="IssueLabel IssueLabel--big bg-blue text-white ml-1 d-inline">
-        {{ proj.projectLead.name }} {{ proj.projectLead.lastName }}
+        {{ proj.projectLead.fullName }}
       </span>
 
       <span class="IssueLabel IssueLabel--big bg-purple text-white ml-1 d-inline">

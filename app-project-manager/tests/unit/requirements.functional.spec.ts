@@ -87,11 +87,11 @@ describe('requirements according to the specification book', () =>
 
   it('should cover FA6', () =>
   {
-    const title = 'Sample Milestone'
+    const name = 'Sample Milestone'
     const reviewDate = new Date()
     const watchedActivities = ['1']
     
-    milestone = new Milestone(title, reviewDate, watchedActivities)
+    milestone = new Milestone(name, reviewDate, watchedActivities)
     expect(milestone).toBeDefined() // FA6
 
     expect(milestone).toHaveProperty('reviewDate', reviewDate) // FA6

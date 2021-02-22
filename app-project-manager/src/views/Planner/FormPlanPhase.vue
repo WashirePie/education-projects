@@ -27,45 +27,23 @@
   <span class="text-small text-gray mt-2 d-block">Computed from the assigned activities. This date will also mark the review date of this phase</span>
   <p class="f5 d-block mt-2">{{ projectedEndDate.toLocaleDateString() }}</p>
 
-  <!-- Lists -->
-  <div v-if="phase.activities.length">
-    <p class="f5 text-bold mt-3">Activities</p>
-      <div class="Box Box--condensed mt-2">
-        <div
-          class="Box-row"
-          v-for="activity in phase.activities" :key="activity.id"
-        >
-          <span><b>{{ activity.title }}</b>&nbsp;&nbsp;</span>
-          <span> total cost </span>
-          <span class="Counter ml-1">💰 {{ activity.getTotalCost() }}CHF</span>
-          <span> total workhours </span>
-          <span class="Counter ml-1">⌛ {{ activity.getTotalWorkload() }} hours</span>
-          <div class="float-right ">
-            <button
-              class="btn-octicon btn-octicon-danger v-align-top"
-              type="button"
-              @click="removeActivity(activity)"
-            >
-              <Octicon octicon="x" />
-            </button>
-          </div>
-        </div>
-      </div>
-  </div>
+  <!-- Activities list -->
+  <ListActivities
+    :activities="phase.activities"
+    @removeActivity="removeActivity"
+  />
 
-  <div v-if="phase.milestones.length">
-    <p class="f5 text-bold mt-3">Milestones</p>
-    <p class="f5 my-3 d-block" v-for="activity in phase.activities" :key="activity.id">
-      {{ activity.id }} | {{ activity.title }} Resource Count: {{ activity.resources.length }}
-    </p>
-  </div>
-  
-  <div v-if="phase.documents.length">
-    <p class="f5 text-bold mt-3">Documents</p>
-    <p class="f5 my-3 d-block" v-for="activity in phase.activities" :key="activity.id">
-      {{ activity.id }} | {{ activity.title }} Resource Count: {{ activity.resources.length }}
-    </p>
-  </div>
+  <!-- Milestones list -->
+  <ListMilestones
+    :milestones="phase.milestones"
+    @removeMilestone="removeMilestone"
+  />
+
+  <!-- DocumentRefs list -->
+  <ListDocuments
+   :documents="phase.documents"
+   @removeDocument="removeDocument"
+  />
 
   <hr>
 
@@ -91,12 +69,11 @@
   <button
     class="btn ml-2"
     type="button"
-    @click="showDocumentPlanner = true"
+    @click="phase.addDocuments()"
   >
     <Octicon octicon="plus" />
-    <span>Add Document</span>
+    <span>Add Documents</span>
   </button>
-
 
   <!-- Error message -->
   <p
@@ -113,25 +90,43 @@
     :phase="phase"
   />
 
+  <ModalFormPlanMilestone
+    v-if="showMilestonePlanner"
+    :show="true"
+    @discard="showMilestonePlanner = false"
+    @done="showMilestonePlanner = false"
+    :phase="phase"
+  />
+
 </template>
 
 <script lang="ts">
 import InputFieldDate from '@/components/InputFieldDate.vue'
 import InputFieldOrderableText from '@/components/InputFieldOrderableText.vue'
+import ListDocuments from '@/components/ListDocuments.vue'
+import ListMilestones from '@/components/ListMilestones.vue'
+import ListActivities from '@/components/ListActivities.vue'
 import Octicon from '@/components/Octicon.vue'
 import ModalFormPlanActivity from './ModalFormPlanActivity.vue'
+import ModalFormPlanMilestone from './ModalFormPlanMilestone.vue'
 import { computed, ComputedRef, defineComponent, onMounted, PropType, ref, watch } from 'vue'
 import { Phase } from '@/classes/phase'
 import { Project } from '@/classes/project'
 import { Activity } from '@/classes/activity'
+import { Milestone } from '@/classes/milestone'
+import { DocumentRef } from '@/classes/document'
 
 export default defineComponent({
   name: 'FormPlanPhase',
   components: {
     InputFieldDate,
     InputFieldOrderableText,
+    ListDocuments,
+    ListMilestones,
+    ListActivities,
     Octicon,
-    ModalFormPlanActivity
+    ModalFormPlanActivity,
+    ModalFormPlanMilestone,
   },
   props: {
     phase: {
@@ -150,7 +145,6 @@ export default defineComponent({
 
     const showActivityPlanner  = ref<boolean>(false)
     const showMilestonePlanner = ref<boolean>(false)
-    const showDocumentPlanner  = ref<boolean>(false)
     const errorMessage         = ref<string>('')
 
     const projectedEndDate: ComputedRef<Date> = computed(() => props.phase.endDate)
@@ -184,23 +178,22 @@ export default defineComponent({
       props.phase.removeActivity(activity)
       validatePhase()
     }
-    
-    watch([showActivityPlanner, showMilestonePlanner, showDocumentPlanner], () => 
-    {
-      validatePhase()
-    })
 
-    onMounted(() => 
-    {
-      validatePhase()
-    })
+    const removeMilestone = (milestone: Milestone) => props.phase.removeMilestone(milestone)
+    const removeDocument = (document: DocumentRef) => props.phase.removeDocument(document)
+    
+    watch([showActivityPlanner, showMilestonePlanner], () => validatePhase())
+    onMounted(() => validatePhase())
 
     return { 
       setStartDate,
       removeActivity,
+      removeMilestone,
+      removeDocument,
       projectedEndDate,
       phaseStartDateField, 
       showActivityPlanner,
+      showMilestonePlanner,
       errorMessage,
     }
   }
