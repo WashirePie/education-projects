@@ -6,12 +6,11 @@
         class="Box-row"
         v-for="milestone in milestones" :key="milestone.name"
       >
-        <span><b>{{ milestone.name }}</b>&nbsp;&nbsp;</span>
-        <span> review date </span>
-        <span class="Counter ml-1">📅 {{ milestone.reviewDate.toLocaleDateString() }}</span>
-        <span> referenced activities </span>
-        <span class="Counter ml-1">{{ milestone.activities.length }}</span>
+        <span class="mr-2"><b>{{ milestone.name }}</b></span>
+        <span class="Counter mr-2">👁️‍🗨️ {{ milestone.activities.length }}</span>
+
         <div class="float-right ">
+          <p class="f6 d-inline">📅 {{ milestone.reviewDate.toLocaleDateString() }}</p>
           <button
             class="btn-octicon btn-octicon-danger v-align-top"
             type="button"

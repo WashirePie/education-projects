@@ -6,8 +6,9 @@
     
     <div class="Box mt-2">
       <div
-        class="Box-row"
         v-for="proj in projects" :key="proj.id"
+        class="Box-row"
+        :class="`${proj.requiresApproval ? 'Box-row--unread' : ''} ${proj.isEditable ? 'clickable' : ''}`"
       >
         <h4 class="f4 d-inline mr-2">{{ proj.title }}</h4>
         <span class="Label mr-2">🗝️ {{ proj.id }}</span>
@@ -16,7 +17,7 @@
         <span class="IssueLabel bg-blue text-white mr-2 d-inline">🧍 {{ proj.projectLead.fullName }}</span>
         <span class="IssueLabel bg-green text-white mr-2 d-inline">🔗 {{ proj.model.title }} </span> 
 
-        <p class="f6 float-right">{{proj.startDate.toLocaleDateString() }} - {{ proj.endDate.toLocaleDateString() }}</p>
+        <p class="f6 float-right">📅 {{proj.startDate.toLocaleDateString() }} - {{ proj.endDate.toLocaleDateString() }}</p>
 
         <p class="note">
           Progress {{ proj.progress }}%
@@ -57,3 +58,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+  .clickable {
+    cursor: pointer;
+  }
+</style>

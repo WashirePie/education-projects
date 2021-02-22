@@ -8,6 +8,7 @@ export const enum EProjectState
   PLANNING = 'Planning',
   WAITING = 'Awaiting approval',
   CANCELLED = 'Cancelled',
+  DENIED = 'Denied',
   EXECUTION = 'Execution',
   FINISHED = 'Finished'
 }
@@ -135,6 +136,8 @@ export class Project
       this._state = EProjectState.PLANNING
       throw new Error('Not all phases are planned')
     }    
+
+    this._state = EProjectState.WAITING
     // TODO: Continue
     // if (phasesArePlanned)
     //   this._state = EProjectState.WAITING
@@ -149,4 +152,16 @@ export class Project
     //   this._state = EProjectState.FINISHED
     
   }
+
+  public approve(doApprove: boolean = true) 
+  {
+    if (!doApprove) this._state = EProjectState.DENIED
+    else {
+      this._state = EProjectState.EXECUTION
+      this.approvalDate = new Date()
+    }
+  }
+
+  get isExecutable(): boolean {return this._state == EProjectState.EXECUTION }
+  get requiresApproval(): boolean { return this._state == EProjectState.WAITING }
 }

@@ -6,8 +6,9 @@
         class="Box-row"
         v-for="doc in documents" :key="doc.path"
       >
-        <span><b>{{ doc.name }}</b>&nbsp;&nbsp;</span>
-        <span class="Counter ml-1">🗄️ {{ doc.ext }}</span>
+        <span class="mr-2"><b>{{ doc.name }}</b></span>
+        <span class="Counter mr-2">🗄️ {{ doc.ext }}</span>
+        
         <div class="float-right ">
           <button
             class="btn-octicon btn-octicon-danger v-align-top"

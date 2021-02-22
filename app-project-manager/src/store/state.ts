@@ -3,7 +3,7 @@ import { CostType } from "@/classes/costType";
 import { DocumentRef } from "@/classes/document";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/classes/employee";
 import { Phase } from "@/classes/phase";
-import { EProjectPriority, Project } from "@/classes/project";
+import { EProjectPriority, EProjectState, Project } from "@/classes/project";
 import { ExternalCostResource, PersonnelResource } from "@/classes/resource";
 
 export type ProjectManagerState =
@@ -42,37 +42,76 @@ const employeeBob: Employee = new Employee('Bob', 'Muster', 'Administration', '#
 const employeeEve: Employee = new Employee('Eve', 'Muster', 'Product Design', '#99997', 42, [employeeFunctions[1]])
 const employeeJil: Employee = new Employee('Jil', 'Muster', 'Development',    '#99996', 10, [employeeFunctions[0], employeeFunctions[2], employeeFunctions[3]])
 
-const projectOne   = new Project('Sample Project',  'P999', HERMES, 'A very basic sample Project', new Date(), EProjectPriority.NORMAL, employeeBob)
-const projectTwo   = new Project('Another Project', 'P998', IPDRCE, 'Another basic sample Project', new Date(), EProjectPriority.HIGH, employeeJil)
-const projectThree = new Project('A third Project',  'P997', HERMES, 'A third basic sample Project', new Date(), EProjectPriority.LOW, employeeBob)
+const projects: Array<Project> = [
+  new Project('A Project',         'P444', IPDRCE, 'A sample project.',            new Date(`1-1-21`), EProjectPriority.ABOVE_AVERAGE, employeeJil),
+  new Project('A planned Project', 'P999', HERMES, 'A third basic sample Project', new Date(`1-2-21`), EProjectPriority.LOW,           employeeBob),
+  new Project('A denied Project',  'P998', HERMES, 'A very basic sample Project',  new Date(`1-3-21`), EProjectPriority.NORMAL,        employeeBob),
+  new Project('Sample Project',    'P997', IPDRCE, 'Another basic sample Project', new Date(`1-4-21`), EProjectPriority.HIGH,          employeeJil),
+  new Project('Example Project',   'P996', HERMES, 'A third basic sample Project', new Date(`1-5-21`), EProjectPriority.LOW,           employeeBob),
+  new Project('Demo Project',      'P995', HERMES, 'A third basic sample Project', new Date(`1-6-21`), EProjectPriority.LOW,           employeeBob) 
+]
 
-const sampleProjectToBePlanned = new Project(
-  'Sample Project', 
-  'P444', 
-  IPDRCE, 
-  'A sample project in the planning state. Used to implement the <Planner> component.', 
-  new Date('1-1-2021'),
-  EProjectPriority.ABOVE_AVERAGE, 
-  employeeJil
-)
+projects.forEach((proj, j) => 
+{
+  proj.phases.forEach((p, i) => p.setStartDate(new Date(`1-${j + i + 1}-21`), proj))
 
-sampleProjectToBePlanned.phases[0].setStartDate(new Date('1-2-21'), sampleProjectToBePlanned)
-sampleProjectToBePlanned.phases[1].setStartDate(new Date('1-14-21'), sampleProjectToBePlanned)
-sampleProjectToBePlanned.phases[2].setStartDate(new Date('2-1-21'), sampleProjectToBePlanned)
-sampleProjectToBePlanned.phases[3].setStartDate(new Date('2-15-21'), sampleProjectToBePlanned)
-sampleProjectToBePlanned.phases[4].setStartDate(new Date('3-1-21'), sampleProjectToBePlanned)
-sampleProjectToBePlanned.phases[5].setStartDate(new Date('4-2-21'), sampleProjectToBePlanned)
+  proj.phases.forEach((p, i) => p.addActivity(
+    `Sample Activity ${j}.${i + 1}`,
+    new Date(`1-${j + i + 2}-21`),
+    new Date(`1-${j + i + 3}-21`),
+    [
+      new PersonnelResource('Make Timetable', 10, EEmployeeFunctions.Administrator, employeeMax),
+      new ExternalCostResource('Review Timetable', 5, costTypeFour)
+    ],
+    employeeJil
+  ))
 
-sampleProjectToBePlanned.phases[0].addActivity( 'Sample Activity 0', new Date('1-3-21'), new Date('2-1-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[0].addActivity( 'Sample Activity 1', new Date('1-4-21'), new Date('1-9-21'), [ new PersonnelResource('Stakeholder Analysis', 120, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Analysis', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[1].addActivity( 'Sample Activity 2', new Date('1-15-21'), new Date('1-29-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[2].addActivity( 'Sample Activity 3', new Date('2-1-21'), new Date('2-20-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[3].addActivity( 'Sample Activity 4', new Date('2-15-21'), new Date('2-28-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[4].addActivity( 'Sample Activity 5', new Date('3-1-21'), new Date('3-25-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
-sampleProjectToBePlanned.phases[5].addActivity( 'Sample Activity 6', new Date('4-2-21'), new Date('4-20-21'), [ new PersonnelResource('Make Timetable', 40, EEmployeeFunctions.Administrator, employeeMax), new ExternalCostResource('Rewiev Timetable', 500, costTypeFour) ], employeeJil )
+  proj.phases.forEach((p, i) => p.addMilestone(
+    `Sample Milestone ${j}.${i + 1}`,
+    new Date(`1-${j + i + 3}-21`),
+    [p.activities[0].id]
+  ))  
 
-sampleProjectToBePlanned.phases[0].addMilestone('Sample Milestone', new Date('1-10-21'), [sampleProjectToBePlanned.phases[0].activities[0].id])
-sampleProjectToBePlanned.phases[0].documents.push(new DocumentRef('MyFile', 'C:/Home/user/me/MyFile.md', '.md'))
+  proj.phases.forEach((p, i) => p.documents.push(new DocumentRef(
+    `MyFile_${j}_${i}`,
+    `C:/home/user/MyFile_${j}_${i}.md`,
+    '.md'
+  )))
+
+})
+
+// Pick out project-to-be-planned
+const sampleProjectToBePlanned = projects.shift()
+
+
+// Set other projects to be planned
+projects.forEach(proj => 
+{
+  proj.phases.forEach(p => p.plan(proj))
+  proj.plan()
+})
+  
+// Pick out planned-project and  denied project
+const plannedProject = projects.shift()
+const deniedProject = projects.shift()
+deniedProject?.approve(false)
+
+// Approve other projects
+projects.forEach(proj => proj.approve())
+
+// Set arbitrary progress values
+projects.forEach(proj =>
+{
+  proj.phases.forEach(p =>
+  {
+    p.activities.forEach(a => a.progress = Math.random() * 100)    
+  })
+})
+
+// Add othe projects back in
+projects.push(deniedProject!)
+projects.push(plannedProject!)
+
 /*
  * ----------------------------- /Sample Data -----------------------------
  */
@@ -101,12 +140,13 @@ export const state: ProjectManagerState = {
     costTypeFour,
   ],
 
-  projects: <Array<Project>>[
-    projectOne, 
-    projectTwo, 
-    projectThree,
-  ],
+  projects: <Array<Project>> projects,
+  // [
+  //   projectOne, 
+  //   projectTwo, 
+  //   projectThree,
+  // ],
 
-  projectToBePlanned: sampleProjectToBePlanned,
+  projectToBePlanned: sampleProjectToBePlanned!,
   phaseToBePlanned: null,
 }

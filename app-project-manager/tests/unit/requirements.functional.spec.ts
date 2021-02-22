@@ -140,7 +140,6 @@ describe('requirements according to the specification book', () =>
     const workload = 40
     const funcs: Array<IEmployeeFunction> = [{ name: EEmployeeFunctions.Administrator }]
 
-
     employee = new Employee(name, lastName, dep, id, workload, funcs)
     expect(employee).toBeDefined() // FA10, FA11
 

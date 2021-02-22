@@ -14,7 +14,20 @@
       <router-link
         class="Header-link"
         to="/"
-      >Dash</router-link>
+      >
+        Dash
+        <div 
+          v-if="waitingProjectsCount"
+          class="d-inline"
+        >
+          <span 
+            class="tooltipped tooltipped-s d-inline" 
+            :aria-label="`${waitingProjectsCount} project${waitingProjectsCount > 1 ? 's' : ''} need${waitingProjectsCount > 1 ? '' : 's'} approval`"
+          >
+            <span class="Counter mr-1 bg-red text-white">{{ waitingProjectsCount }}</span>
+          </span>
+        </div>
+      </router-link>
     </div>
 
     <!-- Nav link 'Planner' -->
@@ -45,6 +58,7 @@
 import Octicon from '@/components/Octicon.vue'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useStore } from '@/store'
+import { EProjectState } from '@/classes/project'
 
 export default defineComponent({
   name: 'Nav',
@@ -57,8 +71,11 @@ export default defineComponent({
 
     const hasProjectToBePlanned: ComputedRef<boolean> = computed(() => store.state.projectToBePlanned != null )
 
+    const waitingProjectsCount: ComputedRef<number> = computed(() => store.state.projects.filter(p => p.state == EProjectState.WAITING).length )
+
     return {
-      hasProjectToBePlanned
+      hasProjectToBePlanned,
+      waitingProjectsCount
     }
   }
 })

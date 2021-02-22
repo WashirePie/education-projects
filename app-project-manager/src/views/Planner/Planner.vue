@@ -64,11 +64,11 @@
     >
       <div 
         class="TimelineItem-badge"
-        :class="phase.state == planningState ? 'bg-yellow' : 'text-white bg-green'"
+        :class="phase.isPlanned ? 'text-white bg-green' : 'bg-yellow'"
       >
         <!-- Phase state icon -->
         <Octicon 
-          v-if="phase.state == planningState" 
+          v-if="!phase.isPlanned" 
           octicon="alert"
         />
         <Octicon 
@@ -170,8 +170,7 @@ export default defineComponent({
   {
     const store = useStore()
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar
-    const planningState = EProjectState.PLANNING
-    
+
     const errorMessage = ref<string>('')
 
     const projectToBePlanned: ComputedRef<Project> = computed(() => store.state.projectToBePlanned! )
@@ -212,7 +211,6 @@ export default defineComponent({
       removeDocument,
       errorMessage,
       discardPlannedProject,
-      planningState,
       projectToBePlanned,
       projectedEndDate
     }

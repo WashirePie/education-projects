@@ -35,6 +35,7 @@ export class Phase
   {
     return this._state
   }
+  public get isPlanned(): boolean { return this._state != EProjectState.PLANNING }
 
   private _progress: number
   public get progress() : number

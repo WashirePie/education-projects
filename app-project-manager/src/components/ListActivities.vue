@@ -6,14 +6,15 @@
         class="Box-row"
         v-for="activity in activities" :key="activity.id"
       >
-        <span><b>{{ activity.title }}</b>&nbsp;&nbsp;</span>
-        <span> total cost </span>
-        <span class="Counter ml-1">💰 {{ activity.getTotalCost() }}CHF</span>
-        <span> total workhours </span>
-        <span class="Counter ml-1">⌛ {{ activity.getTotalWorkload() }} hours</span>
+        <span class="mr-2"><b>{{ activity.title }}</b></span>
+        <span class="Label mr-2">🗝️ {{ activity.id }}</span>
+        <span class="Counter mr-2">💰 {{ activity.getTotalCost() }}CHF</span>
+        <span class="Counter mr-2">⌛ {{ activity.getTotalWorkload() }} hours</span>
+  
         <div class="float-right ">
+          <p class="f6 d-inline">📅 {{activity.startDate.toLocaleDateString() }} - {{ activity.endDate.toLocaleDateString() }}</p>
           <button
-            class="btn-octicon btn-octicon-danger v-align-top"
+            class="btn-octicon btn-octicon-danger"
             type="button"
             @click="removeActivity(activity)"
           >
