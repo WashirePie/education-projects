@@ -28,16 +28,56 @@
   <p class="f5 d-block mt-2">{{ projectedEndDate.toLocaleDateString() }}</p>
 
   <!-- Activities list -->
-  <ListActivities
-    :activities="phase.activities"
-    @removeActivity="removeActivity"
-  />
+  <div v-if="phase.activities.length">
+    <p class="f5 text-bold mt-3">Activities</p>
+    <div class="Box Box--condensed mt-2">
+      <div
+        class="Box-row"
+        v-for="activity in phase.activities" :key="activity.id"
+      >
+        <span class="mr-2">{{ activity.title }}</span>
+        <span class="Counter mr-2">💰 {{ activity.getTotalCost() }}CHF</span>
+        <span class="Counter mr-2">⌛ {{ activity.getTotalWorkload() }} hours</span>
+  
+        <div class="float-right ">
+          <p class="f6 d-inline">📅 {{activity.startDate.toLocaleDateString() }} - {{ activity.endDate.toLocaleDateString() }}</p>
+          <span class="Label mx-2">🗝️ {{ activity.id }}</span>
+          <button
+            class="btn-octicon btn-octicon-danger"
+            type="button"
+            @click="removeActivity(activity)"
+          >
+            <Octicon octicon="x" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Milestones list -->
-  <ListMilestones
-    :milestones="phase.milestones"
-    @removeMilestone="removeMilestone"
-  />
+  <div v-if="phase.milestones.length">
+    <p class="f5 text-bold mt-3">Milestones</p>
+    <div class="Box Box--condensed mt-2">
+      <div
+        class="Box-row"
+        v-for="milestone in phase.milestones" :key="milestone.name"
+      >
+        <span class="mr-2">{{ milestone.name }}</span>
+        <span class="IssueLabel bg-gray-2 mr-2">👁️‍🗨️ {{ milestone.activities.length }}</span>
+
+        <div class="float-right ">
+          <p class="f6 d-inline">📅 {{ milestone.reviewDate.toLocaleDateString() }}</p>
+          <button
+            class="btn-octicon btn-octicon-danger v-align-top"
+            type="button"
+            @click="removeMilestone(milestone)"
+          >
+            <Octicon octicon="x" />
+          </button>
+        </div>
+      </div>
+    </div>  
+  </div>
 
   <!-- DocumentRefs list -->
   <ListDocuments
@@ -104,8 +144,6 @@
 import InputFieldDate from '@/components/InputFieldDate.vue'
 import InputFieldOrderableText from '@/components/InputFieldOrderableText.vue'
 import ListDocuments from '@/components/ListDocuments.vue'
-import ListMilestones from '@/components/ListMilestones.vue'
-import ListActivities from '@/components/ListActivities.vue'
 import Octicon from '@/components/Octicon.vue'
 import ModalFormPlanActivity from './ModalFormPlanActivity.vue'
 import ModalFormPlanMilestone from './ModalFormPlanMilestone.vue'
@@ -122,8 +160,6 @@ export default defineComponent({
     InputFieldDate,
     InputFieldOrderableText,
     ListDocuments,
-    ListMilestones,
-    ListActivities,
     Octicon,
     ModalFormPlanActivity,
     ModalFormPlanMilestone,

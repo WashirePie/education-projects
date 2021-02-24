@@ -4,17 +4,19 @@
 
     <h3 class="f3-light my-2">Approach Models</h3>
     
-    <div class="Box mt-2">
+    <div class="Box Box--condensed mt-2">
       <div
-        class="Box-row"
+        class="Box-row d-flex flex-items-top"
         v-for="amp in approachModels" :key="amp.title"
       >
         <Octicon octicon="package" class="circle d-inline mt-1 mr-2" />
-        <span><b>{{ amp.title }}</b>&nbsp;&nbsp;</span>
+        <span class="mt-1"><b>{{ amp.title }}</b></span>
         
         <details class="details-reset">
-          <summary class="btn mt-1 btn-sm">View Phases</summary>
-          <div class="border p-3 mt-2">
+          <summary class="btn-octicon">
+            <Octicon octicon="chevron-down"/>
+          </summary>
+          <div class="width-full p-3 mt-2">
             <p
               class="d-block note"
               v-for="ampPh in amp.phases" :key="ampPh"
@@ -37,7 +39,7 @@ import { useStore } from "@/store";
 import { ApproachModel } from '@/classes/approachModel';
 
 export default defineComponent({
-  name: 'WidgetApproachModels',
+  name: 'ListApproachModels',
   components: {
     Octicon
   },

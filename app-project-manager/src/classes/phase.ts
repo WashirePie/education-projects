@@ -18,7 +18,6 @@ export class Phase
     this._activities = []
     this._milestones = []
     this._documents = []
-    this._progress = 0
     this._startDate = new Date()
     this._endDate = this._startDate
     this._state = EProjectState.PLANNING
@@ -37,11 +36,9 @@ export class Phase
   }
   public get isPlanned(): boolean { return this._state != EProjectState.PLANNING }
 
-  private _progress: number
   public get progress() : number
   {
-     this._progress = this._activities.length ? (this._activities.map(a => a.progress).reduce((a, c) => a + c) / this._activities.length) : 0
-     return this._progress
+    return this._activities.length ? (this._activities.map(a => a.progress).reduce((a, c) => a + c) / this._activities.length) : 0
   }
 
   private _endDate : Date;
@@ -107,12 +104,9 @@ export class Phase
   {
     let error = null
     const activitiesExist = this._activities.some(a => watch.includes(a.id))
-    // const reviewDateIsLegal = this._activities.every(a => a.endDate < reviewDate)
 
-    // TODO: Use this?
-    // if (!reviewDateIsLegal) error = new Error('Review date must after any end date of the selected activities') // Just a design restriction
-    if (!activitiesExist)   error = new Error('Not all of the selected activities exist in this phase') // Sanity check
-    if (!watch.length)      error = new Error('A milestone needs at least one activity reference assigned')
+    if (!activitiesExist) error = new Error('Not all of the selected activities exist in this phase') // Sanity check
+    if (!watch.length)    error = new Error('A milestone needs at least one activity reference assigned')
    
     if (error) throw error    
     
@@ -125,6 +119,10 @@ export class Phase
   public removeMilestone(milestone: Milestone)
   {
     this._milestones = this._milestones.filter(m => m.name != milestone.name)
+  }
+  public getMilestoneActivities(milestone: Milestone): Array<Activity>
+  {
+    return this._activities.filter(a => milestone.activities.includes(a.id))
   }
 
   private _documents : Array<DocumentRef>;

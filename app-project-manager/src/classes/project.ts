@@ -105,6 +105,11 @@ export class Project
   {
     return this._state
   }
+  public get isExecuting(): boolean        { return this._state == EProjectState.EXECUTION }
+  public get isDenied(): boolean           { return this._state == EProjectState.DENIED }
+  public get isCancelled(): boolean        { return this._state == EProjectState.CANCELLED }
+  public get isFinished(): boolean         { return this._state == EProjectState.FINISHED }
+  public get isAwaitingApproval(): boolean { return this._state == EProjectState.WAITING }
   
   private _endDate : Date;
   public get endDate() : Date {
@@ -138,19 +143,6 @@ export class Project
     }    
 
     this._state = EProjectState.WAITING
-    // TODO: Continue
-    // if (phasesArePlanned)
-    //   this._state = EProjectState.WAITING
-    // else
-    // const phasesArePlanned = this.phases.every(p => p.state = EProjectState.WAITING)
-
-    // if (phasesArePlanned) 
-    //   this._state = EProjectState.WAITING
-    // if (this._state == EProjectState.PLANNING && this.approvalDate)
-    //   this._state = EProjectState.EXECUTION
-    // if (this._state == EProjectState.EXECUTION && new Date() >= this.endDate && this.progress >= 100)
-    //   this._state = EProjectState.FINISHED
-    
   }
 
   public approve(doApprove: boolean = true) 
@@ -162,6 +154,8 @@ export class Project
     }
   }
 
-  get isExecutable(): boolean {return this._state == EProjectState.EXECUTION }
-  get requiresApproval(): boolean { return this._state == EProjectState.WAITING }
+  public cancel()
+  {
+    this._state = EProjectState.CANCELLED
+  }
 }

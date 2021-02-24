@@ -10,15 +10,15 @@
         v-for="emp in employees" :key="emp.id"
       >
         <Octicon octicon="person" class="circle d-inline mt-1 mr-2" />
-        <span><b>{{ emp.fullName }}</b>&nbsp;&nbsp;</span>
-        <span class="Label Label--gray-darker mr-2">🗝️ {{ emp.id }} </span> 
-        <span class="Counter mr-2">🏬 {{ emp.department }}</span>
+        <span class="mr-2">{{ emp.fullName }}</span>
+        <span class="Label Label--gray mr-2">🏬 {{ emp.department }}</span>
         <span 
           class="Label mr-1 Label--purple"
           v-for="empFn in emp.possibleFunctions" :key="empFn.name"
         >
           {{ empFn.name }}
         </span>
+        <span class="Label Label--gray float-right">🗝️ {{ emp.id }} </span> 
       </div>
     </div>   
      
@@ -33,7 +33,7 @@ import { useStore } from "@/store";
 import { Employee } from '@/classes/employee';
 
 export default defineComponent({
-  name: 'WidgetEmployees',
+  name: 'ListEmployees',
   components: {
     Octicon
   },

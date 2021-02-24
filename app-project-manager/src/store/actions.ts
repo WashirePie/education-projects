@@ -23,6 +23,7 @@ export enum ActionTypes
   deleteProject = "DELETE_PROJECT",
 
   setProjectToBePlanned = "SET_PROJECT_TO_BE_PLANNED",
+  setProjectToBeExecuted = "SET_PROJECT_TO_BE_EXECUTED",
 }
 
 type ActionAugments = Omit<ActionContext<ProjectManagerState, ProjectManagerState>, 'commit'> &
@@ -49,6 +50,7 @@ export type Actions = {
   [ActionTypes.deleteProject](context: ActionAugments, project: Project): Promise<string>
 
   [ActionTypes.setProjectToBePlanned](context: ActionAugments, nullableProject: Project | null): Promise<string>
+  [ActionTypes.setProjectToBeExecuted](context: ActionAugments, nullableProject: Project | null): Promise<string>
 }
 
 // Message generators
@@ -239,6 +241,19 @@ export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Act
       {
         commit(MutationType.assignProjectToBePlanned, nullableProject)
         resolve(success.generic('project to be planned', 'created'))
+      }
+    })  
+  },
+
+  [ActionTypes.setProjectToBeExecuted]({ commit }, nullableProject)
+  {
+    return new Promise<string>((resolve, reject) =>
+    {
+      if (state.projectToBeManaged != null && nullableProject != null) reject(error.singleton('project to be executed'))
+      else
+      {
+        commit(MutationType.assignProjectToBeManaged, nullableProject)
+        resolve(success.generic('project to be executed', 'assigned'))
       }
     })  
   }

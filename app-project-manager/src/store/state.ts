@@ -2,7 +2,6 @@ import { ApproachModel } from "@/classes/approachModel";
 import { CostType } from "@/classes/costType";
 import { DocumentRef } from "@/classes/document";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/classes/employee";
-import { Phase } from "@/classes/phase";
 import { EProjectPriority, EProjectState, Project } from "@/classes/project";
 import { ExternalCostResource, PersonnelResource } from "@/classes/resource";
 
@@ -14,7 +13,7 @@ export type ProjectManagerState =
   costTypes: Array<CostType>
   projects: Array<Project>
   projectToBePlanned: Project | null
-  phaseToBePlanned: Phase | null
+  projectToBeManaged: Project | null
 }
 
 // TODO: Take data from db
@@ -66,10 +65,32 @@ projects.forEach((proj, j) =>
     employeeJil
   ))
 
+  proj.phases.forEach((p, i) => p.addActivity(
+    `Sample Activity ${j}.${i + 2}`,
+    new Date(`1-${j + i + 3}-21`),
+    new Date(`1-${j + i + 4}-21`),
+    [
+      new PersonnelResource('Make Something else', 10, EEmployeeFunctions.Administrator, employeeMax),
+      new ExternalCostResource('Review Something else', 5, costTypeFour)
+    ],
+    employeeJil
+  ))
+
+  proj.phases.forEach((p, i) => p.addActivity(
+    `Sample Activity ${j}.${i + 3}`,
+    new Date(`1-${j + i + 4}-21`),
+    new Date(`1-${j + i + 5}-21`),
+    [
+      new PersonnelResource('Make Another thing', 10, EEmployeeFunctions.Administrator, employeeMax),
+      new ExternalCostResource('Review Another thing', 5, costTypeFour)
+    ],
+    employeeJil
+  ))
+
   proj.phases.forEach((p, i) => p.addMilestone(
     `Sample Milestone ${j}.${i + 1}`,
     new Date(`1-${j + i + 3}-21`),
-    [p.activities[0].id]
+    [p.activities[0].id, p.activities[1].id, p.activities[2].id]
   ))  
 
   proj.phases.forEach((p, i) => p.documents.push(new DocumentRef(
@@ -82,7 +103,6 @@ projects.forEach((proj, j) =>
 
 // Pick out project-to-be-planned
 const sampleProjectToBePlanned = projects.shift()
-
 
 // Set other projects to be planned
 projects.forEach(proj => 
@@ -148,5 +168,5 @@ export const state: ProjectManagerState = {
   // ],
 
   projectToBePlanned: sampleProjectToBePlanned!,
-  phaseToBePlanned: null,
+  projectToBeManaged: null
 }

@@ -41,6 +41,17 @@
       >Planner</router-link>
     </div>
 
+    <!-- Nav link 'Manager' -->
+    <div 
+      class="Header-item"
+      v-if="hasProjectToBeManaged"
+    >
+      <router-link
+        class="Header-link"
+        to="/execute"
+      >Manager</router-link>
+    </div>
+
     <!-- Nav avatar -->
     <div class="Header-item mr-0">
       <img
@@ -58,7 +69,6 @@
 import Octicon from '@/components/Octicon.vue'
 import { computed, ComputedRef, defineComponent } from 'vue'
 import { useStore } from '@/store'
-import { EProjectState } from '@/classes/project'
 
 export default defineComponent({
   name: 'Nav',
@@ -71,10 +81,13 @@ export default defineComponent({
 
     const hasProjectToBePlanned: ComputedRef<boolean> = computed(() => store.state.projectToBePlanned != null )
 
-    const waitingProjectsCount: ComputedRef<number> = computed(() => store.state.projects.filter(p => p.state == EProjectState.WAITING).length )
+    const hasProjectToBeManaged: ComputedRef<boolean> = computed(() => store.state.projectToBeManaged != null )
+
+    const waitingProjectsCount: ComputedRef<number> = computed(() => store.getters.waitingProjectsCount )
 
     return {
       hasProjectToBePlanned,
+      hasProjectToBeManaged,
       waitingProjectsCount
     }
   }

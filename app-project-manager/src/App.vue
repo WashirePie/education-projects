@@ -8,7 +8,7 @@
   <!-- Views -->
   <div class="mx-3 my-3">
     <router-view v-slot="{ Component }">
-      <keep-alive include="Planner">
+      <keep-alive include="Planner, Manager">
         <component :is="Component" />
       </keep-alive>
     </router-view>

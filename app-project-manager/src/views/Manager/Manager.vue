@@ -4,23 +4,19 @@
   <div class="container-lg mt-5 px-lg-5">
     <div class="Subhead hx_Subhead--responsive">
       <h1 class="Subhead-heading">
-        Plan Project <b>'{{ projectToBePlanned.title }}'</b>
-        <p class="f5 mt-3 d-block">
-          Follow this form through from top to bottom to finish planning this project. <br>
-          Once planning is finished, this project will await approval to be executed
-        </p>
+        Manage active Project <b>'{{ projectToBeManaged.title }}'</b>
       </h1>
     </div>
 
     <!-- Project overview -->
     <p class="f3 mt-5">Project Overview</p>
     <p class="f5 d-block">
-      Project title is set to <b>{{ projectToBePlanned?.title }}</b> and the id to <b>{{ projectToBePlanned?.id }}</b>. <br>
-      <b>{{ projectToBePlanned?.projectLead.fullName }}</b> is assigned as project lead. <br>
+      Project title is set to <b>{{ projectToBeManaged?.title }}</b> and the id to <b>{{ projectToBeManaged?.id }}</b>. <br>
+      <b>{{ projectToBeManaged?.projectLead.fullName }}</b> is assigned as project lead. <br>
       <br>
-      This project is based on the <b>'{{ projectToBePlanned?.model.title }}'</b> approach model. <br>
-      Project priority is set to <b>'{{ projectToBePlanned?.priority }}'</b>. <br>
-      The project description is <i>{{ projectToBePlanned?.description }}</i>.
+      This project is based on the <b>'{{ projectToBeManaged?.model.title }}'</b> approach model. <br>
+      Project priority is set to <b>'{{ projectToBeManaged?.priority }}'</b>. <br>
+      The project description is <i>{{ projectToBeManaged?.description }}</i>.
     </p>
 
 
@@ -31,14 +27,14 @@
     <button
       class="btn ml-2"
       type="button"
-      @click="projectToBePlanned.addDocuments()"
+      @click="projectToBeManaged.addDocuments()"
     >
       <Octicon octicon="plus" />
       <span>Add Documents</span>
     </button>
 
     <ListDocuments
-      :documents="projectToBePlanned.documents"
+      :documents="projectToBeManaged.documents"
       @removeDocument="removeDocument"
     />
 
@@ -53,14 +49,14 @@
       </div>
       <div class="TimelineItem-body ">
         <p class="f5 text-bold mt-3">Start date</p>
-        <p class="f5 d-block">{{ projectToBePlanned.startDate.toLocaleDateString() }}</p>
+        <p class="f5 d-block">{{ projectToBeManaged.startDate.toLocaleDateString() }}</p>
       </div>
     </div>
 
     <!-- Phases timeline  -->
     <div
       class="TimelineItem pt-4"
-      v-for="phase in projectToBePlanned.phases" :key="phase.title"
+      v-for="phase in projectToBeManaged.phases" :key="phase.title"
     >
       <div 
         class="TimelineItem-badge"
@@ -81,15 +77,25 @@
         <!-- Phase base data -->
         <p class="f5 d-inline">Phase </p>
         <p class="f5 d-inline text-bold">{{ phase.title }}</p>
-        <p class="f6 d-block">{{ phase.startDate.toLocaleDateString() }} - {{ phase.endDate.toLocaleDateString() }}</p>
+        <p class="f6 float-right">📅 {{ phase.startDate.toLocaleDateString() }} - {{ phase.endDate.toLocaleDateString() }}</p>
+        <p class="note">
+          Progress {{ phase.progress.toFixed(2) }}%
+        </p>
+        <span class="Progress Progress--small">
+          <span 
+            class="Progress-item bg-green" 
+            :style="{width: phase.progress + '%'}"
+          >
+          </span>
+        </span>
 
         <!-- Phase form -->
-        <details class="details-reset">
-          <summary class="btn">Edit</summary>
+        <details class="details-reset mt-3">
+          <summary class="btn">Manage</summary>
           <div class="border p-3 mt-2">
-            <FormPlanPhase 
+            <FormManagePhase 
               :phase="phase"
-              :project="projectToBePlanned"
+              :project="projectToBeManaged"
             />
           </div>
         </details>
@@ -122,19 +128,19 @@
         <button
           class="btn btn-primary mr-2"
           type="button"
-          @click="savePlannedProject"
+          @click="saveProjectToBeManaged"
         >
           <Octicon octicon="download" />
-          <span>Release Proposal</span>
+          <span>Save Changes</span>
         </button>
 
         <button
           class="btn btn-danger mr-2"
           type="button"
-          @click="discardPlannedProject"
+          @click="discardProjectToBeManaged"
         >
           <Octicon octicon="trash" />
-          <span>Discard</span>
+          <span>Discard Changes</span>
         </button>
       </div>
     </div>
@@ -144,7 +150,7 @@
 </template>
 
 <script lang="ts">
-import FormPlanPhase from './FormPlanPhase.vue'
+import FormManagePhase from './FormManagePhase.vue'
 import InputFieldText from '@/components/InputFieldText.vue'
 import ListDocuments from '@/components/ListDocuments.vue'
 import Octicon from '@/components/Octicon.vue'
@@ -159,7 +165,7 @@ import { RouteLocationRaw } from 'vue-router'
 export default defineComponent({
   name: 'Planner',
   components: {
-    FormPlanPhase,
+    FormManagePhase,
     InputFieldText,
     ListDocuments,
     Octicon,
@@ -171,29 +177,29 @@ export default defineComponent({
 
     const errorMessage = ref<string>('')
 
-    const projectToBePlanned: ComputedRef<Project> = computed(() => store.state.projectToBePlanned! )
+    const projectToBeManaged: ComputedRef<Project> = computed(() => store.state.projectToBeManaged! )
 
-    const projectedEndDate: ComputedRef<Date> = computed(() => projectToBePlanned.value.endDate )
+    const projectedEndDate: ComputedRef<Date> = computed(() => projectToBeManaged.value.endDate )
 
-    const removeDocument = (document: DocumentRef) => projectToBePlanned.value.removeDocument(document)
+    const removeDocument = (document: DocumentRef) => projectToBeManaged.value.removeDocument(document)
 
-    const discardPlannedProject = () => 
+  const discardProjectToBeManaged = () => 
     {
       router.push( <RouteLocationRaw>{ path: '/'})
-      store.dispatch(ActionTypes.setProjectToBePlanned, null)
+      store.dispatch(ActionTypes.setProjectToBeExecuted, null)
     }
 
-    const savePlannedProject = () =>
+    const saveProjectToBeManaged = () =>
     {
       try 
       {
-        projectToBePlanned.value.plan()
-        store.dispatch(ActionTypes.storeProject, projectToBePlanned.value)
+        // TODO: Implement Checks
+        store.dispatch(ActionTypes.updateProject, projectToBeManaged.value)
           .then((res: string) => 
           {
             errorMessage.value = ''
             router.push( <RouteLocationRaw>{ path: '/'})
-            store.dispatch(ActionTypes.setProjectToBePlanned, null)
+            store.dispatch(ActionTypes.setProjectToBeExecuted, null)
           })
           .catch((err: Error) => errorMessage.value = err.message)
           .finally(() => loadingbar.finish())     
@@ -205,11 +211,11 @@ export default defineComponent({
     }
     
     return {
-      savePlannedProject,
+      saveProjectToBeManaged,
       removeDocument,
       errorMessage,
-      discardPlannedProject,
-      projectToBePlanned,
+      discardProjectToBeManaged,
+      projectToBeManaged,
       projectedEndDate
     }
   }

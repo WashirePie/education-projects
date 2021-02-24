@@ -180,7 +180,7 @@ export default defineComponent({
 
     const saveNewProject = () =>
     {
-      const title       = titleField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default' })
+      const title       = titleField.value!.validateInput({ minChar: 2, maxChar: 45, regex: 'default' })
       const id          = idField.value!.validateInput({ regex: /^P[\d]{3}$/g })
       const model       = approachModelField.value!.validateInput()
       const projectLead = projectLeadField.value!.validateInput()

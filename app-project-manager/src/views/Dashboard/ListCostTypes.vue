@@ -9,8 +9,8 @@
         class="Box-row"
         v-for="ct in costTypes" :key="ct.title"
       >
-        <span><b>{{ ct.title }}</b>&nbsp;&nbsp;</span>
-        <span class="Label Label--gray-darker mr-2">🗝️ {{ ct.id }} </span> 
+        <span>{{ ct.title }}</span>
+        <span class="Label Label--gray float-right">🗝️ {{ ct.id }} </span> 
       </div>
     </div>   
      
@@ -24,7 +24,7 @@ import { useStore } from "@/store";
 import { CostType } from '@/classes/costType';
 
 export default defineComponent({
-  name: 'WidgetCostTypes',
+  name: 'ListCostTypes',
   setup() 
   {
     const store = useStore()

@@ -38,7 +38,12 @@ export class Activity
     return this._progress;
   }
   public set progress(v : number) {
-    this._progress = v;
+    let value = <unknown> v
+    
+    v = parseFloat(<string>value) | 0
+    this._progress = v > 100 ? 100 
+                   : v < 0 ? 0
+                   : v
   }  
 
   private _documents : Array<DocumentRef>;
