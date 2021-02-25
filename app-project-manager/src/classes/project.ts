@@ -48,7 +48,6 @@ export class Project
     this._phases = this.model.scaffold()
     this._phases.forEach(p => p.setStartDate(this.startDate, this))
 
-    this._progress = 0
     this._documents = []
     this._state = EProjectState.PLANNING
   }
@@ -93,11 +92,9 @@ export class Project
     return this._priority;
   }
 
-  private _progress: number
   public get progress() : number
   {
-     this._progress = (this.phases.map(p => p.progress).reduce((a, c) => a + c) / this.phases.length) | 0
-     return this._progress
+    return this._phases.length ? (this._phases.map(p => p.progress).reduce((a, c) => a + c) / this._phases.length) : 0
   }
 
   private _state: EProjectState

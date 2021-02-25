@@ -9,14 +9,13 @@
         class="Box-row d-flex flex-items-top"
         v-for="amp in approachModels" :key="amp.title"
       >
-        <Octicon octicon="package" class="circle d-inline mt-1 mr-2" />
-        <span class="mt-1"><b>{{ amp.title }}</b></span>
-        
         <details class="details-reset">
           <summary class="btn-octicon">
-            <Octicon octicon="chevron-down"/>
+            <Octicon octicon="package" class="circle d-inline mr-2" />
+            <span class="d-inline mr-2"><b>{{ amp.title }}</b></span>
+            <Octicon octicon="chevron-down" />
           </summary>
-          <div class="width-full p-3 mt-2">
+          <div class="width-full p-3">
             <p
               class="d-block note"
               v-for="ampPh in amp.phases" :key="ampPh"
@@ -25,6 +24,7 @@
             </p>
           </div>
         </details>
+        
       </div>
     </div>   
      

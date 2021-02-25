@@ -45,7 +45,6 @@
           :selectOptions="availableEmployees"
         />
 
-        
         <!-- Add Activity resources inline form -->
         <p class="f3 mt-5">Activity Resources</p>
         <hr>
@@ -74,7 +73,7 @@
         </nav>
 
         <!-- Resource fields -->
-        <div class="d-flex  Box Box-header pl-4">
+        <div class="d-flex Box Box-header pl-4">
 
           <div class="flex-1">
             <FieldPersonnelResource
@@ -95,8 +94,8 @@
                 v-for="rsc in resources"
                 :key="rsc.title"
               >
-                <!-- TODO: formatResourceAsString sometimes results in a too long string which moves the close button to an awkward spot -->
-                <span>{{ formatResourceAsString(rsc) }}</span>
+                <!-- TODO: sometimes results in a too long string which moves the close button to an awkward spot -->
+                <span>{{ rsc.toPlanString() }}</span>
                 <div class="float-right ">
                   <button
                     class="btn-octicon btn-octicon-danger"
@@ -181,7 +180,7 @@ import { Phase } from "@/classes/phase";
 import { computed, ComputedRef, defineComponent, PropType, ref } from "vue";
 import { Employee } from '@/classes/employee';
 import { useStore } from '@/store';
-import { ExternalCostResource, IResource, PersonnelResource } from '@/classes/resource'
+import { IResource } from '@/classes/resource'
 import { DocumentRef } from '@/classes/document'
 
 export default defineComponent({
@@ -240,15 +239,6 @@ export default defineComponent({
 
     const removeResource = (resource: IResource) => { resources.value = resources.value.filter(r => r.title != resource.title)}
 
-    const formatResourceAsString = (resource: IResource) =>
-    {
-      let r = `'${resource.title}' - ${resource.plan}`
-      if (resource instanceof PersonnelResource) 
-        return r + ` hours - ${resource.assignee.name} ${resource.assignee.lastName}`
-      if (resource instanceof ExternalCostResource)
-        return r + `CHF - ${resource.costType.title}`
-    }
-
     const savePlannedActivity = () =>
     {
       const title          = activityTitleField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default'})  
@@ -284,7 +274,6 @@ export default defineComponent({
       activityResponsibilityField,
       availableEmployees,
       savePlannedActivity,
-      formatResourceAsString,
       removeResource
     }
   }

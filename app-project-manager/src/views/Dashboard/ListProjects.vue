@@ -30,7 +30,7 @@
           v-if="!proj.isAwaitingApproval && !proj.isDenied"
         >
           <p class="note">
-            Progress {{ proj.progress }}%
+            Progress {{ proj.progress.toFixed(2) }}%
           </p>
           <span class="Progress Progress--small">
             <span 

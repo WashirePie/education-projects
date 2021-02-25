@@ -81,13 +81,18 @@
         <p class="note">
           Progress {{ phase.progress.toFixed(2) }}%
         </p>
-        <span class="Progress Progress--small">
+        <MilestoneProgress
+          class="mt-2"
+          :milestone="phase.phaseMilestone"
+          :phase="phase"
+        />
+        <!-- <span class="Progress Progress--small">
           <span 
             class="Progress-item bg-green" 
             :style="{width: phase.progress + '%'}"
           >
           </span>
-        </span>
+        </span> -->
 
         <!-- Phase form -->
         <details class="details-reset mt-3">
@@ -153,6 +158,7 @@
 import FormManagePhase from './FormManagePhase.vue'
 import InputFieldText from '@/components/InputFieldText.vue'
 import ListDocuments from '@/components/ListDocuments.vue'
+import MilestoneProgress from './MilestoneProgress.vue'
 import Octicon from '@/components/Octicon.vue'
 import router from '@/router'
 import { computed, ComputedRef, defineComponent, getCurrentInstance, ref } from "vue";
@@ -168,6 +174,7 @@ export default defineComponent({
     FormManagePhase,
     InputFieldText,
     ListDocuments,
+    MilestoneProgress,
     Octicon,
   },
   setup()

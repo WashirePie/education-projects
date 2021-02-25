@@ -3,7 +3,7 @@
     class="tooltipped tooltipped-no-delay tooltipped-s"
     :aria-label="activityTitles"
   >
-    <span class="Progress">
+    <span class="Progress Progress--small">
       <span 
         v-for="item in activitiesProgress" :key="item.activityTitle"
         class="Progress-item"
