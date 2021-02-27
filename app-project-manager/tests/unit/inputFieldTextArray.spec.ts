@@ -1,8 +1,7 @@
 import InputFieldOrderableText from '@/components/InputFieldOrderableText.vue'
 import { mount } from '@vue/test-utils'
 
-describe('InputFieldOrderableText.vue', () => 
-{
+describe('InputFieldOrderableText.vue', () => {
   const inputName = 'TestInput'
   const inputDescription = 'Sample description'
   const wrapper = mount(InputFieldOrderableText, {
@@ -12,17 +11,15 @@ describe('InputFieldOrderableText.vue', () =>
     }
   })
 
-  it('should display its title and description', async () => 
-  {
-    const name = await wrapper.find('label').text()    
+  it('should display its title and description', async () => {
+    const name = await wrapper.find('label').text()
     expect(name).toEqual(inputName)
 
     const desc = await wrapper.find('span').text()
     expect(desc).toEqual(inputDescription)
   })
 
-  it('validates too short / too long input', async () =>
-  {
+  it('validates too short / too long input', async () => {
     // Too short
     await wrapper.find('input').setValue('d,')
     await wrapper.find('input').trigger('keyup', { code: 'Comma' })
@@ -36,8 +33,7 @@ describe('InputFieldOrderableText.vue', () =>
     expect(wrapper.vm.errorMessage).toContain('not exceed')
   })
 
-  it('validates amount of items', async () =>
-  {
+  it('validates amount of items', async () => {
     // Valid amount
     await wrapper.find('input').setValue('Phase 1,')
     await wrapper.find('input').trigger('keyup', { code: 'Comma' })
@@ -50,8 +46,7 @@ describe('InputFieldOrderableText.vue', () =>
     expect(wrapper.vm.errorMessage).toContain(inputName)
   })
 
-  it('can change the order of its items and delete items', async () =>
-  {
+  it('can change the order of its items and delete items', async () => {
     await wrapper.find('input').setValue('Phase 3,')
     await wrapper.find('input').trigger('keyup', { code: 'Comma' })
     await wrapper.find('input').setValue('Phase 2,')

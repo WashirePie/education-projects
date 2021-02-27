@@ -1,51 +1,39 @@
 <template>
-
   <!-- Add Milestone modal -->
-  <PrimerModal
-    v-if="show"
-    :displayFooter="true"
-    :displayHeader="false"
-  >
+  <PrimerModal v-if="show" :displayFooter="true" :displayHeader="false">
     <template v-slot:body>
       <div class="container-md">
         <!-- Milestone is evaluatable -->
-        <div
-          v-if="phase.getMilestoneEvaluatable(milestone)"
-        >
-
+        <div v-if="phase.getMilestoneEvaluatable(milestone)">
           <!-- Title -->
           <div class="Subhead hx_Subhead--responsive mb-5">
-            <h1 class="Subhead-heading ">
-              Evaluate Milestone '<b>{{ milestone.name }}</b>'
+            <h1 class="Subhead-heading">
+              Evaluate Milestone '<b>{{ milestone.name }}</b
+              >'
             </h1>
           </div>
 
           <p class="note my-2">Watched activities Progress</p>
-          <MilestoneProgress
-            :milestone="milestone"
-            :phase="phase"
-          />
+          <MilestoneProgress :milestone="milestone" :phase="phase" />
 
           <!-- Resources summary -->
           <p class="f3 text-bold my-4">Milestone overview</p>
-          <div 
+          <div
             class="Box Box--condensed my-2"
-            v-for="activity in phase.getMilestoneActivities(milestone)" :key="activity.id" 
+            v-for="activity in phase.getMilestoneActivities(milestone)"
+            :key="activity.id"
           >
             <div class="Box-header">{{ activity.title }}</div>
-            <div 
-              class="Box-row"
-              v-for="resource in activity.resources" :key="resource.title"
-            >
-              <p :class="resource.actual >= resource.plan ? 'text-red': ''"><b>{{ resource.title }}</b> {{ resource.getSummary() }} </p>
+            <div class="Box-row" v-for="resource in activity.resources" :key="resource.title">
+              <p :class="resource.actual >= resource.plan ? 'text-red' : ''">
+                <b>{{ resource.title }}</b> {{ resource.getSummary() }}
+              </p>
             </div>
           </div>
 
           <p class="f3 text-bold my-4">Resolve</p>
 
-          <p class="f5 mt-3 d-block">
-            Resolve this milestone evaluation as either of the following:<br>
-          </p>
+          <p class="f5 mt-3 d-block">Resolve this milestone evaluation as either of the following:<br /></p>
           <ul>
             <li>Continue, which marks this milestone as completed</li>
             <li>Rework, which sets all of the 'plan' values of the affected resources to their 'actual' value + 10%</li>
@@ -54,124 +42,90 @@
 
           <!-- Milestone eval buttons -->
           <div class="my-4">
-
-            <button 
-              class="btn btn-sm btn-primary mr-2" 
-              type="button"
-              @click="setAsContinued"
-            >Continue</button>
-            <button 
-              class="btn btn-sm btn-danger mr-2" 
-              type="button"
-              @click="setAsCancelled"
-            >Cancel Project Execution</button>
-            <button 
-              class="btn btn-sm btn-outline" 
-              type="button"
-              @click="setAsReworked"
-            >Rework</button>
-
+            <button class="btn btn-sm btn-primary mr-2" type="button" @click="setAsContinued">Continue</button>
+            <button class="btn btn-sm btn-danger mr-2" type="button" @click="setAsCancelled">
+              Cancel Project Execution
+            </button>
+            <button class="btn btn-sm btn-outline" type="button" @click="setAsReworked">Rework</button>
           </div>
-
         </div>
 
-        <p v-else>
-          Milestone is not yet evaluatable
-        </p>
-
+        <p v-else>Milestone is not yet evaluatable</p>
       </div>
     </template>
 
     <template v-slot:footer>
-
-      <div class="container-md">       
-
+      <div class="container-md">
         <!-- 'Close' button -->
-        <button
-          class="btn mr-2"
-          type="button"
-          @click="close"
-        >
+        <button class="btn mr-2" type="button" @click="close">
           <span>Close</span>
         </button>
-
       </div>
-
     </template>
-
   </PrimerModal>
-
 </template>
 
 <script lang="ts">
-import MilestoneProgress from './MilestoneProgress.vue'
-import Octicon from '@/components/Octicon.vue'
+import MilestoneProgress from "./MilestoneProgress.vue";
+import Octicon from "@/components/Octicon.vue";
 import { Phase } from "@/classes/phase";
 import { computed, ComputedRef, defineComponent, PropType, ref } from "vue";
-import { EMilestoneState, Milestone } from '@/classes/milestone'
+import { EMilestoneState, Milestone } from "@/classes/milestone";
 
-interface IResourceDisplay
-{
-  text: string
-  usage: number
+interface IResourceDisplay {
+  text: string;
+  usage: number;
 }
 
 export default defineComponent({
-  name: 'ModalFormManageMilestone',
+  name: "ModalFormManageMilestone",
   components: {
     MilestoneProgress,
-    Octicon
+    Octicon,
   },
   props: {
     show: {
       type: Boolean,
-      default: false
+      default: false,
     },
     phase: {
       type: Object as PropType<Phase>,
-      required: true
+      required: true,
     },
     milestone: {
       type: Object as PropType<Milestone>,
-      required: true
-    }
+      required: true,
+    },
   },
-  emits: ['discard', 'done', 'cancelProject'],
-  setup(props, { emit }) 
-  {
-    const setAsContinued = () =>
-    {
-      props.phase.setMilestoneState(props.milestone, EMilestoneState.continued)
-      emit('done')
-    }
+  emits: ["discard", "done", "cancelProject"],
+  setup(props, { emit }) {
+    const setAsContinued = () => {
+      props.phase.setMilestoneState(props.milestone, EMilestoneState.continued);
+      emit("done");
+    };
 
-    const setAsReworked = () =>
-    {
-      props.phase.setMilestoneState(props.milestone, EMilestoneState.reworked)
-      emit('done')
-    }
+    const setAsReworked = () => {
+      props.phase.setMilestoneState(props.milestone, EMilestoneState.reworked);
+      emit("done");
+    };
 
-    const setAsCancelled = () =>
-    {
-      props.phase.setMilestoneState(props.milestone, EMilestoneState.cancelled)
-      emit('cancelProject')
-    }
+    const setAsCancelled = () => {
+      props.phase.setMilestoneState(props.milestone, EMilestoneState.cancelled);
+      emit("cancelProject");
+    };
 
-    const milestoneResources: ComputedRef<Array<IResourceDisplay>> = computed(() =>
-    {
-      const activities = props.phase.getMilestoneActivities(props.milestone)
-      const resources: Array<IResourceDisplay> = []
-      activities.forEach(a =>
-      {
-        a.resources.forEach(r =>
-        {
-          resources.push({ text: r.getSummary(), usage: r.percent })
-        })
-      })
-      return resources
-    })
-    
-    const close = () => emit('done')
+    const milestoneResources: ComputedRef<Array<IResourceDisplay>> = computed(() => {
+      const activities = props.phase.getMilestoneActivities(props.milestone);
+      const resources: Array<IResourceDisplay> = [];
+      activities.forEach((a) => {
+        a.resources.forEach((r) => {
+          resources.push({ text: r.getSummary(), usage: r.percent });
+        });
+      });
+      return resources;
+    });
+
+    const close = () => emit("done");
 
     return {
       milestoneResources,
@@ -179,7 +133,7 @@ export default defineComponent({
       setAsContinued,
       setAsReworked,
       setAsCancelled,
-    }
-  }
-})
+    };
+  },
+});
 </script>

@@ -13,23 +13,21 @@
       </keep-alive>
     </router-view>
   </div>
-
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import Nav from './components/Nav.vue'
+import { defineComponent } from "vue";
+import Nav from "./components/Nav.vue";
 
 export default defineComponent({
-  name: 'Dashboard',
+  name: "Dashboard",
   components: {
-    Nav
+    Nav,
   },
-  setup ()
-  {
-    return { }
-  }
-})
+  setup() {
+    return {};
+  },
+});
 </script>
 
 <style lang="scss">
@@ -45,7 +43,7 @@ export default defineComponent({
 ::-webkit-scrollbar {
   display: none;
   background-color: $color-general;
-  width: 10px
+  width: 10px;
 }
 
 ::-webkit-scrollbar-thumb:window-inactive,
@@ -59,12 +57,4 @@ export default defineComponent({
   background: $color-dragbar;
   -webkit-app-region: drag;
 }
-
-// #app {
-//   font-family: Avenir, Helvetica, Arial, sans-serif;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-//   text-align: center;
-//   color: #2c3e50;
-// }
 </style>

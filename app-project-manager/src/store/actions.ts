@@ -1,18 +1,16 @@
 import { ApproachModel } from "@/classes/approachModel";
 import { CostType } from "@/classes/costType";
 import { Employee } from "@/classes/employee";
-import { Phase } from "@/classes/phase";
 import { Project } from "@/classes/project";
 import { ActionContext, ActionTree } from "vuex";
 import { Mutations, MutationType } from "./mutations";
 import { ProjectManagerState, state } from "./state";
 
-export enum ActionTypes 
-{
+export enum ActionTypes {
   storeEmployee = "STORE_EMPLOYEE",
   updateEmployee = "UPDATE_EMPLOYEE",
   deleteEmployee = "DELETE_EMPLOYEE",
-  storeApproachModel  = "STORE_APPROACHMODEL",
+  storeApproachModel = "STORE_APPROACHMODEL",
   updateApproachModel = "UPDATE_APPROACHMODEL",
   deleteApproachModel = "DELETE_APPROACHMODEL",
   storeCostType = "STORE_COSTTYPE",
@@ -28,8 +26,8 @@ export enum ActionTypes
 
 type ActionAugments = Omit<ActionContext<ProjectManagerState, ProjectManagerState>, 'commit'> &
 {
-  commit<K extends keyof Mutations>( key: K, payload: Parameters<Mutations[K]>[1]):
-  ReturnType<Mutations[K]>
+  commit<K extends keyof Mutations>(key: K, payload: Parameters<Mutations[K]>[1]):
+    ReturnType<Mutations[K]>
 }
 
 export type Actions = {
@@ -66,195 +64,153 @@ const error = {
 }
 
 // Helper functions to consistently query the relevant property
-const getEmployee = (state: ProjectManagerState, id: Employee['id']): Employee | undefined => 
+const getEmployee = (state: ProjectManagerState, id: Employee['id']): Employee | undefined =>
   state.employees.filter(e => e.id === id)[0]
 
-const getApproachModel = (state: ProjectManagerState, title: ApproachModel['title']): ApproachModel | undefined => 
+const getApproachModel = (state: ProjectManagerState, title: ApproachModel['title']): ApproachModel | undefined =>
   state.approachModels.filter(a => a.title === title)[0]
 
-const getCostType = (state: ProjectManagerState, id: CostType['id']): CostType | undefined => 
+const getCostType = (state: ProjectManagerState, id: CostType['id']): CostType | undefined =>
   state.costTypes.filter(c => c.id === id)[0]
 
-const getProject = (state: ProjectManagerState, id: Project['id']): Project | undefined => 
+const getProject = (state: ProjectManagerState, id: Project['id']): Project | undefined =>
   state.projects.filter(p => p.id === id)[0]
 
 export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Actions = {
-  [ActionTypes.storeEmployee]({ commit }, employee) 
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.storeEmployee]({ commit }, employee) {
+    return new Promise<string>((resolve, reject) => {
       if (getEmployee(state, employee.id)) reject(error.duplicate('employee', 'id'))
-      else
-      {
+      else {
         commit(MutationType.addEmployee, employee)
         resolve(success.generic('employee', 'stored'))
       }
-    })   
+    })
   },
-  [ActionTypes.updateEmployee]({ commit }, employee)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.updateEmployee]({ commit }, employee) {
+    return new Promise<string>((resolve, reject) => {
       if (!getEmployee(state, employee.id)) reject(error.inexists('employee', 'id'))
-      else
-      {
+      else {
         commit(MutationType.removeEmployee, employee)
         commit(MutationType.addEmployee, employee)
         resolve(success.generic('employee', 'updated'))
       }
-    })  
+    })
   },
-  [ActionTypes.deleteEmployee]({ commit }, employee)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.deleteEmployee]({ commit }, employee) {
+    return new Promise<string>((resolve, reject) => {
       if (!getEmployee(state, employee.id)) reject(error.inexists('employee', 'id'))
-      else
-      {
+      else {
         commit(MutationType.removeEmployee, employee)
         resolve(success.generic('employee', 'removed'))
       }
-    })  
+    })
   },
 
-  [ActionTypes.storeApproachModel]({ commit }, model)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.storeApproachModel]({ commit }, model) {
+    return new Promise<string>((resolve, reject) => {
       if (getApproachModel(state, model.title)) reject(error.duplicate('approach model', 'title'))
-      else
-      {
+      else {
         commit(MutationType.addApproachModel, model)
         resolve(success.generic('approach model', 'stored'))
       }
-    })  
+    })
   },
-  [ActionTypes.updateApproachModel]({ commit }, model)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.updateApproachModel]({ commit }, model) {
+    return new Promise<string>((resolve, reject) => {
       if (!getApproachModel(state, model.title)) reject(error.inexists('approach model', 'title'))
-      else
-      {
+      else {
         commit(MutationType.removeApproachModel, model)
         commit(MutationType.addApproachModel, model)
         resolve(success.generic('approach model', 'updated'))
       }
-    })  
+    })
   },
-  [ActionTypes.deleteApproachModel]({ commit }, model)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.deleteApproachModel]({ commit }, model) {
+    return new Promise<string>((resolve, reject) => {
       if (!getApproachModel(state, model.title)) reject(error.inexists('approach model', 'title'))
-      else
-      {
+      else {
         commit(MutationType.removeApproachModel, model)
         resolve(success.generic('approach model', 'removed'))
       }
-    })  
+    })
   },
 
-  [ActionTypes.storeCostType]({ commit }, costType)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.storeCostType]({ commit }, costType) {
+    return new Promise<string>((resolve, reject) => {
       if (getCostType(state, costType.id)) reject(error.duplicate('cost center', 'id'))
-      else
-      {
+      else {
         commit(MutationType.addCostType, costType)
         resolve(success.generic('cost center', 'stored'))
       }
-    })  
+    })
   },
-  [ActionTypes.updateCostType]({ commit }, costType)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.updateCostType]({ commit }, costType) {
+    return new Promise<string>((resolve, reject) => {
       if (!getCostType(state, costType.id)) reject(error.inexists('cost center', 'id'))
-      else
-      {
+      else {
         commit(MutationType.removeCostType, costType)
         commit(MutationType.addCostType, costType)
         resolve(success.generic('cost center', 'updated'))
       }
-    })  
+    })
   },
-  [ActionTypes.deleteCostType]({ commit }, costType)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.deleteCostType]({ commit }, costType) {
+    return new Promise<string>((resolve, reject) => {
       if (!getCostType(state, costType.id)) reject(error.inexists('cost center', 'id'))
-      else
-      {
+      else {
         commit(MutationType.removeCostType, costType)
         resolve(success.generic('cost center', 'removed'))
       }
-    })  
+    })
   },
 
-  [ActionTypes.storeProject]({ commit }, project)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.storeProject]({ commit }, project) {
+    return new Promise<string>((resolve, reject) => {
       if (getProject(state, project.id)) reject(error.duplicate('project', 'id'))
-      else
-      {
+      else {
         commit(MutationType.addProject, project)
         resolve(success.generic('project', 'stored'))
       }
-    }) 
+    })
   },
-  [ActionTypes.updateProject]({ commit }, project)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.updateProject]({ commit }, project) {
+    return new Promise<string>((resolve, reject) => {
       if (!getProject(state, project.id)) reject(error.inexists('project', 'id'))
-      else
-      {
+      else {
         commit(MutationType.removeProject, project)
         commit(MutationType.addProject, project)
         resolve(success.generic('project', 'updated'))
       }
-    })  
+    })
   },
-  [ActionTypes.deleteProject]({ commit }, project)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.deleteProject]({ commit }, project) {
+    return new Promise<string>((resolve, reject) => {
       if (!getProject(state, project.id)) reject(error.inexists('project', 'id'))
-      else
-      {
+      else {
         commit(MutationType.removeProject, project)
         resolve(success.generic('project', 'removed'))
       }
-    })  
+    })
   },
 
-  [ActionTypes.setProjectToBePlanned]({ commit }, nullableProject)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.setProjectToBePlanned]({ commit }, nullableProject) {
+    return new Promise<string>((resolve, reject) => {
       if (state.projectToBePlanned != null && nullableProject != null) reject(error.singleton('project to be planned'))
       else if (nullableProject && getProject(state, nullableProject.id)) reject(error.duplicate('project', 'id'))
-      else
-      {
+      else {
         commit(MutationType.assignProjectToBePlanned, nullableProject)
         resolve(success.generic('project to be planned', 'created'))
       }
-    })  
+    })
   },
 
-  [ActionTypes.setProjectToBeExecuted]({ commit }, nullableProject)
-  {
-    return new Promise<string>((resolve, reject) =>
-    {
+  [ActionTypes.setProjectToBeExecuted]({ commit }, nullableProject) {
+    return new Promise<string>((resolve, reject) => {
       if (state.projectToBeManaged != null && nullableProject != null) reject(error.singleton('project to be executed'))
-      else
-      {
+      else {
         commit(MutationType.assignProjectToBeManaged, nullableProject)
         resolve(success.generic('project to be executed', 'assigned'))
       }
-    })  
+    })
   }
 }

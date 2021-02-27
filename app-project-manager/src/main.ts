@@ -9,7 +9,7 @@ import '@primer/css/dist/primer.css'
 const app = createApp(App)
   .use(store)
   .use(router)
-  
+
 // Register globally accessible components
 app.component('PrimerModal', PrimerModal)
 app.config.globalProperties.$Loadingbar = Loadingbar

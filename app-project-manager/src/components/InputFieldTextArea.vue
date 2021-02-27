@@ -2,14 +2,9 @@
   <!-- Label & description -->
   <div class="form-group">
     <div class="form-group-header">
-      <label
-        :for="inputName"
-      >{{ inputName }}</label>
+      <label :for="inputName">{{ inputName }}</label>
     </div>
-    <span
-      class="text-small text-gray"
-      v-if="inputDescription"
-    >{{ inputDescription }}</span>
+    <span class="text-small text-gray" v-if="inputDescription">{{ inputDescription }}</span>
   </div>
 
   <!-- Input field -->
@@ -20,52 +15,52 @@
       :id="inputName"
     ></textarea>
 
-    <p
-      class="note text-red"
-      v-if="errorMessage"
-    >{{ errorMessage }}</p>
+    <p class="note text-red" v-if="errorMessage">{{ errorMessage }}</p>
   </div>
-
 </template>
 
 <script lang="ts">
-import { EValidationTypes, useValidation, ValidationParams, ValidationReturns } from '@/helpers/validators'
-import { defineComponent, watch, ref } from 'vue'
+import { EValidationTypes, useValidation, ValidationParams, ValidationReturns } from "@/helpers/validators";
+import { defineComponent, watch, ref } from "vue";
 
 export default defineComponent({
-  name: 'InputFieldTextArea',
+  name: "InputFieldTextArea",
   props: {
     inputName: {
       type: String,
-      default: 'Generic Textarea Input'
+      default: "Generic Textarea Input",
     },
     inputDescription: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
-  setup(props)
-  {
-    const validate = useValidation()
+  setup(props) {
+    const validate = useValidation();
 
-    const inputValue   = ref<string>('')
-    const errorMessage = ref<string>('')
+    const inputValue = ref<string>("");
+    const errorMessage = ref<string>("");
 
     // Reset Error message when typing continues
-    watch(inputValue, () => errorMessage.value = '')
+    watch(inputValue, () => (errorMessage.value = ""));
 
-    const validateInput = (params: ValidationParams[EValidationTypes.textValidation]): ValidationReturns[EValidationTypes.textValidation]['payload'] =>
-    {
-      let res = validate(EValidationTypes.textValidation, {source: inputValue.value, sourceName: props.inputName}, params) as ValidationReturns[EValidationTypes.textValidation]
-      errorMessage.value = res.responseMessage
-      return res.payload
-    }
+    const validateInput = (
+      params: ValidationParams[EValidationTypes.textValidation]
+    ): ValidationReturns[EValidationTypes.textValidation]["payload"] => {
+      let res = validate(
+        EValidationTypes.textValidation,
+        { source: inputValue.value, sourceName: props.inputName },
+        params
+      ) as ValidationReturns[EValidationTypes.textValidation];
+      errorMessage.value = res.responseMessage;
+      return res.payload;
+    };
 
-    return { 
+    return {
       validateInput,
-      errorMessage, 
-      inputValue 
-    }
-  }
-})
+      errorMessage,
+      inputValue,
+    };
+  },
+});
 </script>

@@ -1,6 +1,5 @@
-declare global 
-{
-  interface Window { 
+declare global {
+  interface Window {
     ipcRenderer: IpcRenderer;
     dialog: Dialog;
   }

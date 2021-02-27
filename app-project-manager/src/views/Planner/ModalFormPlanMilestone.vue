@@ -1,18 +1,11 @@
 <template>
-
   <!-- Add Milestone modal -->
-  <PrimerModal
-    v-if="show"
-    :displayFooter="true"
-    :displayHeader="false"
-  >
+  <PrimerModal v-if="show" :displayFooter="true" :displayHeader="false">
     <template v-slot:body>
       <div class="container-md">
         <!-- Title -->
         <div class="Subhead hx_Subhead--responsive mb-5">
-          <h1 class="Subhead-heading ">
-            Add Milestone
-          </h1>
+          <h1 class="Subhead-heading">Add Milestone</h1>
         </div>
 
         <!-- Form components -->
@@ -29,111 +22,99 @@
           inputDescription="Select the activities this milestone should evaluate"
           :inputSource="phaseActivities"
         />
-
       </div>
     </template>
 
     <template v-slot:footer>
-
       <div class="container-md">
         <!-- Error message -->
-        <p
-          class="note text-red my-2"
-          v-if="errorMessage"
-        >{{ errorMessage }}</p>
-        
+        <p class="note text-red my-2" v-if="errorMessage">{{ errorMessage }}</p>
+
         <!-- Save / cancel buttons -->
-        <button
-          class="btn btn-primary mr-2"
-          type="button"
-          @click="savePlannedMilestone"
-        >
+        <button class="btn btn-primary mr-2" type="button" @click="savePlannedMilestone">
           <Octicon octicon="plus" />
           <span>Add Milestone</span>
         </button>
 
-        <button
-          class="btn btn-danger mr-2"
-          type="button"
-          @click="$emit('discard')"
-        >
+        <button class="btn btn-danger mr-2" type="button" @click="$emit('discard')">
           <Octicon octicon="trash" />
           <span>Discard</span>
         </button>
       </div>
-
     </template>
-
   </PrimerModal>
-
 </template>
 
 <script lang="ts">
-import InputFieldText from '@/components/InputFieldText.vue'
-import InputFieldOptions, { IOptionItem } from '@/components/InputFieldOptions.vue'
-import InputFieldSelect from '@/components/InputFieldSelect.vue'
-import Octicon from '@/components/Octicon.vue'
+import InputFieldText from "@/components/InputFieldText.vue";
+import InputFieldOptions, { IOptionItem } from "@/components/InputFieldOptions.vue";
+import InputFieldSelect from "@/components/InputFieldSelect.vue";
+import Octicon from "@/components/Octicon.vue";
 import { Phase } from "@/classes/phase";
 import { computed, ComputedRef, defineComponent, PropType, ref } from "vue";
-import { Activity } from '@/classes/activity'
+import { Activity } from "@/classes/activity";
 
 export default defineComponent({
-  name: 'ModalFormPlanMilestone',
+  name: "ModalFormPlanMilestone",
   components: {
     InputFieldText,
     InputFieldSelect,
     InputFieldOptions,
-    Octicon
+    Octicon,
   },
   props: {
     show: {
       type: Boolean,
-      default: false
+      default: false,
     },
     phase: {
       type: Object as PropType<Phase>,
-      required: true
-    }
+      required: true,
+    },
   },
-  emits: ['discard', 'done'],
-  setup(props, { emit }) 
-  {
-    const milestoneNameField                 = ref<InstanceType<typeof InputFieldText>>()
-    const milestoneReferencedActivitiesField = ref<InstanceType<typeof InputFieldOptions>>()
+  emits: ["discard", "done"],
+  setup(props, { emit }) {
+    const milestoneNameField = ref<InstanceType<typeof InputFieldText>>();
+    const milestoneReferencedActivitiesField = ref<InstanceType<typeof InputFieldOptions>>();
 
-    const errorMessage = ref<string>('')
+    const errorMessage = ref<string>("");
 
-    const phaseActivities: ComputedRef<Array<IOptionItem>> = computed(() =>
-    {
-      const activities: Array<Activity> = props.phase.activities
-      const mapped: Array<IOptionItem> = activities.map(f => 
-      {
-        return { name: f.title, payload: f.id, note: `${f.responsibility.fullName} / ${f.startDate.toLocaleDateString()} - ${f.endDate.toLocaleDateString()}`, state: false } as IOptionItem
-      })
-      return mapped
-    })   
+    const phaseActivities: ComputedRef<Array<IOptionItem>> = computed(() => {
+      const activities: Array<Activity> = props.phase.activities;
+      const mapped: Array<IOptionItem> = activities.map((f) => {
+        return {
+          name: f.title,
+          payload: f.id,
+          note: `${
+            f.responsibility.fullName
+          } / ${f.startDate.toLocaleDateString()} - ${f.endDate.toLocaleDateString()}`,
+          state: false,
+        } as IOptionItem;
+      });
+      return mapped;
+    });
 
-    const savePlannedMilestone = () =>
-    {
-      const name       = milestoneNameField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default', duplicatesArray: [...props.phase.milestones.map(m => m.name)]})  
-      const activities = milestoneReferencedActivitiesField.value!.validateInput(1)
+    const savePlannedMilestone = () => {
+      const name = milestoneNameField.value!.validateInput({
+        minChar: 2,
+        maxChar: 60,
+        regex: "default",
+        duplicatesArray: [...props.phase.milestones.map((m) => m.name)],
+      });
+      const activities = milestoneReferencedActivitiesField.value!.validateInput(1);
 
-      if (name && activities)
-      {
-        const watchActivities: Array<string> = activities as Array<string>
+      if (name && activities) {
+        const watchActivities: Array<string> = activities as Array<string>;
 
-        try
-        {
-          props.phase.addMilestone(name, watchActivities)
-          errorMessage.value = ''
-          emit('done')
-        }
-        catch (error)
-        {
-          errorMessage.value = error.message
+        try {
+          props.phase.addMilestone(name, watchActivities);
+          errorMessage.value = "";
+          emit("done");
+        } catch (error) {
+          errorMessage.value = error.message;
         }
       }
-    }
+    };
 
     return {
       errorMessage,
@@ -141,7 +122,7 @@ export default defineComponent({
       milestoneNameField,
       milestoneReferencedActivitiesField,
       savePlannedMilestone,
-    }
-  }
-})
+    };
+  },
+});
 </script>

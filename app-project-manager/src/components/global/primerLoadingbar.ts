@@ -1,8 +1,7 @@
 import { App, ComponentPublicInstance, createApp } from 'vue'
 import PrimerLoading from './PrimerLoading.vue'
 
-interface IPrimerLoading
-{
+interface IPrimerLoading {
   loadingInstance: App;
   loadingElement: ComponentPublicInstance;
   start(): void;
@@ -10,26 +9,22 @@ interface IPrimerLoading
   finish(): void;
 }
 
-interface IPrimerLoadingData
-{
+interface IPrimerLoadingData {
   start?: boolean;
   progress?: number;
   height?: number;
 }
 
-class PrimerLoadingbar implements IPrimerLoading
-{
+class PrimerLoadingbar implements IPrimerLoading {
   loadingInstance = createApp(PrimerLoading)
   loadingElement: ComponentPublicInstance & IPrimerLoadingData
 
-  constructor()
-  {
+  constructor() {
     this.loadingElement = this.loadingInstance.mount('#loading-bar')
-    
+
   }
 
-  setLoadingbar(state: boolean, value: number, height: number = 4)
-  {
+  setLoadingbar(state: boolean, value: number, height: number = 4) {
     this.loadingElement.start = state
     this.loadingElement.progress = value
     this.loadingElement.height = height

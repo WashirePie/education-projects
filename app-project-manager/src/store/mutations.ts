@@ -1,13 +1,11 @@
 import { ApproachModel } from "@/classes/approachModel";
 import { CostType } from "@/classes/costType";
 import { Employee } from "@/classes/employee";
-import { Phase } from "@/classes/phase";
 import { Project } from "@/classes/project";
 import { MutationTree } from "vuex";
 import { ProjectManagerState } from "./state";
 
-export enum MutationType
-{
+export enum MutationType {
   addEmployee = "ADD_EMPLOYEE",
   removeEmployee = "REMOVE_EMPLOYEE",
 
@@ -43,7 +41,7 @@ export type Mutations = {
 
 export const mutations: MutationTree<ProjectManagerState> & Mutations = {
   [MutationType.addEmployee](state, employee) { state.employees.push(employee) },
-  [MutationType.removeEmployee](state, employee) { state.employees = state.employees.filter( e => e.id != employee.id )},
+  [MutationType.removeEmployee](state, employee) { state.employees = state.employees.filter(e => e.id != employee.id) },
 
   [MutationType.addApproachModel](state, model) { state.approachModels.push(model) },
   [MutationType.removeApproachModel](state, model) { state.approachModels = state.approachModels.filter(a => a.title != model.title) },

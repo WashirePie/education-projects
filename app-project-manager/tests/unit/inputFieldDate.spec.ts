@@ -1,8 +1,7 @@
 import InputFieldDate from '@/components/InputFieldDate.vue'
 import { mount } from '@vue/test-utils'
 
-describe('InputFieldDate.vue', () => 
-{
+describe('InputFieldDate.vue', () => {
   const inputName = 'TestInput'
   const inputDescription = 'Sample description'
   const wrapper = mount(InputFieldDate, {
@@ -12,17 +11,15 @@ describe('InputFieldDate.vue', () =>
     }
   })
 
-  it('should display its title and description', async () => 
-  {
-    const name = await wrapper.find('label').text()    
+  it('should display its title and description', async () => {
+    const name = await wrapper.find('label').text()
     expect(name).toEqual(inputName)
 
     const desc = await wrapper.find('span').text()
     expect(desc).toEqual(inputDescription)
   })
 
-  it('validates dates in the CH locale format', async () =>
-  {
+  it('validates dates in the CH locale format', async () => {
     // Valid Date
     await wrapper.find('input').setValue('2021-02-17')
     let res: Date = wrapper.vm.validateInput({})
@@ -38,16 +35,14 @@ describe('InputFieldDate.vue', () =>
     expect(res).toBeNull()
   })
 
-  it('handles date boundaries', async () => 
-  {
-    const toISODate = (d: Date): string => 
-    {
+  it('handles date boundaries', async () => {
+    const toISODate = (d: Date): string => {
       let isoDate = d.toISOString()
       return isoDate.substring(0, isoDate.split('').indexOf('T'))
     }
 
     const date = new Date()
-    
+
     const pastDate = new Date()
     pastDate.setDate(date.getDate() - 1)
 
@@ -62,7 +57,7 @@ describe('InputFieldDate.vue', () =>
 
     // Valid
     await wrapper.find('input').setValue(toISODate(date))
-    res = wrapper.vm.validateInput({ minDate: pastDate })    
+    res = wrapper.vm.validateInput({ minDate: pastDate })
     expect(wrapper.vm.errorMessage).toEqual('')
     expect(res.getDate()).toEqual(date.getDate())
     expect(res.getMonth()).toEqual(date.getMonth())
@@ -80,5 +75,6 @@ describe('InputFieldDate.vue', () =>
     expect(wrapper.vm.errorMessage).toEqual('')
     expect(res.getDate()).toEqual(date.getDate())
     expect(res.getMonth()).toEqual(date.getMonth())
-    expect(res.getFullYear()).toEqual(date.getFullYear())  })
+    expect(res.getFullYear()).toEqual(date.getFullYear())
+  })
 })

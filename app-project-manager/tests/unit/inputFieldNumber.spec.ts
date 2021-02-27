@@ -1,8 +1,7 @@
 import InputFieldNumber from '@/components/InputFieldNumber.vue'
 import { mount } from '@vue/test-utils'
 
-describe('InputFieldDate.vue', () => 
-{
+describe('InputFieldDate.vue', () => {
   const inputName = 'TestInput'
   const inputDescription = 'Sample description'
   const wrapper = mount(InputFieldNumber, {
@@ -11,18 +10,16 @@ describe('InputFieldDate.vue', () =>
       inputDescription
     }
   })
-  
-  it('should display its title and description', async () => 
-  {
-    const name = await wrapper.find('label').text()    
+
+  it('should display its title and description', async () => {
+    const name = await wrapper.find('label').text()
     expect(name).toEqual(inputName)
 
     const desc = await wrapper.find('span').text()
     expect(desc).toEqual(inputDescription)
   })
 
-  it('validates numbers', async () =>
-  {
+  it('validates numbers', async () => {
     // Valid Number
     await wrapper.find('input').setValue('2000')
     let res: number = wrapper.vm.validateInput({})
@@ -35,9 +32,8 @@ describe('InputFieldDate.vue', () =>
     expect(wrapper.vm.errorMessage).toEqual('')
     expect(res).toBeNaN()
   })
-  
-  it('handles boundaries', async () => 
-  {
+
+  it('handles boundaries', async () => {
     const number = 42
     const biggerNumber = number + 1
     const smallerNumber = number - 1

@@ -1,9 +1,9 @@
-import { 
-  CommitOptions, 
-  createLogger, 
-  createStore, 
-  DispatchOptions, 
-  Store as VuexStore 
+import {
+  CommitOptions,
+  createLogger,
+  createStore,
+  DispatchOptions,
+  Store as VuexStore
 } from "vuex";
 
 import { ProjectManagerState, state } from "./state";
@@ -20,9 +20,8 @@ export const store = createStore<ProjectManagerState>({
   getters
 })
 
-export function useStore()
-{
- return store as Store
+export function useStore() {
+  return store as Store
 }
 
 export type Store = Omit<
@@ -30,7 +29,7 @@ export type Store = Omit<
 > & {
   commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
     key: K,
-    payload: P, 
+    payload: P,
     options?: CommitOptions
   ): ReturnType<Mutations[K]>
 } & {

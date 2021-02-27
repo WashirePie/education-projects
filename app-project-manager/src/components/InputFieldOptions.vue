@@ -4,95 +4,82 @@
     <div class="form-group-header">
       <label>{{ inputName }}</label>
     </div>
-    <span
-      class="text-small text-gray"
-      v-if="inputDescription"
-    >{{ inputDescription }}</span>
+    <span class="text-small text-gray" v-if="inputDescription">{{ inputDescription }}</span>
   </div>
 
   <!-- Input field -->
   <div class="form-group-body">
-    <div
-      v-for="item in inputSource" :key="item.name"
-      class="form-checkbox"
-    >
+    <div v-for="item in inputSource" :key="item.name" class="form-checkbox">
       <label :class="`${errorMessage ? 'text-red' : ''}`">
-        <input
-          type="checkbox"
-          v-model="item.state"
-          :aria-describedby="item.name"
-        />
+        <input type="checkbox" v-model="item.state" :aria-describedby="item.name" />
         {{ item.name }}
       </label>
-      <p
-        class="note"
-        :id="item.name"
-      >{{ item.note }}</p>
+      <p class="note" :id="item.name">{{ item.note }}</p>
     </div>
 
-    <p
-      class="note text-red"
-      v-if="errorMessage"
-    >{{ errorMessage }}</p>
+    <p class="note text-red" v-if="errorMessage">{{ errorMessage }}</p>
   </div>
-
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, PropType, ref } from "vue";
 
-export interface IOptionItem
-{
-  name: string
-  payload: any
-  note: string
-  state: false
+export interface IOptionItem {
+  name: string;
+  payload: any;
+  note: string;
+  state: false;
 }
 
 export default defineComponent({
-  name: 'InputFieldOptions',
+  name: "InputFieldOptions",
   props: {
     inputName: {
       type: String,
-      default: 'Generic Select Multiple Input'
+      default: "Generic Select Multiple Input",
     },
     inputDescription: {
       type: String,
-      default: ''
+      default: "",
     },
     inputSource: {
       type: Array as PropType<Array<IOptionItem>>,
-      default: () => ([{ name: 'Option 1', note: 'Available', state: true, payload: 1 }, { name: 'Option 2', note: 'Available', state: false, payload: 1 }])
-    }
+      default: () => [
+        { name: "Option 1", note: "Available", state: true, payload: 1 },
+        { name: "Option 2", note: "Available", state: false, payload: 1 },
+      ],
+    },
   },
-  setup(props)
-  {
-    const errorMessage = ref<string>('')
+  setup(props) {
+    const errorMessage = ref<string>("");
 
     // TODO: Make the errorMessage reset upon changes in inputSource (When the user selects an item)
-    const validateInput = (minSelected = 1, maxSelected = props.inputSource.length): Array<IOptionItem['payload']> | null =>
-    {
-      const selected = props.inputSource.filter(i => i.state).length
+    const validateInput = (
+      minSelected = 1,
+      maxSelected = props.inputSource.length
+    ): Array<IOptionItem["payload"]> | null => {
+      const selected = props.inputSource.filter((i) => i.state).length;
 
-      const validation = selected < minSelected ? `'${props.inputName}' should have at least ${minSelected} item${minSelected == 1 ? '' : 's'} selected`
-                       : selected > maxSelected ? `'${props.inputName}' should have no more than ${maxSelected} item${minSelected == 1 ? '' : 's'} selected`
-                       : ''
+      const validation =
+        selected < minSelected
+          ? `'${props.inputName}' should have at least ${minSelected} item${minSelected == 1 ? "" : "s"} selected`
+          : selected > maxSelected
+          ? `'${props.inputName}' should have no more than ${maxSelected} item${minSelected == 1 ? "" : "s"} selected`
+          : "";
 
-      if (validation)
-        errorMessage.value = validation
-      else
-      {
-        errorMessage.value = ''
-        return props.inputSource.filter(i => i.state).map(i => i.payload)
+      if (validation) errorMessage.value = validation;
+      else {
+        errorMessage.value = "";
+        return props.inputSource.filter((i) => i.state).map((i) => i.payload);
       }
 
-      return null
-    }
+      return null;
+    };
 
-    return { 
-      validateInput, 
-      errorMessage 
-    }
-  }
-})
+    return {
+      validateInput,
+      errorMessage,
+    };
+  },
+});
 </script>

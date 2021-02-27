@@ -12,12 +12,11 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-async function createWindow ()
-{
+async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    minHeight: 800,
+    minWidth: 1400,
     frame: false,
     webPreferences: {
 
@@ -33,15 +32,13 @@ async function createWindow ()
   // Restrain Theme to 'light'
   nativeTheme.themeSource = 'light'
 
-  if (process.env.WEBPACK_DEV_SERVER_URL)
-  {
+  if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
     if (!process.env.IS_TEST)
       win.webContents.openDevTools()
   }
-  else
-  {
+  else {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
@@ -49,18 +46,15 @@ async function createWindow ()
 }
 
 // Quit when all windows are closed.
-app.on('window-all-closed', () =>
-{
+app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin')
-  {
+  if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
-app.on('activate', () =>
-{
+app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0)
@@ -70,17 +64,13 @@ app.on('activate', () =>
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () =>
-{
-  if (isDevelopment && !process.env.IS_TEST)
-  {
+app.on('ready', async () => {
+  if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
-    try
-    {
+    try {
       await installExtension(VUEJS_DEVTOOLS)
     }
-    catch (e)
-    {
+    catch (e) {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
@@ -88,22 +78,16 @@ app.on('ready', async () =>
 })
 
 // Exit cleanly on request from parent process in development mode.
-if (isDevelopment)
-{
-  if (process.platform === 'win32')
-  {
-    process.on('message', (data) =>
-    {
-      if (data === 'graceful-exit')
-      {
+if (isDevelopment) {
+  if (process.platform === 'win32') {
+    process.on('message', (data) => {
+      if (data === 'graceful-exit') {
         app.quit()
       }
     })
   }
-  else
-  {
-    process.on('SIGTERM', () =>
-    {
+  else {
+    process.on('SIGTERM', () => {
       app.quit()
     })
   }
