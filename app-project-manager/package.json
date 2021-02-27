@@ -1,5 +1,7 @@
 {
   "name": "app-project-manager",
+  "author": "Simon Schödler",
+  "description": "A tool to manage projects",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,9 +19,9 @@
     "@primer/css": "^15.2.0",
     "core-js": "^3.6.5",
     "nedb": "^1.8.0",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vue": "3.0.0",
+    "vue-router": "4.0.0-0",
+    "vuex": "4.0.0-0"
   },
   "devDependencies": {
     "@types/electron-devtools-installer": "^2.2.0",

@@ -145,7 +145,7 @@ export class Phase
         a.resources.forEach(r =>
         {
           // TODO: Nice to have: Mark a resource as reworked (Or display it's previous 'plan' value in the ui)
-          if (r.actual >= r.plan) r.plan = r.actual * 1.1
+          if (r.actual >= r.plan) r.plan = Math.round((r.actual * 1.1) * 100) / 100
         })
       })
       milestone.state = EMilestoneState.reworked

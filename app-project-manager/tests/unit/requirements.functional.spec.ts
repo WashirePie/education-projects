@@ -1,8 +1,9 @@
 import { Activity } from '@/classes/activity'
 import { ApproachModel } from '@/classes/approachModel'
 import { CostType } from '@/classes/costType'
+import { DocumentRef } from '@/classes/document'
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from '@/classes/employee'
-import { Milestone } from '@/classes/milestone'
+import { EMilestoneState, Milestone } from '@/classes/milestone'
 import { Phase } from '@/classes/phase'
 import { EProjectPriority, EProjectState, Project } from '@/classes/project'
 import { ExternalCostResource, PersonnelResource } from '@/classes/resource'
@@ -51,7 +52,7 @@ describe('requirements according to the specification book', () =>
     expect(project).toHaveProperty('description', desc) // FA4
     expect(project).toHaveProperty('priority', priority) // FA4
     expect(project).toHaveProperty('projectLead', projectLead) // FA4
-    expect(project).toHaveProperty('_progress', 0) // FA4
+    expect(project).toHaveProperty('progress', 0) // FA4
     expect(project).toHaveProperty('documents', []) // FA4
     expect(project).toHaveProperty('approvalDate', null) // FA4
 
@@ -67,8 +68,6 @@ describe('requirements according to the specification book', () =>
 
     expect(phase).toHaveProperty('phaseMilestone') // FA5
     expect(phase.phaseMilestone).toBeInstanceOf(Milestone) // FA5
-    expect(phase.phaseMilestone).toHaveProperty('reviewDate') // FA5
-    expect(phase.phaseMilestone.reviewDate).toBeInstanceOf(Date) // FA5
 
     expect(phase).toHaveProperty('state', EProjectState.PLANNING) // FA5
 
@@ -78,7 +77,7 @@ describe('requirements according to the specification book', () =>
     expect(phase).toHaveProperty('endDate') // FA5
     expect(phase.endDate).toBeInstanceOf(Date)
 
-    expect(phase).toHaveProperty('_progress', 0) // FA5
+    expect(phase).toHaveProperty('progress', 0) // FA5
     expect(phase).toHaveProperty('documents', []) // FA5
     expect(phase).toHaveProperty('approvalDate', null) // FA5
 
@@ -88,13 +87,11 @@ describe('requirements according to the specification book', () =>
   it('should cover FA6', () =>
   {
     const name = 'Sample Milestone'
-    const reviewDate = new Date()
     const watchedActivities = ['1']
     
-    milestone = new Milestone(name, reviewDate, watchedActivities)
+    milestone = new Milestone(name, watchedActivities)
     expect(milestone).toBeDefined() // FA6
 
-    expect(milestone).toHaveProperty('reviewDate', reviewDate) // FA6
     expect(milestone).toHaveProperty('activities', watchedActivities) // FA6
 
     phase?.addActivity(
@@ -128,7 +125,7 @@ describe('requirements according to the specification book', () =>
     expect(activity).toHaveProperty('responsibility', responsible) // FA9
 
     expect(activity.resources.push(new PersonnelResource('Dummy Rsc', 10, EEmployeeFunctions.Designer, responsible))).toBeTruthy() // FA9
-    expect(activity.resources.push(new ExternalCostResource('Dummy Rsc', 10, new CostType('Dummy CT0', 'CT42')))).toBeTruthy() // FA9
+    expect(activity.resources.push(new ExternalCostResource('Dummy Rsc', 10, new CostType('Dummy CT', 'CT42')))).toBeTruthy() // FA9
   })
 
   it('should cover FA10, FA11, FA12', () =>
@@ -185,5 +182,70 @@ describe('requirements according to the specification book', () =>
     expect(externalCostResource).toHaveProperty('plan', plan) // FA18
     expect(externalCostResource).toHaveProperty('deviation', '') // FA18
   })
-  // TODO: Implement tests for the rest of the FAs
+
+  it('should cover FA19, FA20', () =>
+  {
+    // Not all phases are planned
+    expect(() => project?.plan()).toThrowError() // FA19
+
+    project?.phases[0].addActivity('Activity 0.0', new Date(), new Date(), [new ExternalCostResource('Dummy Rsc', 10, new CostType('Dummy CT', 'CT42'))], employee!, [])
+    project?.phases[1].addActivity('Activity 1.0', new Date(), new Date(), [new ExternalCostResource('Dummy Rsc', 10, new CostType('Dummy CT', 'CT42'))], employee!, [])
+
+    project?.phases[0].addMilestone('Milestone 0', ['0'])
+    project?.phases[1].addMilestone('Milestone 1', ['0'])
+    
+    project?.phases[0].plan(project)
+    project?.phases[1].plan(project)
+
+    expect(project?.phases.every(p => p.isPlanned)).toBeTruthy() // FA19
+    
+    project?.plan()
+
+    expect(project?.isAwaitingApproval).toBeTruthy() // FA20
+  })
+
+  it('should cover FA21', () =>
+  {
+    project?.documents.push(new DocumentRef('Sample', 'C:/File.md', '.md'))
+    project?.phases[0].documents.push(new DocumentRef('Sample', 'C:/File.md', '.md'))
+    project?.phases[0].activities[0].documents.push(new DocumentRef('Sample', 'C:/File.md', '.md'))
+
+    project!.phases[0].activities[0].resources[0].actual = 11 // FA21
+    project!.phases[0].activities[0].resources[0].deviation = 'Sample Deviation explanation' // FA21
+  })
+
+  it('sholud cover FA22, FA23, FA24', () =>
+  {
+    project!.phases[0].activities[0].progress = 100;
+
+    expect(project!.phases[0].progress).toEqual(100) // FA23
+    expect(project!.progress).toEqual(50) // FA22
+  })
+
+  it('should cover FA25, 26', () =>
+  {
+    // Phase 0's milestone should be evaluatable because it's activities progress was set to 100%
+    // Wherease Phase 1's milestone should not be evaluatable
+    expect(project!.phases[0].getMilestoneEvaluatable(project!.phases[0].milestones[0])).toBeTruthy() // FA25
+    expect(project!.phases[1].getMilestoneEvaluatable(project!.phases[1].milestones[0])).toBeFalsy() // FA25
+
+    project!.phases[1].activities[0].resources[0].actual = 11 // plan >= actual (Actual was set to 10)
+    expect(project!.phases[1].getMilestoneEvaluatable(project!.phases[1].milestones[0])).toBeTruthy() // FA26
+  })
+
+  it('should cover FA27, FA28, FA29', () =>
+  {
+    project!.phases[0].setMilestoneState(project!.phases[0].milestones[0], EMilestoneState.continued)
+    expect(project!.phases[0].milestones[0].state).toEqual(EMilestoneState.continued) // FA27
+
+    project!.phases[1].setMilestoneState(project!.phases[1].milestones[0], EMilestoneState.reworked)
+    expect(project!.phases[1].milestones[0].state).toEqual(EMilestoneState.reworked) // FA27
+    expect(project!.phases[1].activities[0].resources[0].plan).toEqual(12.1)
+
+    expect(project!.phases[0].isFinished).toBeTruthy() // FA28
+    expect(project!.phases[1].isFinished).toBeFalsy() // FA28
+
+    project?.cancel()
+    expect(project!.state).toEqual(EProjectState.CANCELLED) // FA29
+  })
 })
