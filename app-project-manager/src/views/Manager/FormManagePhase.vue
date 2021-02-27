@@ -1,71 +1,20 @@
 <template>
-  <!-- Title -->
-  <div class="Subhead hx_Subhead--responsive mb-5">
-    <h1 class="Subhead-heading ">
-      Phase '<b>{{ phase?.title }}</b>'
-    </h1>
-  </div> 
-
   <!-- Activities list -->
   <div v-if="phase.activities.length">
-    <p class="f5 text-bold mt-3">Activities</p>
-    <div class="Box Box--condensed mt-2">
+    <p class="f3 text-bold">Activities</p>
+    <div class="Box Box--condensed mt-4">
       <div
-        class="Box-row"
         v-for="activity in phase.activities" :key="activity.id"
+        class="Box-row Box-row--hover-blue clickable"
+        @click="activityToBeManaged = activity; showActivityManager = true"
       >
-        <details class="details-reset">
-          <summary class="btn-octicon">
-            <h4 class="f4 d-inline mr-2">{{ activity.title }}</h4>
-            <Octicon octicon="chevron-down"/>
-          </summary>
-
-          <!-- Resources List  -->
-          <div class="width-full p-3 Box Box-header  ">
-            <ul>
-              <li
-                class="d-block"
-                v-for="rsc in activity.resources" :key="rsc.title"
-              >
-
-                <p>{{ rsc.title }}</p>
-                <input 
-                  v-model="rsc.actual"
-                  class="form-control input-sm d-inline ml-1"
-                  style="width: 100px;"
-                  type="number"
-                >
-                <p class="d-inline"> of {{ rsc.plan }} {{ rsc.unit }}</p>
-
-                <!-- COMBAK -->
-                <!-- TODO: Only display deviation field when actual > plan -->
-                <!-- TODO: Format in a nice way -->
-                <!-- TODO: Implement Validation??? -->
-                <!-- TODO: Continue with Milestones -->
-                <input 
-                  v-model="rsc.deviation"
-                  class="form-control input-sm d-inline ml-1"
-                  style="width: 100px;"
-                  placeholder="Deviation"
-                  type="string"
-                >
-              </li>
-            </ul>
-          </div>
-        </details>
-
-        <p class="d-inline mx-2">Set Progress</p>
-        <input
-          v-model="activity.progress"
-          class="form-control input-sm d-inline mr-1"
-          style="width: 50px;"
-          type="number"
-        >
-        <p class="d-inline">%</p>
+        <span class="mr-2">{{ activity.title }}</span>
+        <span class="Counter mr-2">💰 {{ activity.getTotalCost() }}CHF</span>
+        <span class="Counter mr-2">⌛ {{ activity.getTotalWorkload() }} hours</span>
 
         <div class="float-right ">
-          <span class="Label mr-2">🗝️ {{ activity.id }}</span>
-          <p class="f6 d-inline">📅 {{activity.startDate.toLocaleDateString() }} - {{ activity.endDate.toLocaleDateString() }}</p>
+          <span class="Label mx-2">🗝️ {{ activity.id }}</span>
+          <p class="f6 d-inline">{{activity.startDate.toLocaleDateString() }} - {{ activity.endDate.toLocaleDateString() }}</p>
         </div>
       </div>
     </div>
@@ -73,28 +22,22 @@
 
   <!-- Milestones list -->
   <div v-if="phase.milestones.length">
-    <p class="f5 text-bold mt-3">Milestones</p>
+    <p class="f3 text-bold my-4">Milestones</p>
     <div class="Box Box--condensed mt-2">
 
       <div
-        class="Box-row"
         v-for="milestone in phase.milestones" :key="milestone.name"
+        class="Box-row "
+        :class="phase.getMilestoneEvaluatable(milestone) ? 'Box-row--unread Box-row--hover-blue clickable' : ''"
+        @click="openMilestoneManager(milestone)"
       >
         <span class="mr-2">{{ milestone.name }}</span>
+        <span 
+          v-if="milestone.isEvaluated"
+          class="IssueLabel bg-green text-white mr-2">✔️ Evaluated ({{ milestone.state }})</span>
         <span class="IssueLabel bg-gray-2 mr-2">👁️‍🗨️ {{ milestone.activities.length }}</span>
-
-        <div class="float-right ">
-          <p class="f6 d-inline">📅 {{ milestone.reviewDate.toLocaleDateString() }}</p>
-        </div>
-
-        <div class="d-block my-1">
-          <button class="btn btn-sm btn-primary mr-2" type="button">Continue</button>
-          <button class="btn btn-sm btn-danger mr-2" type="button">Cancel</button>
-          <button class="btn btn-sm btn-outline" type="button">Rework</button>
-        </div>
-
+        <p class="note">Watched activities Progress</p>
         <MilestoneProgress
-          class="mt-2"
           :milestone="milestone"
           :phase="phase"
         />
@@ -108,16 +51,14 @@
    @removeDocument="removeDocument"
   />
 
-  <hr>
-
   <!-- 'Add' Documents buttons -->
   <button
-    class="btn ml-2"
+    class="btn mt-4"
     type="button"
     @click="phase.addDocuments()"
   >
     <Octicon octicon="plus" />
-    <span>Add Documents</span>
+    <span>Add Phase Documents</span>
   </button>
 
   <!-- Error message -->
@@ -126,22 +67,48 @@
     v-if="errorMessage"
   >{{ errorMessage }}</p>
 
+  <!-- Activity modal -->
+  <ModalFormManageActivity 
+    v-if="showActivityManager"
+    :show="true"
+    @discard="showActivityManager = false"
+    @done="showActivityManager = false"
+    :activity="activityToBeManaged"
+  />
+
+  <!-- Milestone modal -->
+  <ModalFormManageMilestone
+    v-if="showMilestoneManager"
+    :show="true"
+    @discard="showMilestoneManager = false"
+    @done="showMilestoneManager = false"
+    @cancelProject="cancelProject"
+    :phase="phase"
+    :milestone="milestoneToBeManaged"
+  />
+
 </template>
 
 <script lang="ts">
 import ListDocuments from '@/components/ListDocuments.vue'
 import MilestoneProgress from './MilestoneProgress.vue'
+import ModalFormManageActivity from './ModalFormManageActivity.vue'
+import ModalFormManageMilestone from './ModalFormManageMilestone.vue'
 import Octicon from '@/components/Octicon.vue'
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, PropType, reactive, ref } from 'vue'
 import { Phase } from '@/classes/phase'
 import { Project } from '@/classes/project'
 import { DocumentRef } from '@/classes/document'
+import { Activity } from '@/classes/activity'
+import { Milestone } from '@/classes/milestone'
 
 export default defineComponent({
   name: 'FormPlanPhase',
   components: {
     ListDocuments,
     MilestoneProgress,
+    ModalFormManageActivity,
+    ModalFormManageMilestone,
     Octicon,
   },
   props: {
@@ -154,16 +121,50 @@ export default defineComponent({
       required: true
     },
   },
-  setup(props)
+  emits: ['cancelProject'],
+  setup(props, { emit })
   {
     const errorMessage         = ref<string>('')
 
+    const showActivityManager  = ref<boolean>(false)
+    const showMilestoneManager = ref<boolean>(false)
+
+    const openMilestoneManager = (milestone: Milestone) =>
+    {
+      if (props.phase.getMilestoneEvaluatable(milestone))
+      {
+        milestoneToBeManaged.value = milestone; 
+        showMilestoneManager.value = true
+      }
+    }
+
+    const cancelProject = () =>
+    {
+      showMilestoneManager.value = false
+      emit('cancelProject')
+    }
+
     const removeDocument = (document: DocumentRef) => props.phase.removeDocument(document)
+
+    const activityToBeManaged  = ref<Activity | null>(null)
+    const milestoneToBeManaged = ref<Milestone | null>(null)
 
     return {
       removeDocument,
+      cancelProject,
+      openMilestoneManager,
+      showActivityManager,
+      showMilestoneManager,
+      activityToBeManaged,
+      milestoneToBeManaged,
       errorMessage,
     }
   }
 })
 </script>
+
+<style lang="scss">
+  .clickable {
+    cursor: pointer;
+  }
+</style>

@@ -13,7 +13,7 @@
     </div>
 
     <!-- Project overview -->
-    <p class="f3 mt-5">Project Overview</p>
+    <p class="f3 text-bold my-4">Project Overview</p>
     <p class="f5 d-block">
       Project title is set to <b>{{ projectToBePlanned?.title }}</b> and the id to <b>{{ projectToBePlanned?.id }}</b>. <br>
       <b>{{ projectToBePlanned?.projectLead.fullName }}</b> is assigned as project lead. <br>
@@ -24,12 +24,13 @@
     </p>
 
 
-    <!-- Add Project docs button -->
-    <p class="f3 mt-5">Project Documents</p>
-    <hr>
-    
+    <!-- Add Project docs -->
+    <ListDocuments
+      :documents="projectToBePlanned.documents"
+      @removeDocument="removeDocument"
+    />
     <button
-      class="btn ml-2"
+      class="btn mt-4"
       type="button"
       @click="projectToBePlanned.addDocuments()"
     >
@@ -37,14 +38,9 @@
       <span>Add Documents</span>
     </button>
 
-    <ListDocuments
-      :documents="projectToBePlanned.documents"
-      @removeDocument="removeDocument"
-    />
 
 
-    <p class="f3 mt-5">Project Phases</p>
-    <hr>
+    <p class="f3 text-bold my-4">Project Phases</p>
 
     <!-- Start date item -->
     <div class="TimelineItem TimelineItem--condensed">

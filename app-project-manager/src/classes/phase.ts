@@ -1,7 +1,7 @@
 import { Activity } from "./activity";
 import { DocumentRef } from "./document";
 import { Employee } from "./employee";
-import { Milestone } from "./milestone";
+import { EMilestoneState, Milestone } from "./milestone";
 import { EProjectState, Project } from "./project";
 import { IResource } from "./resource";
 
@@ -21,7 +21,7 @@ export class Phase
     this._startDate = new Date()
     this._endDate = this._startDate
     this._state = EProjectState.PLANNING
-    this._phaseMilestone = new Milestone('Phasemilestone', this.endDate, [])
+    this._phaseMilestone = new Milestone('Phasemilestone', [])
   }
   
   private _title : string;
@@ -35,6 +35,7 @@ export class Phase
     return this._state
   }
   public get isPlanned(): boolean { return this._state != EProjectState.PLANNING }
+  public get isFinished(): boolean { return this.progress >= 100 }
 
   public get progress() : number
   {
@@ -100,7 +101,7 @@ export class Phase
   public get milestones() : Array<Milestone> {
     return this._milestones;
   }
-  public addMilestone(name: string, reviewDate: Date, watch: Array<string>)
+  public addMilestone(name: string, watch: Array<string>)
   {
     let error = null
     const activitiesExist = this._activities.some(a => watch.includes(a.id))
@@ -110,7 +111,7 @@ export class Phase
    
     if (error) throw error    
     
-    const newMilestone = new Milestone(name, reviewDate, watch)
+    const newMilestone = new Milestone(name, watch)
 
     if (this._milestones.some(m => m.name == newMilestone.name)) throw new Error('Milestone with this ID already exists!') // Sanity check
 
@@ -123,6 +124,36 @@ export class Phase
   public getMilestoneActivities(milestone: Milestone): Array<Activity>
   {
     return this._activities.filter(a => milestone.activities.includes(a.id))
+  }
+  public getMilestoneEvaluatable(milestone: Milestone): boolean
+  {
+    const activities = this.getMilestoneActivities(milestone)
+    const activitiesFinished = activities.every(a => a.isFinished)
+    const someResourcesUsedUp = activities.some(a => a.resources.some(r => r.actual >= r.plan))
+
+    return ( activitiesFinished || someResourcesUsedUp ) && !milestone.isEvaluated
+  }
+  public setMilestoneState(milestone: Milestone, state: EMilestoneState): void
+  {
+    if (state == EMilestoneState.continued)
+      milestone.state = EMilestoneState.continued
+    else if (state == EMilestoneState.reworked)
+    {
+      const activities = this.getMilestoneActivities(milestone)
+      activities.forEach(a =>
+      {
+        a.resources.forEach(r =>
+        {
+          // TODO: Nice to have: Mark a resource as reworked (Or display it's previous 'plan' value in the ui)
+          if (r.actual >= r.plan) r.plan = r.actual * 1.1
+        })
+      })
+      milestone.state = EMilestoneState.reworked
+    }
+    else if (state == EMilestoneState.cancelled)
+    {
+      milestone.state = EMilestoneState.cancelled
+    }
   }
 
   private _documents : Array<DocumentRef>;

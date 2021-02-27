@@ -4,12 +4,12 @@
   <div class="container-lg mt-5 px-lg-5">
     <div class="Subhead hx_Subhead--responsive">
       <h1 class="Subhead-heading">
-        Manage active Project <b>'{{ projectToBeManaged.title }}'</b>
+        Manage Project <b>'{{ projectToBeManaged.title }}'</b>
       </h1>
     </div>
 
     <!-- Project overview -->
-    <p class="f3 mt-5">Project Overview</p>
+    <p class="f3 text-bold my-4">Project Overview</p>
     <p class="f5 d-block">
       Project title is set to <b>{{ projectToBeManaged?.title }}</b> and the id to <b>{{ projectToBeManaged?.id }}</b>. <br>
       <b>{{ projectToBeManaged?.projectLead.fullName }}</b> is assigned as project lead. <br>
@@ -20,27 +20,24 @@
     </p>
 
 
-    <!-- Add Project docs button -->
-    <p class="f3 mt-5">Project Documents</p>
-    <hr>
-    
-    <button
-      class="btn ml-2"
-      type="button"
-      @click="projectToBeManaged.addDocuments()"
-    >
-      <Octicon octicon="plus" />
-      <span>Add Documents</span>
-    </button>
-
+    <!-- Add Project docs -->
     <ListDocuments
       :documents="projectToBeManaged.documents"
       @removeDocument="removeDocument"
     />
 
+    <button
+      class="btn mt-4"
+      type="button"
+      @click="projectToBeManaged.addDocuments()"
+    >
+      <Octicon octicon="plus" />
+      <span>Add Project Documents</span>
+    </button>
 
-    <p class="f3 mt-5">Project Phases</p>
-    <hr>
+
+
+    <p class="f3 text-bold my-4">Project Phases</p>
 
     <!-- Start date item -->
     <div class="TimelineItem TimelineItem--condensed">
@@ -59,17 +56,17 @@
       v-for="phase in projectToBeManaged.phases" :key="phase.title"
     >
       <div 
-        class="TimelineItem-badge"
-        :class="phase.isPlanned ? 'text-white bg-green' : 'bg-yellow'"
+        class="TimelineItem-badge text-white"
+        :class="phase.isFinished ? 'bg-green' : 'bg-blue'"
       >
         <!-- Phase state icon -->
         <Octicon 
-          v-if="!phase.isPlanned" 
-          octicon="alert"
+          v-if="phase.isFinished" 
+          octicon="check"
         />
         <Octicon 
           v-else 
-          octicon="check"
+          octicon="hourglass"
         />
       </div>
       <div class="TimelineItem-body">
@@ -77,22 +74,13 @@
         <!-- Phase base data -->
         <p class="f5 d-inline">Phase </p>
         <p class="f5 d-inline text-bold">{{ phase.title }}</p>
-        <p class="f6 float-right">📅 {{ phase.startDate.toLocaleDateString() }} - {{ phase.endDate.toLocaleDateString() }}</p>
-        <p class="note">
-          Progress {{ phase.progress.toFixed(2) }}%
-        </p>
+        <p class="f6 d-block">{{ phase.startDate.toLocaleDateString() }} - {{ phase.endDate.toLocaleDateString() }} (Review Date)</p> 
+        <p class="note">Total Progress {{ phase.progress.toFixed(2) }}%</p>
         <MilestoneProgress
           class="mt-2"
           :milestone="phase.phaseMilestone"
           :phase="phase"
         />
-        <!-- <span class="Progress Progress--small">
-          <span 
-            class="Progress-item bg-green" 
-            :style="{width: phase.progress + '%'}"
-          >
-          </span>
-        </span> -->
 
         <!-- Phase form -->
         <details class="details-reset mt-3">
@@ -101,6 +89,7 @@
             <FormManagePhase 
               :phase="phase"
               :project="projectToBeManaged"
+              @cancelProject="cancelProjectToBeManaged"
             />
           </div>
         </details>
@@ -114,7 +103,7 @@
         <Octicon octicon="pin" />
       </div>
       <div class="TimelineItem-body ">
-        <p class="f5 text-bold mt-3">Projected end date</p>
+        <p class="f5 text-bold mt-3">End date</p>
         <p class="f5 d-block">{{ projectedEndDate?.toLocaleDateString() }}</p>
       </div>
     </div>
@@ -190,10 +179,16 @@ export default defineComponent({
 
     const removeDocument = (document: DocumentRef) => projectToBeManaged.value.removeDocument(document)
 
-  const discardProjectToBeManaged = () => 
+    const discardProjectToBeManaged = () => 
     {
       router.push( <RouteLocationRaw>{ path: '/'})
       store.dispatch(ActionTypes.setProjectToBeExecuted, null)
+    }
+
+    const cancelProjectToBeManaged = () =>
+    {
+      projectToBeManaged.value.cancel()
+      router.push( <RouteLocationRaw>{ path: '/' })
     }
 
     const saveProjectToBeManaged = () =>
@@ -219,9 +214,10 @@ export default defineComponent({
     
     return {
       saveProjectToBeManaged,
+      discardProjectToBeManaged,
+      cancelProjectToBeManaged,
       removeDocument,
       errorMessage,
-      discardProjectToBeManaged,
       projectToBeManaged,
       projectedEndDate
     }

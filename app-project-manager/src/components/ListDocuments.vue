@@ -1,6 +1,6 @@
 <template>
   <div v-if="documents.length">
-    <p class="f5 text-bold mt-3">Documents</p>
+    <p class="f3 text-bold my-4">Documents</p>
     <div class="Box Box--condensed mt-2">
       <div
         class="Box-row"

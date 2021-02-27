@@ -30,13 +30,6 @@
           :inputSource="phaseActivities"
         />
 
-        <InputFieldDate
-          ref="milestoneReviewDateField"
-          inputName="Review date"
-          inputDescription="Set the review date of this milestone."
-          :placeHolder="phase.endDate"
-        />
-
       </div>
     </template>
 
@@ -77,7 +70,6 @@
 
 <script lang="ts">
 import InputFieldText from '@/components/InputFieldText.vue'
-import InputFieldDate from '@/components/InputFieldDate.vue'
 import InputFieldOptions, { IOptionItem } from '@/components/InputFieldOptions.vue'
 import InputFieldSelect from '@/components/InputFieldSelect.vue'
 import Octicon from '@/components/Octicon.vue'
@@ -89,7 +81,6 @@ export default defineComponent({
   name: 'ModalFormPlanMilestone',
   components: {
     InputFieldText,
-    InputFieldDate,
     InputFieldSelect,
     InputFieldOptions,
     Octicon
@@ -108,7 +99,6 @@ export default defineComponent({
   setup(props, { emit }) 
   {
     const milestoneNameField                 = ref<InstanceType<typeof InputFieldText>>()
-    const milestoneReviewDateField           = ref<InstanceType<typeof InputFieldDate>>()
     const milestoneReferencedActivitiesField = ref<InstanceType<typeof InputFieldOptions>>()
 
     const errorMessage = ref<string>('')
@@ -126,16 +116,15 @@ export default defineComponent({
     const savePlannedMilestone = () =>
     {
       const name       = milestoneNameField.value!.validateInput({ minChar: 2, maxChar: 60, regex: 'default', duplicatesArray: [...props.phase.milestones.map(m => m.name)]})  
-      const reviewDate = milestoneReviewDateField.value!.validateInput({ minDate: props.phase.startDate })
       const activities = milestoneReferencedActivitiesField.value!.validateInput(1)
 
-      if (name && reviewDate && activities)
+      if (name && activities)
       {
         const watchActivities: Array<string> = activities as Array<string>
 
         try
         {
-          props.phase.addMilestone(name, reviewDate, watchActivities)
+          props.phase.addMilestone(name, watchActivities)
           errorMessage.value = ''
           emit('done')
         }
@@ -150,7 +139,6 @@ export default defineComponent({
       errorMessage,
       phaseActivities,
       milestoneNameField,
-      milestoneReviewDateField,
       milestoneReferencedActivitiesField,
       savePlannedMilestone,
     }

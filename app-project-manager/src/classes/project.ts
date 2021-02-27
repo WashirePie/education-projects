@@ -147,6 +147,7 @@ export class Project
     if (!doApprove) this._state = EProjectState.DENIED
     else {
       this._state = EProjectState.EXECUTION
+      this._phases.forEach(p => p.approvalDate = new Date())
       this.approvalDate = new Date()
     }
   }

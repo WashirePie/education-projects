@@ -22,8 +22,8 @@
                 : proj.isFinished ?         'bg-green text-white'
                 : ''"
         >🚦 {{ proj.state }}</span>
+        <p class="f6 mx-2 float-right">{{proj.startDate.toLocaleDateString() }} - {{ proj.endDate.toLocaleDateString() }}</p>
         <span class="Label float-right">🗝️ {{ proj.id }}</span>
-        <p class="f6 mr-2 float-right">📅 {{proj.startDate.toLocaleDateString() }} - {{ proj.endDate.toLocaleDateString() }}</p>
         <p class="note">Priority: {{ proj.priority }} | Lead: {{ proj.projectLead.fullName }} | Model: {{ proj.model.title }}</p>
 
         <div

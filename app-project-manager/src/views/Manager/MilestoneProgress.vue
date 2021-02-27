@@ -50,7 +50,7 @@ export default defineComponent({
         return {
           value: a.progress,
           color: colors[i % colors.length],
-          activityTitle: a.title
+          activityTitle: `'${a.title}': ${a.progress}%`
         }
       })  
 

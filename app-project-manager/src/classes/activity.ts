@@ -61,6 +61,8 @@ export class Activity
     this._documents = this._documents.filter(d => d.path != doc.path)
   }
 
+  get isFinished(): boolean { return this.progress >= 100 }
+
   getExternalCostResources = (): Array<ExternalCostResource> => this.resources.filter(r => r instanceof ExternalCostResource) as Array<ExternalCostResource>
   getPersonnelResources = (): Array<PersonnelResource> => this.resources.filter(r => r instanceof PersonnelResource) as Array<PersonnelResource>
   getTotalCost = (): number => 

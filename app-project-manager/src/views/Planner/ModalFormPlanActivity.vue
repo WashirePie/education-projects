@@ -46,8 +46,7 @@
         />
 
         <!-- Add Activity resources inline form -->
-        <p class="f3 mt-5">Activity Resources</p>
-        <hr>
+        <p class="f3 text-bold my-4">Activity Resources</p>
         
         <nav class="UnderlineNav">
           <div class="UnderlineNav-body" role="tablist">
@@ -81,7 +80,7 @@
               :resources="resources"
             />
             <FieldExternalCostResource
-              v-if="!toggleResourceType"
+              v-else
               :resources="resources"
             />
           </div>
@@ -111,12 +110,9 @@
 
         </div>
 
-        <!-- 'Add' Project docs button -->
-        <p class="f3 mt-5">Project Documents</p>
-        <hr>
-
+        <!-- 'Add' activity docs button -->
         <button
-          class="btn ml-2"
+          class="btn mt-3"
           type="button"
           @click="addDocuments"
         >

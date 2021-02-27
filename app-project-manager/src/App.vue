@@ -27,10 +27,6 @@ export default defineComponent({
   },
   setup ()
   {
-    // TODO: Add 'Milestones' to FormPlanPhase
-    // TODO: Add 'DocumentRefs' to FormPlanPhase
-    // TODO: Add 'DocumentRefs' to ModalFormPlanActivity
-    // TODO: Add 'DocumentRefs' to ProjectModal
     return { }
   }
 })

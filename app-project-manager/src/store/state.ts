@@ -89,7 +89,6 @@ projects.forEach((proj, j) =>
 
   proj.phases.forEach((p, i) => p.addMilestone(
     `Sample Milestone ${j}.${i + 1}`,
-    new Date(`1-${j + i + 3}-21`),
     [p.activities[0].id, p.activities[1].id, p.activities[2].id]
   ))  
 

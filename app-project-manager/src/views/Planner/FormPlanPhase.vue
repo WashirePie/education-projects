@@ -1,11 +1,4 @@
 <template>
-  <!-- Title -->
-  <div class="Subhead hx_Subhead--responsive mb-5">
-    <h1 class="Subhead-heading ">
-      Plan Phase '<b>{{ phase?.title }}</b>'
-    </h1>
-  </div>
-
   <!-- Start date field -->
   <div v-if="!phase.activities.length">
     <InputFieldDate
@@ -29,7 +22,7 @@
 
   <!-- Activities list -->
   <div v-if="phase.activities.length">
-    <p class="f5 text-bold mt-3">Activities</p>
+    <p class="f3 text-bold my-4">Activities</p>
     <div class="Box Box--condensed mt-2">
       <div
         class="Box-row"
@@ -40,8 +33,8 @@
         <span class="Counter mr-2">⌛ {{ activity.getTotalWorkload() }} hours</span>
   
         <div class="float-right ">
-          <p class="f6 d-inline">📅 {{activity.startDate.toLocaleDateString() }} - {{ activity.endDate.toLocaleDateString() }}</p>
           <span class="Label mx-2">🗝️ {{ activity.id }}</span>
+          <p class="f6 d-inline">{{activity.startDate.toLocaleDateString() }} - {{ activity.endDate.toLocaleDateString() }}</p>
           <button
             class="btn-octicon btn-octicon-danger"
             type="button"
@@ -56,7 +49,7 @@
 
   <!-- Milestones list -->
   <div v-if="phase.milestones.length">
-    <p class="f5 text-bold mt-3">Milestones</p>
+    <p class="f3 text-bold my-4">Milestones</p>
     <div class="Box Box--condensed mt-2">
       <div
         class="Box-row"
@@ -66,7 +59,6 @@
         <span class="IssueLabel bg-gray-2 mr-2">👁️‍🗨️ {{ milestone.activities.length }}</span>
 
         <div class="float-right ">
-          <p class="f6 d-inline">📅 {{ milestone.reviewDate.toLocaleDateString() }}</p>
           <button
             class="btn-octicon btn-octicon-danger v-align-top"
             type="button"
@@ -85,35 +77,35 @@
    @removeDocument="removeDocument"
   />
 
-  <hr>
-
   <!-- Add - Activity, Milestone or Documents buttons -->
-  <button
-    class="btn"
-    type="button"
-    @click="showActivityPlanner = true"
-  >
-    <Octicon octicon="plus" />
-    <span>Add Activity</span>
-  </button>
+  <div class="mt-4">
+    <button
+      class="btn"
+      type="button"
+      @click="showActivityPlanner = true"
+    >
+      <Octicon octicon="plus" />
+      <span>Add Activity</span>
+    </button>
 
-  <button
-    class="btn ml-2"
-    type="button"
-    @click="showMilestonePlanner = true"
-  >
-    <Octicon octicon="plus" />
-    <span>Add Milestone</span>
-  </button>
+    <button
+      class="btn ml-2"
+      type="button"
+      @click="showMilestonePlanner = true"
+    >
+      <Octicon octicon="plus" />
+      <span>Add Milestone</span>
+    </button>
 
-  <button
-    class="btn ml-2"
-    type="button"
-    @click="phase.addDocuments()"
-  >
-    <Octicon octicon="plus" />
-    <span>Add Documents</span>
-  </button>
+    <button
+      class="btn ml-2"
+      type="button"
+      @click="phase.addDocuments()"
+    >
+      <Octicon octicon="plus" />
+      <span>Add Documents</span>
+    </button>
+  </div>
 
   <!-- Error message -->
   <p
@@ -130,6 +122,7 @@
     :phase="phase"
   />
 
+  <!-- Milestone modal -->
   <ModalFormPlanMilestone
     v-if="showMilestonePlanner"
     :show="true"
