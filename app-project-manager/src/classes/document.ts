@@ -1,5 +1,5 @@
 import { OpenDialogReturnValue } from "electron/main"
-const path = require('path')
+import * as path from "path";
 
 export class DocumentRef {
   name: string
@@ -26,7 +26,7 @@ export class DocumentRef {
     if (res.canceled || !res.filePaths.length) return []
 
     return res.filePaths.map(fp => {
-      const name: string = path.basename(fp).split('.').shift()
+      const name: string = path.basename(fp).split('.').shift()!
       const ext: string = path.extname(fp)
 
       return new DocumentRef(name, fp, ext)

@@ -2,8 +2,9 @@ import { ApproachModel } from "@/classes/approachModel";
 import { CostType } from "@/classes/costType";
 import { DocumentRef } from "@/classes/document";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/classes/employee";
-import { EProjectPriority, EProjectState, Project } from "@/classes/project";
+import { EProjectPriority, Project } from "@/classes/project";
 import { ExternalCostResource, PersonnelResource } from "@/classes/resource";
+import { useDatabase } from "./db";
 
 export type ProjectManagerState =
   {

@@ -68,5 +68,4 @@ export class Activity {
     let personnelResources = this.getPersonnelResources()
     return personnelResources.length ? personnelResources.map(e => e.plan).reduce((a, c) => a + c) : 0
   }
-
 }

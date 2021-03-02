@@ -11,7 +11,7 @@ import { Mutations, mutations } from "./mutations";
 import { Actions, actions } from "./actions";
 import { Getters, getters } from "./getters";
 
-// TODO: Does this need to export?
+// TODO: Does this need to export? it's getting exported in useStore()...
 export const store = createStore<ProjectManagerState>({
   plugins: process.env.NODE_ENV === 'development' ? [createLogger()] : [],
   state,
