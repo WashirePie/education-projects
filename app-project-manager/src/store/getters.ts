@@ -12,7 +12,7 @@ export type Getters = {
 export const getters: GetterTree<ProjectManagerState, ProjectManagerState> & Getters = {
   availableProjectLeads(state): Array<Employee> {
     return state.employees.filter(e =>
-      e.possibleFunctions.some(f => f.name == EEmployeeFunctions.ProjectLead))
+      e.possibleFunctions.some(f => f == EEmployeeFunctions.ProjectLead))
   },
   sortedProjects(state): Array<Project> {
     const byTitle = (a: Project, b: Project) => a.title < b.title ? -1 : a.title > b.title ? 1 : 0

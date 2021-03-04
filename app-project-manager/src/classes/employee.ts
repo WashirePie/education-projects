@@ -1,3 +1,5 @@
+import { Type } from "class-transformer"
+
 export const enum EEmployeeFunctions {
   Developer = "Developer",
   Designer = "Designer",
@@ -16,7 +18,7 @@ export class Employee {
   department: string
   id: string
   workload: number
-  possibleFunctions: Array<IEmployeeFunction>
+  possibleFunctions: Array<EEmployeeFunctions>
 
   constructor(
     _name: string,
@@ -24,7 +26,7 @@ export class Employee {
     _department: string,
     _id: string,
     _workload: number,
-    _possibleFunctions: Array<IEmployeeFunction>
+    _possibleFunctions: Array<EEmployeeFunctions>
   ) {
     this.name = _name
     this.lastName = _lastName

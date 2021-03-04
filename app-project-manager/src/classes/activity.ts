@@ -1,13 +1,24 @@
+import { Type } from "class-transformer";
 import { DocumentRef } from "./document";
 import { Employee } from "./employee";
-import { ExternalCostResource, IResource, PersonnelResource } from "./resource";
+import { ExternalCostResource, IResource, PersonnelResource, Resource } from "./resource";
 
 export class Activity {
   id: string
   title: string
   startDate: Date
   endDate: Date
+  @Type(() => Resource, {
+    discriminator: {
+      property: '__type',
+      subTypes: [
+        { value: PersonnelResource, name: 'personellResource' },
+        { value: ExternalCostResource, name: 'externalCostResource' }
+      ],
+    },
+  })
   resources: Array<IResource>
+  @Type(() => Employee)
   responsibility: Employee
 
   constructor(
@@ -43,6 +54,7 @@ export class Activity {
         : v
   }
 
+  @Type(() => DocumentRef)
   private _documents: Array<DocumentRef>;
   public get documents(): Array<DocumentRef> {
     return this._documents;

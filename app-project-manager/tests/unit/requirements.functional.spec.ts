@@ -36,7 +36,7 @@ describe('requirements according to the specification book', () => {
     const desc = 'Description'
     const startDate = new Date()
     const priority = EProjectPriority.HIGH
-    const projectLead = new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [{ name: EEmployeeFunctions.Designer }])
+    const projectLead = new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [EEmployeeFunctions.Designer])
 
     project = new Project(title, id, approachModel!, desc, startDate, priority, projectLead)
     expect(project).toBeDefined() // FA2
@@ -94,7 +94,7 @@ describe('requirements according to the specification book', () => {
       new Date(),
       new Date(),
       [new ExternalCostResource('', 1, new CostType('', ''))],
-      new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [{ name: EEmployeeFunctions.Designer }])
+      new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [EEmployeeFunctions.Designer])
     )
 
     const id = phase?.activities[0].id
@@ -107,7 +107,7 @@ describe('requirements according to the specification book', () => {
     const id = '123'
     const startDate = new Date()
     const endDate = new Date()
-    const responsible = new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [{ name: EEmployeeFunctions.Designer }])
+    const responsible = new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [EEmployeeFunctions.Designer])
 
     activity = new Activity(id, title, startDate, endDate, [], responsible)
     expect(activity).toBeDefined() // FA7, FA8
@@ -128,7 +128,7 @@ describe('requirements according to the specification book', () => {
     const dep = 'SW-Development'
     const id = '#12345'
     const workload = 40
-    const funcs: Array<IEmployeeFunction> = [{ name: EEmployeeFunctions.Administrator }]
+    const funcs: Array<EEmployeeFunctions> = [EEmployeeFunctions.Administrator]
 
     employee = new Employee(name, lastName, dep, id, workload, funcs)
     expect(employee).toBeDefined() // FA10, FA11
@@ -145,8 +145,8 @@ describe('requirements according to the specification book', () => {
     const title = 'Sample Personnel Resource'
     const plan = 20
     const func = EEmployeeFunctions.Designer
-    const assignee = new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [{ name: EEmployeeFunctions.Designer }])
-    const illegalAssignee = new Employee('Seth', 'Wise', 'Dep', '#12346', 30, [{ name: EEmployeeFunctions.Administrator }])
+    const assignee = new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [EEmployeeFunctions.Designer])
+    const illegalAssignee = new Employee('Seth', 'Wise', 'Dep', '#12346', 30, [EEmployeeFunctions.Administrator])
 
     // Personnel resources can only be assigned to employees who are capable of the function
     expect(() => { let a = new PersonnelResource(title, plan, func, illegalAssignee) }).toThrowError()

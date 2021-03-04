@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import { useStore } from "@/store"
 import { ActionTypes } from "@/store/actions"
 

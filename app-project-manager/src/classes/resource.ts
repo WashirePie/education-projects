@@ -1,5 +1,6 @@
+import { Type } from "class-transformer";
 import { CostType } from "./costType";
-import { EEmployeeFunctions, Employee, IEmployeeFunction } from "./employee";
+import { EEmployeeFunctions, Employee } from "./employee";
 
 export interface IResource {
   title: string;
@@ -61,16 +62,15 @@ export class Resource {
 
 export class PersonnelResource extends Resource implements IResource {
   function: EEmployeeFunctions
+  @Type(() => Employee)
   assignee: Employee
   readonly unit: string = "hours"
 
   constructor(title: string, plan: number, _function: EEmployeeFunctions, _assignee: Employee) {
     super(title, plan)
-    if (_assignee.possibleFunctions.some(f => f.name == _function)) {
-      this.function = _function
-      this.assignee = _assignee
-    }
-    else throw new Error(`Assignee is not capable of doing work of type '${_function}'`)
+
+    this.function = _function
+    this.assignee = _assignee
   }
 
   public toPlanString = (): string => `'${this.title}' - ${this.plan} ${this.unit} - ${this.assignee.fullName}`
@@ -78,6 +78,7 @@ export class PersonnelResource extends Resource implements IResource {
 }
 
 export class ExternalCostResource extends Resource implements IResource {
+  @Type(() => CostType)
   costType: CostType
   readonly unit: string = "$"
 
@@ -85,7 +86,6 @@ export class ExternalCostResource extends Resource implements IResource {
     super(title, plan)
     this.costType = _costType
   }
-
 
   public toPlanString = (): string => `'${this.title}' - ${this.unit}${this.plan} - ${this.costType.title}`
   public getSummary = (): string => `Used ${this.unit}${this.actual} of ${this.unit}${this.plan}`

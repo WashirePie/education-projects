@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer'
 import { ApproachModel } from './approachModel'
 import { DocumentRef } from './document'
 import { Employee } from './employee'
@@ -41,8 +42,11 @@ export class Project {
     this._startDate = startDate
     this._endDate = startDate
 
-    this._phases = this.model.scaffold()
-    this._phases.forEach(p => p.setStartDate(this.startDate, this))
+    // This will fail when casting to this class, since the constructor is called before the Obj's properties are set
+    try {
+      this._phases = this.model.scaffold()
+      this._phases.forEach(p => p.setStartDate(this.startDate, this))
+    } catch (error) { /* Ignore */ }
 
     this._documents = []
     this._state = EProjectState.PLANNING
@@ -58,6 +62,7 @@ export class Project {
     return this._id;
   }
 
+  @Type(() => ApproachModel)
   private _model: ApproachModel;
   public get model(): ApproachModel {
     return this._model;
@@ -68,11 +73,14 @@ export class Project {
     return this._description;
   }
 
+  @Type(() => Phase)
+  /* @ts-ignore */
   private _phases: Array<Phase>;
   public get phases(): Array<Phase> {
     return this._phases;
   }
 
+  @Type(() => Employee)
   private _projectLead: Employee;
   public get projectLead(): Employee {
     return this._projectLead;
@@ -108,6 +116,7 @@ export class Project {
     return this._endDate;
   }
 
+  @Type(() => DocumentRef)
   private _documents: Array<DocumentRef>;
   public get documents(): Array<DocumentRef> {
     return this._documents;

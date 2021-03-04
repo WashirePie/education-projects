@@ -102,7 +102,7 @@ export default defineComponent({
       store.state.employeeFunctions.filter((f) => f.name != EEmployeeFunctions.ProjectLead)
     );
     const availableEmployees: ComputedRef<Array<Employee>> = computed(() =>
-      store.state.employees.filter((e) => e.possibleFunctions.some((f) => f.name == employeeFunctionValue.value))
+      store.state.employees.filter((e) => e.possibleFunctions.some((f) => f == employeeFunctionValue.value))
     );
 
     // Set default values on mounted

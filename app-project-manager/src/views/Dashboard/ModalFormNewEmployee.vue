@@ -73,7 +73,7 @@ import InputFieldOptions, { IOptionItem } from "@/components/InputFieldOptions.v
 import Octicon from "@/components/Octicon.vue";
 import { computed, ComputedRef, defineComponent, getCurrentInstance, ref } from "vue";
 import { useStore } from "@/store";
-import { Employee, IEmployeeFunction } from "@/classes/employee";
+import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/classes/employee";
 import { ActionTypes } from "@/store/actions";
 
 export default defineComponent({
@@ -119,14 +119,10 @@ export default defineComponent({
       const department = departmentField.value!.validateInput({ minChar: 2, maxChar: 60, regex: "default" });
       const id = persIdField.value!.validateInput({ regex: /^#[\d]{5}$/g });
       const workload = workloadField.value!.validateInput({ min: 0, max: 70 });
-      const funcs = functionsField.value!.validateInput(1) as Array<string>;
+      const funcs = functionsField.value!.validateInput(1) as Array<EEmployeeFunctions>;
 
       if (name && lastName && department && id && workload && funcs) {
-        const possibleFunctions: Array<IEmployeeFunction> = funcs.map((f) => {
-          return { name: f } as IEmployeeFunction;
-        });
-
-        const newEmployee: Employee = new Employee(name, lastName, department, id, workload, possibleFunctions);
+        const newEmployee: Employee = new Employee(name, lastName, department, id, workload, funcs);
 
         store
           .dispatch(ActionTypes.storeEmployee, newEmployee)

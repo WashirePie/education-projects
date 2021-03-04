@@ -1,6 +1,5 @@
-declare global 
-{
-  interface Window { 
+declare global {
+  interface Window {
     ipcRenderer: IpcRenderer;
     dialog: Dialog;
     path: string;
@@ -8,6 +7,7 @@ declare global
 }
 
 import { IpcRenderer, ipcRenderer, Dialog, remote } from 'electron'
+import "reflect-metadata"
 
 window.dialog = remote.dialog
 window.ipcRenderer = ipcRenderer

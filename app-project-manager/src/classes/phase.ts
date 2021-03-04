@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { Activity } from "./activity";
 import { DocumentRef } from "./document";
 import { Employee } from "./employee";
@@ -42,11 +43,13 @@ export class Phase {
     return this._endDate;
   }
 
+  @Type(() => Milestone)
   private _phaseMilestone: Milestone;
   public get phaseMilestone(): Milestone {
     return this._phaseMilestone;
   }
 
+  @Type(() => Activity)
   private _activities: Array<Activity>;
   public get activities(): Array<Activity> {
     return this._activities;
@@ -87,6 +90,7 @@ export class Phase {
     this._startDate = startDate
   }
 
+  @Type(() => Milestone)
   private _milestones: Array<Milestone>;
   public get milestones(): Array<Milestone> {
     return this._milestones;
@@ -137,6 +141,7 @@ export class Phase {
     }
   }
 
+  @Type(() => DocumentRef)
   private _documents: Array<DocumentRef>;
   public get documents(): Array<DocumentRef> {
     return this._documents;

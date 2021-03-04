@@ -1,10 +1,12 @@
+import { Activity } from "@/classes/activity";
 import { ApproachModel } from "@/classes/approachModel";
 import { CostType } from "@/classes/costType";
 import { DocumentRef } from "@/classes/document";
 import { EEmployeeFunctions, Employee, IEmployeeFunction } from "@/classes/employee";
+import { Milestone } from "@/classes/milestone";
 import { EProjectPriority, Project } from "@/classes/project";
 import { ExternalCostResource, PersonnelResource } from "@/classes/resource";
-import { useDatabase } from "./db";
+import { classToPlain, plainToClass } from "class-transformer";
 
 export type ProjectManagerState =
   {
@@ -37,10 +39,10 @@ const costTypeFour = new CostType('Consultancy Work', 'CT220')
 const HERMES: ApproachModel = new ApproachModel('HERMES', ['Initialization', 'Concept', 'Realization', 'Introduction'])
 const IPDRCE: ApproachModel = new ApproachModel('IPDRCE', ['Inform', 'Plan', 'Decide', 'Realize', 'Control', 'Evaluate'])
 
-const employeeMax: Employee = new Employee('Max', 'Muster', 'Development', '#99999', 40, [employeeFunctions[0], employeeFunctions[3]])
-const employeeBob: Employee = new Employee('Bob', 'Muster', 'Administration', '#99998', 30, [employeeFunctions[2], employeeFunctions[3]])
-const employeeEve: Employee = new Employee('Eve', 'Muster', 'Product Design', '#99997', 42, [employeeFunctions[1]])
-const employeeJil: Employee = new Employee('Jil', 'Muster', 'Development', '#99996', 10, [employeeFunctions[0], employeeFunctions[2], employeeFunctions[3]])
+const employeeMax: Employee = new Employee('Max', 'Muster', 'Development', '#99999', 40, [employeeFunctions[0].name, employeeFunctions[3].name])
+const employeeBob: Employee = new Employee('Bob', 'Muster', 'Administration', '#99998', 30, [employeeFunctions[2].name, employeeFunctions[3].name])
+const employeeEve: Employee = new Employee('Eve', 'Muster', 'Product Design', '#99997', 42, [employeeFunctions[1].name])
+const employeeJil: Employee = new Employee('Jil', 'Muster', 'Development', '#99996', 10, [employeeFunctions[0].name, employeeFunctions[2].name, employeeFunctions[3].name])
 
 const projects: Array<Project> = [
   new Project('A Project', 'P444', IPDRCE, 'A sample project.', new Date(`1-1-21`), EProjectPriority.ABOVE_AVERAGE, employeeJil),
@@ -127,14 +129,13 @@ projects.forEach(proj => {
 // Pick out project-to-be-managed
 const sampleProjectToBeManaged = projects[0]
 
-// Add othe projects back in
+// Add other projects back in
 projects.push(deniedProject!)
 projects.push(plannedProject!)
 
 /*
  * ----------------------------- /Sample Data -----------------------------
  */
-
 
 export const state: ProjectManagerState = {
   // 'employeeFunctions' are hardcoded and immutable. This could easily be moved to a database.
