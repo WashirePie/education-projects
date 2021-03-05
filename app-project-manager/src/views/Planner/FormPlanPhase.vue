@@ -26,13 +26,13 @@
   <div v-if="phase.activities.length">
     <p class="f3 text-bold my-4">Activities</p>
     <div class="Box Box--condensed mt-2">
-      <div class="Box-row" v-for="activity in phase.activities" :key="activity.id">
+      <div class="Box-row" v-for="activity in phase.activities" :key="activity.aId">
         <span class="mr-2">{{ activity.title }}</span>
         <span class="Counter mr-2">💰 {{ activity.getTotalCost() }}CHF</span>
         <span class="Counter mr-2">⌛ {{ activity.getTotalWorkload() }} hours</span>
 
         <div class="float-right">
-          <span class="Label mx-2">🗝️ {{ activity.id }}</span>
+          <span class="Label mx-2">🗝️ {{ activity.aId }}</span>
           <p class="f6 d-inline">
             {{ activity.startDate.toLocaleDateString() }} - {{ activity.endDate.toLocaleDateString() }}
           </p>

@@ -1,12 +1,19 @@
 import { Phase } from "./phase";
 
 export class ApproachModel {
-  title: string
-  phases: Array<string>
+  constructor(title: string, phases: Array<string>) {
+    this._title = title
+    this._phases = phases
+  }
 
-  constructor(_title: string, _phases: Array<string>) {
-    this.title = _title
-    this.phases = _phases
+  private _title: string;
+  public get title(): string {
+    return this._title;
+  }
+
+  private _phases: Array<string>;
+  public get phases(): Array<string> {
+    return this._phases;
   }
 
   scaffold(): Array<Phase> {

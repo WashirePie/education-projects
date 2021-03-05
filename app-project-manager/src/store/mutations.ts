@@ -41,16 +41,16 @@ export type Mutations = {
 
 export const mutations: MutationTree<ProjectManagerState> & Mutations = {
   [MutationType.addEmployee](state, employee) { state.employees.push(employee) },
-  [MutationType.removeEmployee](state, employee) { state.employees = state.employees.filter(e => e.id != employee.id) },
+  [MutationType.removeEmployee](state, employee) { state.employees = state.employees.filter(e => e.eId != employee.eId) },
 
   [MutationType.addApproachModel](state, model) { state.approachModels.push(model) },
   [MutationType.removeApproachModel](state, model) { state.approachModels = state.approachModels.filter(a => a.title != model.title) },
 
   [MutationType.addCostType](state, costType) { state.costTypes.push(costType) },
-  [MutationType.removeCostType](state, costType) { state.costTypes = state.costTypes.filter(c => c.id != costType.id) },
+  [MutationType.removeCostType](state, costType) { state.costTypes = state.costTypes.filter(c => c.cId != costType.cId) },
 
   [MutationType.addProject](state, project) { state.projects.push(project) },
-  [MutationType.removeProject](state, project) { state.projects = state.projects.filter(p => p.id != project.id) },
+  [MutationType.removeProject](state, project) { state.projects = state.projects.filter(p => p.pId != project.pId) },
 
   [MutationType.assignProjectToBePlanned](state, nullableProject) { state.projectToBePlanned = nullableProject },
   [MutationType.assignProjectToBeManaged](state, nullableProject) { state.projectToBeManaged = nullableProject },

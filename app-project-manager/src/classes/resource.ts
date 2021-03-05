@@ -61,16 +61,29 @@ export class Resource {
 }
 
 export class PersonnelResource extends Resource implements IResource {
-  function: EEmployeeFunctions
-  @Type(() => Employee)
-  assignee: Employee
-  readonly unit: string = "hours"
-
-  constructor(title: string, plan: number, _function: EEmployeeFunctions, _assignee: Employee) {
+  constructor(title: string, plan: number, func: EEmployeeFunctions, assignee: Employee) {
     super(title, plan)
 
-    this.function = _function
-    this.assignee = _assignee
+    this._func = func
+    this._assignee = assignee
+  }
+
+  public get unit(): string {
+    return "hours"
+  }
+
+  private _func: EEmployeeFunctions;
+  public get func(): EEmployeeFunctions {
+    return this._func;
+  }
+  public set func(v: EEmployeeFunctions) {
+    this._func = v;
+  }
+
+  @Type(() => Employee)
+  private _assignee: Employee;
+  public get assignee(): Employee {
+    return this._assignee;
   }
 
   public toPlanString = (): string => `'${this.title}' - ${this.plan} ${this.unit} - ${this.assignee.fullName}`
@@ -78,13 +91,20 @@ export class PersonnelResource extends Resource implements IResource {
 }
 
 export class ExternalCostResource extends Resource implements IResource {
-  @Type(() => CostType)
-  costType: CostType
-  readonly unit: string = "$"
 
-  constructor(title: string, plan: number, _costType: CostType) {
+  constructor(title: string, plan: number, costType: CostType) {
     super(title, plan)
-    this.costType = _costType
+    this._costType = costType
+  }
+
+  public get unit() {
+    return '$'
+  }
+
+  @Type(() => CostType)
+  private _costType: CostType;
+  public get costType(): CostType {
+    return this._costType;
   }
 
   public toPlanString = (): string => `'${this.title}' - ${this.unit}${this.plan} - ${this.costType.title}`

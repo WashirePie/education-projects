@@ -1,9 +1,16 @@
 export class CostType {
-  title: string
-  id: string
+  constructor(title: string, id: string) {
+    this._title = title
+    this._cId = id
+  }
 
-  constructor(_title: string, _id: string) {
-    this.title = _title
-    this.id = _id
+  private _title: string;
+  public get title(): string {
+    return this._title;
+  }
+
+  private _cId: string;
+  public get cId(): string {
+    return this._cId;
   }
 }

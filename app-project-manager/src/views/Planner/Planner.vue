@@ -14,7 +14,7 @@
     <!-- Project overview -->
     <p class="f3 text-bold my-4">Project Overview</p>
     <p class="f5 d-block">
-      Project title is set to <b>{{ projectToBePlanned?.title }}</b> and the id to <b>{{ projectToBePlanned?.id }}</b
+      Project title is set to <b>{{ projectToBePlanned?.title }}</b> and the id to <b>{{ projectToBePlanned?.pId }}</b
       >. <br />
       <b>{{ projectToBePlanned?.projectLead.fullName }}</b> is assigned as project lead. <br />
       <br />
@@ -133,8 +133,7 @@ export default defineComponent({
     const removeDocument = (document: DocumentRef) => projectToBePlanned.value.removeDocument(document);
 
     const discardPlannedProject = () => {
-      router.push(<RouteLocationRaw>{ path: "/" });
-      store.dispatch(ActionTypes.setProjectToBePlanned, null);
+      router.push(<RouteLocationRaw>{ path: "/" }).then(() => store.dispatch(ActionTypes.setProjectToBePlanned, null));
     };
 
     const savePlannedProject = () => {
@@ -144,8 +143,9 @@ export default defineComponent({
           .dispatch(ActionTypes.storeProject, projectToBePlanned.value)
           .then((res: string) => {
             errorMessage.value = "";
-            router.push(<RouteLocationRaw>{ path: "/" });
-            store.dispatch(ActionTypes.setProjectToBePlanned, null);
+            router
+              .push(<RouteLocationRaw>{ path: "/" })
+              .then(() => store.dispatch(ActionTypes.setProjectToBePlanned, null));
           })
           .catch((err: Error) => (errorMessage.value = err.message))
           .finally(() => loadingbar.finish());

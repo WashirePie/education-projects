@@ -21,7 +21,7 @@
           <div
             class="Box Box--condensed my-2"
             v-for="activity in phase.getMilestoneActivities(milestone)"
-            :key="activity.id"
+            :key="activity.aId"
           >
             <div class="Box-header">{{ activity.title }}</div>
             <div class="Box-row" v-for="resource in activity.resources" :key="resource.title">

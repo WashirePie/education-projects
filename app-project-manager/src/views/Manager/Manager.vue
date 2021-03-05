@@ -10,7 +10,7 @@
     <!-- Project overview -->
     <p class="f3 text-bold my-4">Project Overview</p>
     <p class="f5 d-block">
-      Project title is set to <b>{{ projectToBeManaged?.title }}</b> and the id to <b>{{ projectToBeManaged?.id }}</b
+      Project title is set to <b>{{ projectToBeManaged?.title }}</b> and the id to <b>{{ projectToBeManaged?.pId }}</b
       >. <br />
       <b>{{ projectToBeManaged?.projectLead.fullName }}</b> is assigned as project lead. <br />
       <br />
@@ -136,13 +136,12 @@ export default defineComponent({
     const removeDocument = (document: DocumentRef) => projectToBeManaged.value.removeDocument(document);
 
     const discardProjectToBeManaged = () => {
-      router.push(<RouteLocationRaw>{ path: "/" });
-      store.dispatch(ActionTypes.setProjectToBeExecuted, null);
+      router.push(<RouteLocationRaw>{ path: "/" }).then(() => store.dispatch(ActionTypes.setProjectToBeManaged, null));
     };
 
     const cancelProjectToBeManaged = () => {
       projectToBeManaged.value.cancel();
-      router.push(<RouteLocationRaw>{ path: "/" });
+      saveProjectToBeManaged();
     };
 
     const saveProjectToBeManaged = () => {
@@ -152,8 +151,9 @@ export default defineComponent({
           .dispatch(ActionTypes.updateProject, projectToBeManaged.value)
           .then((res: string) => {
             errorMessage.value = "";
-            router.push(<RouteLocationRaw>{ path: "/" });
-            store.dispatch(ActionTypes.setProjectToBeExecuted, null);
+            router
+              .push(<RouteLocationRaw>{ path: "/" })
+              .then(() => store.dispatch(ActionTypes.setProjectToBeManaged, null));
           })
           .catch((err: Error) => (errorMessage.value = err.message))
           .finally(() => loadingbar.finish());

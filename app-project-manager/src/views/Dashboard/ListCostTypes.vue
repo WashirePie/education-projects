@@ -5,7 +5,7 @@
     <div class="Box Box--condensed mt-2">
       <div class="Box-row" v-for="ct in costTypes" :key="ct.title">
         <span>{{ ct.title }}</span>
-        <span class="Label Label--gray float-right">🗝️ {{ ct.id }} </span>
+        <span class="Label Label--gray float-right">🗝️ {{ ct.cId }} </span>
       </div>
     </div>
   </div>

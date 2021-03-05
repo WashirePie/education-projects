@@ -5,7 +5,7 @@
     <div class="Box mt-2">
       <div
         v-for="proj in projects"
-        :key="proj.id"
+        :key="proj.pId"
         class="Box-row"
         :class="`${proj.isAwaitingApproval ? 'Box-row--unread' : ''} 
                  ${proj.isExecuting || proj.isAwaitingApproval ? 'clickable Box-row--hover-blue' : ''}`"
@@ -33,7 +33,7 @@
           {{ proj.startDate.toLocaleDateString() }} -
           {{ proj.endDate.toLocaleDateString() }}
         </p>
-        <span class="Label float-right">🗝️ {{ proj.id }}</span>
+        <span class="Label float-right">🗝️ {{ proj.pId }}</span>
         <p class="note">
           Priority: {{ proj.priority }} | Lead: {{ proj.projectLead.fullName }} | Model: {{ proj.model.title }}
         </p>

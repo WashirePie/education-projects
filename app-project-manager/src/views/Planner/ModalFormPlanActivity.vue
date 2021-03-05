@@ -198,7 +198,14 @@ export default defineComponent({
 
       if (title && startDate && endDate && responsibility && resources.value) {
         try {
-          props.phase.addActivity(title, startDate, endDate, resources.value, responsibility, documents.value);
+          props.phase.addActivity(
+            title,
+            startDate,
+            endDate,
+            resources.value,
+            responsibility,
+            documents.value as Array<DocumentRef>
+          );
           errorMessage.value = "";
           emit("done");
         } catch (error) {

@@ -84,7 +84,7 @@ export default defineComponent({
       const mapped: Array<IOptionItem> = activities.map((f) => {
         return {
           name: f.title,
-          payload: f.id,
+          payload: f.aId,
           note: `${
             f.responsibility.fullName
           } / ${f.startDate.toLocaleDateString()} - ${f.endDate.toLocaleDateString()}`,

@@ -4,10 +4,55 @@ import { Employee } from "./employee";
 import { ExternalCostResource, IResource, PersonnelResource, Resource } from "./resource";
 
 export class Activity {
-  id: string
-  title: string
-  startDate: Date
-  endDate: Date
+  constructor(
+    aId: string,
+    title: string,
+    startDate: Date,
+    endDate: Date,
+    resources: Array<IResource>,
+    responsibility: Employee,
+    documents: Array<DocumentRef> = []
+  ) {
+    this._aId = aId
+    this._title = title
+    this._startDate = startDate
+    this._endDate = endDate
+    this._resources = resources
+    this._responsibility = responsibility
+    this._documents = documents
+
+    this._progress = 0
+  }
+
+  private _title: string;
+  public get title(): string {
+    return this._title;
+  }
+
+  private _aId: string;
+  public get aId(): string {
+    return this._aId;
+  }
+
+  private _startDate: Date;
+  public get startDate(): Date {
+    return this._startDate;
+  }
+
+  private _endDate: Date;
+  public get endDate(): Date {
+    return this._endDate;
+  }
+
+  @Type(() => Employee)
+  private _responsibility: Employee;
+  public get responsibility(): Employee {
+    return this._responsibility;
+  }
+  public set responsibility(v: Employee) {
+    this._responsibility = v;
+  }
+
   @Type(() => Resource, {
     discriminator: {
       property: '__type',
@@ -17,28 +62,12 @@ export class Activity {
       ],
     },
   })
-  resources: Array<IResource>
-  @Type(() => Employee)
-  responsibility: Employee
-
-  constructor(
-    _id: string,
-    _title: string,
-    _startDate: Date,
-    _endDate: Date,
-    _resources: Array<IResource>,
-    _responsibility: Employee,
-    _documents: Array<DocumentRef> = []
-  ) {
-    this.id = _id
-    this.title = _title
-    this.startDate = _startDate
-    this.endDate = _endDate
-    this.resources = _resources
-    this.responsibility = _responsibility
-    this._documents = _documents
-
-    this._progress = 0
+  private _resources: Array<IResource>;
+  public get resources(): Array<IResource> {
+    return this._resources;
+  }
+  public set resources(v: Array<IResource>) {
+    this._resources = v;
   }
 
   private _progress: number;

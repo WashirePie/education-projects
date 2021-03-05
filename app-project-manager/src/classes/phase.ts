@@ -7,8 +7,6 @@ import { EProjectState, Project } from "./project";
 import { IResource } from "./resource";
 
 export class Phase {
-  approvalDate: Date | null = null
-
   constructor(title: string) {
     this._title = title
 
@@ -19,11 +17,21 @@ export class Phase {
     this._endDate = this._startDate
     this._state = EProjectState.PLANNING
     this._phaseMilestone = new Milestone('Phasemilestone', [])
+
+    this._approvalDate = null
   }
 
   private _title: string;
   public get title(): string {
     return this._title;
+  }
+
+  private _approvalDate: Date | null;
+  public get approvalDate(): Date | null {
+    return this._approvalDate;
+  }
+  public set approvalDate(v: Date | null) {
+    this._approvalDate = v;
   }
 
   private _state: EProjectState
@@ -66,14 +74,14 @@ export class Phase {
 
     const newActivity = new Activity(newId, title, startDate, endDate, resources, responsibility, documents)
 
-    if (this.phaseMilestone.activities.includes(newActivity.id)) throw new Error('Activity with this ID already exists!') // Sanity check
+    if (this.phaseMilestone.activities.includes(newActivity.aId)) throw new Error('Activity with this ID already exists!') // Sanity check
 
-    this.phaseMilestone.activities.push(newActivity.id)
+    this.phaseMilestone.activities.push(newActivity.aId)
     this._activities.push(newActivity)
   }
   public removeActivity(activity: Activity) {
-    const id = activity.id
-    this._activities = this._activities.filter(a => a.id != id)
+    const id = activity.aId
+    this._activities = this._activities.filter(a => a.aId != id)
     this._phaseMilestone.activities = this._phaseMilestone.activities.filter(i => i != id)
   }
 
@@ -97,7 +105,7 @@ export class Phase {
   }
   public addMilestone(name: string, watch: Array<string>) {
     let error = null
-    const activitiesExist = this._activities.some(a => watch.includes(a.id))
+    const activitiesExist = this._activities.some(a => watch.includes(a.aId))
 
     if (!activitiesExist) error = new Error('Not all of the selected activities exist in this phase') // Sanity check
     if (!watch.length) error = new Error('A milestone needs at least one activity reference assigned')
@@ -114,7 +122,7 @@ export class Phase {
     this._milestones = this._milestones.filter(m => m.name != milestone.name)
   }
   public getMilestoneActivities(milestone: Milestone): Array<Activity> {
-    return this._activities.filter(a => milestone.activities.includes(a.id))
+    return this._activities.filter(a => milestone.activities.includes(a.aId))
   }
   public getMilestoneEvaluatable(milestone: Milestone): boolean {
     const activities = this.getMilestoneActivities(milestone)

@@ -9,13 +9,32 @@ export enum EMilestoneState {
 }
 
 export class Milestone {
-  name: string
-  activities: Array<Activity['id']>
-  state: EMilestoneState = EMilestoneState.open
+  constructor(name: string, watch: Array<Activity['aId']>) {
+    this._name = name
+    this._activities = watch
 
-  constructor(_name: string, watch: Array<Activity['id']>) {
-    this.name = _name
-    this.activities = watch
+    this._state = EMilestoneState.open
+  }
+
+  private _name: string;
+  public get name(): string {
+    return this._name;
+  }
+
+  private _activities: Array<Activity['aId']>;
+  public get activities(): Array<Activity['aId']> {
+    return this._activities;
+  }
+  public set activities(v: Array<Activity['aId']>) {
+    this._activities = v;
+  }
+
+  private _state: EMilestoneState;
+  public get state(): EMilestoneState {
+    return this._state;
+  }
+  public set state(v: EMilestoneState) {
+    this._state = v
   }
 
   public get isEvaluated(): boolean { return this.state != EMilestoneState.open }

@@ -5,7 +5,7 @@
     <div class="Box Box--condensed mt-4">
       <div
         v-for="activity in phase.activities"
-        :key="activity.id"
+        :key="activity.aId"
         class="Box-row Box-row--hover-blue clickable"
         @click="
           activityToBeManaged = activity;
@@ -17,7 +17,7 @@
         <span class="Counter mr-2">⌛ {{ activity.getTotalWorkload() }} hours</span>
 
         <div class="float-right">
-          <span class="Label mx-2">🗝️ {{ activity.id }}</span>
+          <span class="Label mx-2">🗝️ {{ activity.aId }}</span>
           <p class="f6 d-inline">
             {{ activity.startDate.toLocaleDateString() }} - {{ activity.endDate.toLocaleDateString() }}
           </p>

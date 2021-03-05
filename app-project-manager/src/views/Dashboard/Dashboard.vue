@@ -112,20 +112,7 @@ export default defineComponent({
     const showNewEmployeeModal = ref(false);
     const projectToBePlanned: ComputedRef<Project | null> = computed(() => store.state.projectToBePlanned);
 
-    // Setup references for elements
-    const formProject = ref<Ref | null>(null);
-
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar;
-
-    const validateProjectToBePlanned = () => {
-      loadingbar.start();
-
-      formProject.value
-        .validateForm()
-        .then(() => router.push(<RouteLocationRaw>{ path: "/plan" }))
-        .catch((err: Error) => console.log(err.message)) // TODO: Move to notification
-        .finally(() => loadingbar.finish());
-    };
 
     const handleProjectAction = (project: Project) => {
       if (project.isAwaitingApproval) {
@@ -134,15 +121,17 @@ export default defineComponent({
 
         store
           .dispatch(ActionTypes.updateProject, project)
-          .catch((err: Error) => console.error(err.message)) // TODO: Move to notification
+          .catch((error: Error) =>
+            window.dialog.showErrorBox("An error occured while updating this project", error.message)
+          )
           .finally(() => loadingbar.finish());
       } else if (project.isExecuting) {
         loadingbar.start();
 
         store
-          .dispatch(ActionTypes.setProjectToBeExecuted, project)
+          .dispatch(ActionTypes.setProjectToBeManaged, project)
           .then(() => router.push(<RouteLocationRaw>{ path: "/execute" }))
-          .catch((err: Error) => console.log(err.message)) // TODO: Move to notification
+          .catch((err: Error) => window.dialog.showMessageBox({ message: "There's already a project in the manager" }))
           .finally(() => loadingbar.finish());
       }
     };
@@ -152,10 +141,8 @@ export default defineComponent({
       showNewApproachModelModal,
       showNewCostTypeModal,
       showNewEmployeeModal,
-      validateProjectToBePlanned,
       handleProjectAction,
       projectToBePlanned,
-      formProject,
     };
   },
 });

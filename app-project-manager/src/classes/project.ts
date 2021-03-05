@@ -22,8 +22,6 @@ export enum EProjectPriority {
 }
 
 export class Project {
-  approvalDate: Date | null = null
-
   constructor(
     title: string,
     id: string,
@@ -34,7 +32,7 @@ export class Project {
     projectLead: Employee
   ) {
     this._title = title
-    this._id = id
+    this._pId = id
     this._model = model
     this._description = description
     this._priority = priority
@@ -50,6 +48,7 @@ export class Project {
 
     this._documents = []
     this._state = EProjectState.PLANNING
+    this._approvalDate = null
   }
 
   private _title: string;
@@ -57,10 +56,19 @@ export class Project {
     return this._title;
   }
 
-  private _id: string;
-  public get id(): string {
-    return this._id;
+  private _pId: string;
+  public get pId(): string {
+    return this._pId;
   }
+
+  private _approvalDate: Date | null;
+  public get approvalDate(): Date | null {
+    return this._approvalDate;
+  }
+  public set approvalDate(v: Date | null) {
+    this._approvalDate = v;
+  }
+
 
   @Type(() => ApproachModel)
   private _model: ApproachModel;

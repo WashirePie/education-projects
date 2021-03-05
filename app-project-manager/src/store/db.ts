@@ -2,8 +2,10 @@ import { ApproachModel } from "@/classes/approachModel";
 import { CostType } from "@/classes/costType";
 import { Employee } from "@/classes/employee";
 import { Project } from "@/classes/project";
+import { plainToClass } from "class-transformer";
 import Nedb from "nedb";
 import * as path from "path";
+import { store } from ".";
 
 export enum EDatabases {
   projects = 'projects',
@@ -35,9 +37,16 @@ const databases: ProjectManagerDBs = {
     filename: databasePaths.projects,
     autoload: true,
     onload(error: Error | null) {
-      if (error) console.error(`Error while loading the db '${[EDatabases.projects]}'`, error)
-      databases[EDatabases.projects].find({}, (error: Error, docs: Array<Project>) => {
-        // TODO: Init state with db data
+      if (error) window.dialog.showErrorBox(`Error while loading the '${[EDatabases.projects]}' database`, error.message)
+
+      // Get all stored projects
+      databases[EDatabases.projects].find({}, (error: Error, docs: Array<object>) => {
+        if (error) window.dialog.showErrorBox(`Error while loading data from the '${[EDatabases.projects]} database'`, error.message)
+        try {
+          store.state.projects = plainToClass(Project, docs)
+        } catch (error) {
+          if (error) window.dialog.showErrorBox(`Error casting data from the '${[EDatabases.projects]} database'`, error.message)
+        }
       })
     }
   }),
@@ -45,9 +54,16 @@ const databases: ProjectManagerDBs = {
     filename: databasePaths.approachModels,
     autoload: true,
     onload(error: Error | null) {
-      if (error) console.error(`Error while loading the db '${[EDatabases.approachModels]}'`, error)
-      databases[EDatabases.approachModels].find({}, (error: Error, docs: Array<ApproachModel>) => {
-        // TODO: Init state with db data
+      if (error) window.dialog.showErrorBox(`Error while loading the '${[EDatabases.approachModels]}' database`, error.message)
+
+      // Get all stored approach modesl
+      databases[EDatabases.approachModels].find({}, (error: Error, docs: Array<object>) => {
+        if (error) window.dialog.showErrorBox(`Error while loading data from the '${[EDatabases.approachModels]} database'`, error.message)
+        try {
+          store.state.approachModels = plainToClass(ApproachModel, docs)
+        } catch (error) {
+          if (error) window.dialog.showErrorBox(`Error casting data from the '${[EDatabases.approachModels]} database'`, error.message)
+        }
       })
     }
   }),
@@ -55,9 +71,16 @@ const databases: ProjectManagerDBs = {
     filename: databasePaths.costTypes,
     autoload: true,
     onload(error: Error | null) {
-      if (error) console.error(`Error while loading the db '${[EDatabases.costTypes]}'`, error)
-      databases[EDatabases.costTypes].find({}, (error: Error, docs: Array<CostType>) => {
-        // TODO: Init state with db data
+      if (error) window.dialog.showErrorBox(`Error while loading the '${[EDatabases.costTypes]}' database`, error.message)
+
+      // Get all stored cost types
+      databases[EDatabases.costTypes].find({}, (error: Error, docs: Array<object>) => {
+        if (error) window.dialog.showErrorBox(`Error while loading data from the '${[EDatabases.costTypes]} database'`, error.message)
+        try {
+          store.state.costTypes = plainToClass(CostType, docs)
+        } catch (error) {
+          if (error) window.dialog.showErrorBox(`Error casting data from the '${[EDatabases.costTypes]} database'`, error.message)
+        }
       })
     }
   }),
@@ -65,9 +88,16 @@ const databases: ProjectManagerDBs = {
     filename: databasePaths.employees,
     autoload: true,
     onload(error: Error | null) {
-      if (error) console.error(`Error while loading the db '${[EDatabases.employees]}'`, error)
-      databases[EDatabases.employees].find({}, (error: Error, docs: Array<Employee>) => {
-        // TODO: Init state with db data
+      if (error) window.dialog.showErrorBox(`Error while loading the '${[EDatabases.employees]}' database`, error.message)
+
+      // Get all stored employees
+      databases[EDatabases.employees].find({}, (error: Error, docs: Array<object>) => {
+        if (error) window.dialog.showErrorBox(`Error while loading data from the '${[EDatabases.employees]} database'`, error.message)
+        try {
+          store.state.employees = plainToClass(Employee, docs)
+        } catch (error) {
+          if (error) window.dialog.showErrorBox(`Error casting data from the '${[EDatabases.employees]} database'`, error.message)
+        }
       })
     }
   })
