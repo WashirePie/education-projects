@@ -159,6 +159,7 @@ export default defineComponent({
 
     const saveProjectToBeManaged = () => {
       try {
+        projectToBeManaged.value.manage();
         store
           .dispatch(ActionTypes.storeProject, projectToBeManaged.value)
           .then((res: string) => {

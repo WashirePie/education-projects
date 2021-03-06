@@ -163,7 +163,8 @@ export class Project {
   }
 
   public manage() {
-    const phasesAreFinished = this.phases.every(p => p.state == EProjectState.FINISHED)
+    const phasesAreFinished = this.phases.every(p => p.isFinished)
+    console.log(phasesAreFinished);
 
     if (phasesAreFinished) {
       this._state = EProjectState.FINISHED
