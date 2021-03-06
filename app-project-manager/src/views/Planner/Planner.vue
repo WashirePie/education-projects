@@ -54,7 +54,7 @@
       <div class="TimelineItem-body">
         <!-- Phase base data -->
         <p class="f5 d-inline">Phase</p>
-        <p class="f5 d-inline text-bold">{{ phase.title }}</p>
+        <p class="f5 d-inline text-bold ml-1">{{ phase.title }}</p>
         <p class="f6 d-block">{{ phase.startDate.toLocaleDateString() }} - {{ phase.endDate.toLocaleDateString() }}</p>
 
         <!-- Phase form -->

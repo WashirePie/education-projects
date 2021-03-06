@@ -51,7 +51,7 @@
       <div class="TimelineItem-body">
         <!-- Phase base data -->
         <p class="f5 d-inline">Phase</p>
-        <p class="f5 d-inline text-bold">{{ phase.title }}</p>
+        <p class="f5 d-inline text-bold ml-1">{{ phase.title }}</p>
         <p class="f6 d-block">
           {{ phase.startDate.toLocaleDateString() }} - {{ phase.endDate.toLocaleDateString() }} (Review Date)
         </p>
@@ -92,8 +92,13 @@
         </button>
 
         <button class="btn btn-danger mr-2" type="button" @click="discardProjectToBeManaged">
-          <Octicon octicon="trash" />
+          <Octicon octicon="x" />
           <span>Discard Changes</span>
+        </button>
+
+        <button class="btn btn-danger float-right" type="button" @click="removeProjectToBeManaged">
+          <Octicon octicon="trash" />
+          <span>Delete this Project</span>
         </button>
       </div>
     </div>
@@ -132,11 +137,19 @@ export default defineComponent({
     const projectToBeManaged: ComputedRef<Project> = computed(() => store.state.projectToBeManaged!);
 
     const projectedEndDate: ComputedRef<Date> = computed(() => projectToBeManaged.value.endDate);
+    console.log(projectToBeManaged.value);
 
     const removeDocument = (document: DocumentRef) => projectToBeManaged.value.removeDocument(document);
 
     const discardProjectToBeManaged = () => {
       router.push(<RouteLocationRaw>{ path: "/" }).then(() => store.dispatch(ActionTypes.setProjectToBeManaged, null));
+    };
+
+    const removeProjectToBeManaged = () => {
+      store.dispatch(ActionTypes.deleteProject, projectToBeManaged.value);
+      router.push(<RouteLocationRaw>{ path: "/" }).then(() => {
+        store.dispatch(ActionTypes.setProjectToBeManaged, null);
+      });
     };
 
     const cancelProjectToBeManaged = () => {
@@ -146,9 +159,8 @@ export default defineComponent({
 
     const saveProjectToBeManaged = () => {
       try {
-        // TODO: Implement Checks
         store
-          .dispatch(ActionTypes.updateProject, projectToBeManaged.value)
+          .dispatch(ActionTypes.storeProject, projectToBeManaged.value)
           .then((res: string) => {
             errorMessage.value = "";
             router
@@ -165,6 +177,7 @@ export default defineComponent({
     return {
       saveProjectToBeManaged,
       discardProjectToBeManaged,
+      removeProjectToBeManaged,
       cancelProjectToBeManaged,
       removeDocument,
       errorMessage,

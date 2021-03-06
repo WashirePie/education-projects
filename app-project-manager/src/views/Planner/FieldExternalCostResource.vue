@@ -20,7 +20,7 @@
 
     <div class="form-group-body">
       <select v-model="costTypeValue" class="form-select">
-        <option v-for="cc in costTypes" :key="cc.id" :value="cc">{{ cc.id }}: {{ cc.title }}</option>
+        <option v-for="cc in costTypes" :key="cc.cId" :value="cc">{{ cc.cId }}: {{ cc.title }}</option>
       </select>
     </div>
   </div>

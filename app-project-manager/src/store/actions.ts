@@ -2,9 +2,13 @@ import { ApproachModel } from "@/classes/approachModel";
 import { CostType } from "@/classes/costType";
 import { Employee } from "@/classes/employee";
 import { Project } from "@/classes/project";
+import { ClassConstructor, classToPlain, plainToClass } from "class-transformer";
 import { ActionContext, ActionTree } from "vuex";
+import { useDatabase } from "./db";
 import { Mutations, MutationType } from "./mutations";
 import { ProjectManagerState, state } from "./state";
+
+const db = useDatabase()
 
 export enum ActionTypes {
   storeEmployee = "STORE_EMPLOYEE",
@@ -32,19 +36,15 @@ type ActionAugments = Omit<ActionContext<ProjectManagerState, ProjectManagerStat
 
 export type Actions = {
   [ActionTypes.storeEmployee](context: ActionAugments, employee: Employee): Promise<string>
-  [ActionTypes.updateEmployee](context: ActionAugments, employee: Employee): Promise<string>
   [ActionTypes.deleteEmployee](context: ActionAugments, employee: Employee): Promise<string>
 
   [ActionTypes.storeApproachModel](context: ActionAugments, model: ApproachModel): Promise<string>
-  [ActionTypes.updateApproachModel](context: ActionAugments, model: ApproachModel): Promise<string>
   [ActionTypes.deleteApproachModel](context: ActionAugments, model: ApproachModel): Promise<string>
 
   [ActionTypes.storeCostType](context: ActionAugments, costType: CostType): Promise<string>
-  [ActionTypes.updateCostType](context: ActionAugments, costType: CostType): Promise<string>
   [ActionTypes.deleteCostType](context: ActionAugments, costType: CostType): Promise<string>
 
   [ActionTypes.storeProject](context: ActionAugments, project: Project): Promise<string>
-  [ActionTypes.updateProject](context: ActionAugments, project: Project): Promise<string>
   [ActionTypes.deleteProject](context: ActionAugments, project: Project): Promise<string>
 
   [ActionTypes.setProjectToBePlanned](context: ActionAugments, nullableProject: Project | null): Promise<string>
@@ -52,11 +52,11 @@ export type Actions = {
 }
 
 // Message generators
-const success = {
+const successMessage = {
   generic: (type: string, action: string): string => `${type} was successfully ${action}`,
 }
 
-const error = {
+const errorMessage = {
   duplicate: (type: string, property: string): ReferenceError => new ReferenceError(`${type} with this '${property}' already exists`),
   inexists: (type: string, property: string): ReferenceError => new ReferenceError(`No ${type} with this '${property}' exists`),
   singleton: (type: string): ReferenceError => new ReferenceError(`A ${type} already exists`),
@@ -79,137 +79,182 @@ const getProject = (state: ProjectManagerState, id: Project['pId']): Project | u
 export const actions: ActionTree<ProjectManagerState, ProjectManagerState> & Actions = {
   [ActionTypes.storeEmployee]({ commit }, employee) {
     return new Promise<string>((resolve, reject) => {
-      if (getEmployee(state, employee.eId)) reject(error.duplicate('employee', 'id'))
-      else {
-        commit(MutationType.addEmployee, employee)
-        resolve(success.generic('employee', 'stored'))
+
+      const callback = (dbError: Error | null, newDoc: unknown | null, updatedDoc: unknown | null) => {
+        if (dbError) reject(dbError)
+        else {
+          if (newDoc) {
+            commit(MutationType.addEmployee, plainToClass(Employee, newDoc))
+            resolve(successMessage.generic('employee', 'stored'))
+          } else if (updatedDoc) {
+            const e = plainToClass(Employee, updatedDoc)
+            commit(MutationType.removeEmployee, e)
+            commit(MutationType.addEmployee, e)
+            resolve(successMessage.generic('employee', 'updated'))
+          } else {
+            reject(new Error('No new or updated docs returned from database'))
+          }
+        }
       }
-    })
-  },
-  [ActionTypes.updateEmployee]({ commit }, employee) {
-    return new Promise<string>((resolve, reject) => {
-      if (!getEmployee(state, employee.eId)) reject(error.inexists('employee', 'id'))
-      else {
-        commit(MutationType.removeEmployee, employee)
-        commit(MutationType.addEmployee, employee)
-        resolve(success.generic('employee', 'updated'))
+
+      const plainEmployee = classToPlain(employee)
+      if (plainEmployee.hasOwnProperty('_id')) {
+        db.employees.update({ _id: plainEmployee._id }, plainEmployee, { returnUpdatedDocs: true }, (error: Error | null, n: number, doc: unknown | null) => callback(error, null, doc))
+      } else {
+        if (getEmployee(state, employee.eId)) reject(errorMessage.duplicate('employee', 'id'))
+        else db.employees.insert(plainEmployee, (error: Error | null, doc: unknown | null) => callback(error, doc, null))
       }
     })
   },
   [ActionTypes.deleteEmployee]({ commit }, employee) {
     return new Promise<string>((resolve, reject) => {
-      if (!getEmployee(state, employee.eId)) reject(error.inexists('employee', 'id'))
+      if (!getEmployee(state, employee.eId)) reject(errorMessage.inexists('employee', 'id'))
       else {
+        /* @ts-ignore */
+        db.employees.remove({ _id: employee._id }, {}, (error: Error | null, numRemoved: number) => { if (error) reject(error) })
         commit(MutationType.removeEmployee, employee)
-        resolve(success.generic('employee', 'removed'))
+        resolve(successMessage.generic('employee', 'removed'))
       }
     })
   },
 
   [ActionTypes.storeApproachModel]({ commit }, model) {
     return new Promise<string>((resolve, reject) => {
-      if (getApproachModel(state, model.title)) reject(error.duplicate('approach model', 'title'))
-      else {
-        commit(MutationType.addApproachModel, model)
-        resolve(success.generic('approach model', 'stored'))
+      const callback = (dbError: Error | null, newDoc: unknown | null, updatedDoc: unknown | null) => {
+        if (dbError) reject(dbError)
+        else {
+          if (newDoc) {
+            commit(MutationType.addApproachModel, plainToClass(ApproachModel, newDoc))
+            resolve(successMessage.generic('approach model', 'stored'))
+          } else if (updatedDoc) {
+            const m = plainToClass(ApproachModel, updatedDoc)
+            commit(MutationType.removeApproachModel, m)
+            commit(MutationType.addApproachModel, m)
+            resolve(successMessage.generic('approach model', 'updated'))
+          } else {
+            reject(new Error('No new or updated docs returned from database'))
+          }
+        }
       }
-    })
-  },
-  [ActionTypes.updateApproachModel]({ commit }, model) {
-    return new Promise<string>((resolve, reject) => {
-      if (!getApproachModel(state, model.title)) reject(error.inexists('approach model', 'title'))
-      else {
-        commit(MutationType.removeApproachModel, model)
-        commit(MutationType.addApproachModel, model)
-        resolve(success.generic('approach model', 'updated'))
+
+      const plainModel = classToPlain(model)
+      if (plainModel.hasOwnProperty('_id')) {
+        db.approachModels.update({ _id: plainModel._id }, plainModel, { returnUpdatedDocs: true }, (error: Error | null, n: number, doc: unknown | null) => callback(error, null, doc))
+      } else {
+        if (getApproachModel(state, model.title)) reject(errorMessage.duplicate('approach model', 'title'))
+        else db.approachModels.insert(plainModel, (error: Error | null, doc: unknown | null) => callback(error, doc, null))
       }
     })
   },
   [ActionTypes.deleteApproachModel]({ commit }, model) {
     return new Promise<string>((resolve, reject) => {
-      if (!getApproachModel(state, model.title)) reject(error.inexists('approach model', 'title'))
+      if (!getApproachModel(state, model.title)) reject(errorMessage.inexists('approach model', 'title'))
       else {
+        /* @ts-ignore */
+        db.approachModels.remove({ _id: model._id }, {}, (error: Error | null, numRemoved: number) => { if (error) reject(error) })
         commit(MutationType.removeApproachModel, model)
-        resolve(success.generic('approach model', 'removed'))
+        resolve(successMessage.generic('approach model', 'removed'))
       }
     })
   },
 
   [ActionTypes.storeCostType]({ commit }, costType) {
     return new Promise<string>((resolve, reject) => {
-      if (getCostType(state, costType.cId)) reject(error.duplicate('cost center', 'id'))
-      else {
-        commit(MutationType.addCostType, costType)
-        resolve(success.generic('cost center', 'stored'))
+      const callback = (dbError: Error | null, newDoc: unknown | null, updatedDoc: unknown | null) => {
+        if (dbError) reject(dbError)
+        else {
+          if (newDoc) {
+            commit(MutationType.addCostType, plainToClass(CostType, newDoc))
+            resolve(successMessage.generic('cost type', 'stored'))
+          } else if (updatedDoc) {
+            const ct = plainToClass(CostType, updatedDoc)
+            commit(MutationType.removeCostType, ct)
+            commit(MutationType.addCostType, ct)
+            resolve(successMessage.generic('cost type', 'updated'))
+          } else {
+            reject(new Error('No new or updated docs returned from database'))
+          }
+        }
       }
-    })
-  },
-  [ActionTypes.updateCostType]({ commit }, costType) {
-    return new Promise<string>((resolve, reject) => {
-      if (!getCostType(state, costType.cId)) reject(error.inexists('cost center', 'id'))
-      else {
-        commit(MutationType.removeCostType, costType)
-        commit(MutationType.addCostType, costType)
-        resolve(success.generic('cost center', 'updated'))
+
+      const plainCostType = classToPlain(costType)
+      if (plainCostType.hasOwnProperty('_id')) {
+        db.costTypes.update({ _id: plainCostType._id }, plainCostType, { returnUpdatedDocs: true }, (error: Error | null, n: number, doc: unknown | null) => callback(error, null, doc))
+      } else {
+        if (getCostType(state, costType.cId)) reject(errorMessage.duplicate('cost type', 'cId'))
+        else db.costTypes.insert(plainCostType, (error: Error | null, doc: unknown | null) => callback(error, doc, null))
       }
     })
   },
   [ActionTypes.deleteCostType]({ commit }, costType) {
     return new Promise<string>((resolve, reject) => {
-      if (!getCostType(state, costType.cId)) reject(error.inexists('cost center', 'id'))
+      if (!getCostType(state, costType.cId)) reject(errorMessage.inexists('cost center', 'id'))
       else {
+        /* @ts-ignore */
+        db.costTypes.remove({ _id: costType._id }, {}, (error: Error | null, numRemoved: number) => { if (error) reject(error) })
         commit(MutationType.removeCostType, costType)
-        resolve(success.generic('cost center', 'removed'))
+        resolve(successMessage.generic('cost center', 'removed'))
       }
     })
   },
 
   [ActionTypes.storeProject]({ commit }, project) {
     return new Promise<string>((resolve, reject) => {
-      if (getProject(state, project.pId)) reject(error.duplicate('project', 'id'))
-      else {
-        commit(MutationType.addProject, project)
-        resolve(success.generic('project', 'stored'))
+      const callback = (dbError: Error | null, newDoc: unknown | null, updatedDoc: unknown | null) => {
+        if (dbError) reject(dbError)
+        else {
+          if (newDoc) {
+            commit(MutationType.addProject, plainToClass(Project, newDoc))
+            resolve(successMessage.generic('project', 'stored'))
+          } else if (updatedDoc) {
+            const p = plainToClass(Project, updatedDoc)
+            commit(MutationType.removeProject, p)
+            commit(MutationType.addProject, p)
+            resolve(successMessage.generic('project', 'updated'))
+          } else {
+            reject(new Error('No new or updated docs returned from database'))
+          }
+        }
       }
-    })
-  },
-  [ActionTypes.updateProject]({ commit }, project) {
-    return new Promise<string>((resolve, reject) => {
-      if (!getProject(state, project.pId)) reject(error.inexists('project', 'id'))
-      else {
-        commit(MutationType.removeProject, project)
-        commit(MutationType.addProject, project)
-        resolve(success.generic('project', 'updated'))
+
+      const plainProject = classToPlain(project)
+      if (plainProject.hasOwnProperty('_id')) {
+        db.projects.update({ _id: plainProject._id }, plainProject, { returnUpdatedDocs: true }, (error: Error | null, n: number, doc: unknown | null) => callback(error, null, doc))
+      } else {
+        if (getProject(state, project.pId)) reject(errorMessage.duplicate('project', 'pId'))
+        else db.projects.insert(plainProject, (error: Error | null, doc: unknown | null) => callback(error, doc, null))
       }
     })
   },
   [ActionTypes.deleteProject]({ commit }, project) {
     return new Promise<string>((resolve, reject) => {
-      if (!getProject(state, project.pId)) reject(error.inexists('project', 'id'))
+      if (!getProject(state, project.pId)) reject(errorMessage.inexists('project', 'id'))
       else {
+        /* @ts-ignore */
+        db.projects.remove({ _id: project._id }, {}, (error: Error | null, numRemoved: number) => { if (error) reject(error) })
         commit(MutationType.removeProject, project)
-        resolve(success.generic('project', 'removed'))
+        resolve(successMessage.generic('project', 'removed'))
       }
     })
   },
 
   [ActionTypes.setProjectToBePlanned]({ commit }, nullableProject) {
     return new Promise<string>((resolve, reject) => {
-      if (state.projectToBePlanned != null && nullableProject != null) reject(error.singleton('project to be planned'))
-      else if (nullableProject && getProject(state, nullableProject.pId)) reject(error.duplicate('project', 'id'))
+      if (state.projectToBePlanned != null && nullableProject != null) reject(errorMessage.singleton('project to be planned'))
+      else if (nullableProject && getProject(state, nullableProject.pId)) reject(errorMessage.duplicate('project', 'id'))
       else {
         commit(MutationType.assignProjectToBePlanned, nullableProject)
-        resolve(success.generic('project to be planned', 'created'))
+        resolve(successMessage.generic('project to be planned', 'created'))
       }
     })
   },
 
   [ActionTypes.setProjectToBeManaged]({ commit }, nullableProject) {
     return new Promise<string>((resolve, reject) => {
-      if (state.projectToBeManaged != null && nullableProject != null) reject(error.singleton('project to be executed'))
+      if (state.projectToBeManaged != null && nullableProject != null) reject(errorMessage.singleton('project to be executed'))
       else {
         commit(MutationType.assignProjectToBeManaged, nullableProject)
-        resolve(success.generic('project to be executed', 'assigned'))
+        resolve(successMessage.generic('project to be executed', 'assigned'))
       }
     })
   }

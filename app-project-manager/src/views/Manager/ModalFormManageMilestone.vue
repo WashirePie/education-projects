@@ -26,7 +26,8 @@
             <div class="Box-header">{{ activity.title }}</div>
             <div class="Box-row" v-for="resource in activity.resources" :key="resource.title">
               <p :class="resource.actual >= resource.plan ? 'text-red' : ''">
-                <b>{{ resource.title }}</b> {{ resource.getSummary() }}
+                <b>{{ resource.title }}</b>
+                {{ resource.getSummary() }}
               </p>
             </div>
           </div>
@@ -69,13 +70,8 @@
 import MilestoneProgress from "./MilestoneProgress.vue";
 import Octicon from "@/components/Octicon.vue";
 import { Phase } from "@/classes/phase";
-import { computed, ComputedRef, defineComponent, PropType, ref } from "vue";
+import { defineComponent, PropType } from "vue";
 import { EMilestoneState, Milestone } from "@/classes/milestone";
-
-interface IResourceDisplay {
-  text: string;
-  usage: number;
-}
 
 export default defineComponent({
   name: "ModalFormManageMilestone",
@@ -104,6 +100,8 @@ export default defineComponent({
       emit("done");
     };
 
+    console.log(props.phase.activities[0].resources);
+
     const setAsReworked = () => {
       props.phase.setMilestoneState(props.milestone, EMilestoneState.reworked);
       emit("done");
@@ -114,21 +112,9 @@ export default defineComponent({
       emit("cancelProject");
     };
 
-    const milestoneResources: ComputedRef<Array<IResourceDisplay>> = computed(() => {
-      const activities = props.phase.getMilestoneActivities(props.milestone);
-      const resources: Array<IResourceDisplay> = [];
-      activities.forEach((a) => {
-        a.resources.forEach((r) => {
-          resources.push({ text: r.getSummary(), usage: r.percent });
-        });
-      });
-      return resources;
-    });
-
     const close = () => emit("done");
 
     return {
-      milestoneResources,
       close,
       setAsContinued,
       setAsReworked,

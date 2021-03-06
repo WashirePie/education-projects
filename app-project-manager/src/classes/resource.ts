@@ -86,8 +86,12 @@ export class PersonnelResource extends Resource implements IResource {
     return this._assignee;
   }
 
-  public toPlanString = (): string => `'${this.title}' - ${this.plan} ${this.unit} - ${this.assignee.fullName}`
-  public getSummary = (): string => `Used ${this.actual} ${this.unit} of ${this.plan} ${this.unit}`
+  public toPlanString(): string {
+    return `'${this.title}' - ${this.plan} ${this.unit} - ${this.assignee.fullName}`
+  }
+  public getSummary(): string {
+    return `Used ${this.actual} ${this.unit} of ${this.plan} ${this.unit}`
+  }
 }
 
 export class ExternalCostResource extends Resource implements IResource {
@@ -107,6 +111,10 @@ export class ExternalCostResource extends Resource implements IResource {
     return this._costType;
   }
 
-  public toPlanString = (): string => `'${this.title}' - ${this.unit}${this.plan} - ${this.costType.title}`
-  public getSummary = (): string => `Used ${this.unit}${this.actual} of ${this.unit}${this.plan}`
+  public toPlanString(): string {
+    return `'${this.title}' - ${this.unit}${this.plan} - ${this.costType.title}`
+  }
+  public getSummary(): string {
+    return `Used ${this.unit}${this.actual} of ${this.unit}${this.plan}`
+  }
 }

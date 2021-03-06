@@ -120,8 +120,8 @@
 <script lang="ts">
 import InputFieldText from "@/components/InputFieldText.vue";
 import InputFieldDate from "@/components/InputFieldDate.vue";
-import FieldPersonnelResource from "@/components/FieldPersonnelResource.vue";
-import FieldExternalCostResource from "@/components/FieldExternalCostResource.vue";
+import FieldPersonnelResource from "@/views/Planner/FieldPersonnelResource.vue";
+import FieldExternalCostResource from "@/views/Planner/FieldExternalCostResource.vue";
 import InputFieldSelect, { ISelectItem } from "@/components/InputFieldSelect.vue";
 import ListDocuments from "@/components/ListDocuments.vue";
 import Octicon from "@/components/Octicon.vue";

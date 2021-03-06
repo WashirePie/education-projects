@@ -161,4 +161,12 @@ export class Project {
   public cancel() {
     this._state = EProjectState.CANCELLED
   }
+
+  public manage() {
+    const phasesAreFinished = this.phases.every(p => p.state == EProjectState.FINISHED)
+
+    if (phasesAreFinished) {
+      this._state = EProjectState.FINISHED
+    }
+  }
 }

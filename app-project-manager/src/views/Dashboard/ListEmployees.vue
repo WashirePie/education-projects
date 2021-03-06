@@ -10,7 +10,12 @@
         <span class="Label mr-1 Label--purple" v-for="empFn in emp.possibleFunctions" :key="empFn">
           {{ empFn }}
         </span>
-        <span class="Label Label--gray float-right">🗝️ {{ emp.eId }} </span>
+        <div class="float-right">
+          <span class="Label Label--gray">🗝️ {{ emp.eId }} </span>
+          <button class="btn-octicon btn-octicon-danger v-align-top" type="button" @click="removeEmployee(emp)">
+            <Octicon octicon="x" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -27,13 +32,17 @@ export default defineComponent({
   components: {
     Octicon,
   },
-  setup() {
+  emits: ["removeEmployee"],
+  setup(props, { emit }) {
     const store = useStore();
 
     const employees: ComputedRef<Array<Employee>> = computed(() => store.state.employees);
 
+    const removeEmployee = (employee: Employee) => emit("removeEmployee", employee);
+
     return {
       employees,
+      removeEmployee,
     };
   },
 });

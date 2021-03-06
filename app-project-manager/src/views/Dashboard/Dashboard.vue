@@ -33,12 +33,12 @@
     <!-- Widgets -->
     <hr class="mt-6" />
     <ListProjects @clickedProject="handleProjectAction" />
-    <hr />
-    <ListApproachModels />
-    <hr />
-    <ListEmployees />
-    <hr />
-    <ListCostTypes />
+    <br />
+    <ListApproachModels @removeApproachModel="removeApproachModel" />
+    <br />
+    <ListEmployees @removeEmployee="removeEmployee" />
+    <br />
+    <ListCostTypes @removeCostType="removeCostType" />
   </div>
 
   <!-- New project modal -->
@@ -90,6 +90,9 @@ import { useStore } from "@/store";
 import { RouteLocationRaw } from "vue-router";
 import { Project } from "@/classes/project";
 import { ActionTypes } from "@/store/actions";
+import { ApproachModel } from "@/classes/approachModel";
+import { CostType } from "@/classes/costType";
+import { Employee } from "@/classes/employee";
 
 export default defineComponent({
   name: "Dashboard",
@@ -114,13 +117,20 @@ export default defineComponent({
 
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar;
 
+    // TODO: Implement Really? Dialog
+    const removeApproachModel = (model: ApproachModel) => store.dispatch(ActionTypes.deleteApproachModel, model);
+    // TODO: Implement Really? Dialog
+    const removeCostType = (costType: CostType) => store.dispatch(ActionTypes.deleteCostType, costType);
+    // TODO: Implement Really? Dialog
+    const removeEmployee = (employee: Employee) => store.dispatch(ActionTypes.deleteEmployee, employee);
+
     const handleProjectAction = (project: Project) => {
       if (project.isAwaitingApproval) {
         project.approve();
         loadingbar.start();
 
         store
-          .dispatch(ActionTypes.updateProject, project)
+          .dispatch(ActionTypes.storeProject, project)
           .catch((error: Error) =>
             window.dialog.showErrorBox("An error occured while updating this project", error.message)
           )
@@ -133,6 +143,8 @@ export default defineComponent({
           .then(() => router.push(<RouteLocationRaw>{ path: "/execute" }))
           .catch((err: Error) => window.dialog.showMessageBox({ message: "There's already a project in the manager" }))
           .finally(() => loadingbar.finish());
+      } else if (project.isFinished) {
+        // Ignore
       }
     };
 
@@ -143,6 +155,9 @@ export default defineComponent({
       showNewEmployeeModal,
       handleProjectAction,
       projectToBePlanned,
+      removeApproachModel,
+      removeCostType,
+      removeEmployee,
     };
   },
 });

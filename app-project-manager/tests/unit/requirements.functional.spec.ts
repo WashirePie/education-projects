@@ -97,7 +97,7 @@ describe('requirements according to the specification book', () => {
       new Employee('Sam', 'Wise', 'Dep', '#12345', 30, [EEmployeeFunctions.Designer])
     )
 
-    const id = phase?.activities[0].id
+    const id = phase?.activities[0].aId
 
     expect(phase?.phaseMilestone.activities).toEqual([id]) // FA6.1
   })

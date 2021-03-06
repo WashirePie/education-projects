@@ -36,8 +36,8 @@
 
     <div class="form-group-body">
       <select v-model="availableEmployeeValue" class="form-select">
-        <option v-for="empl in availableEmployees" :key="empl.id" :value="empl">
-          {{ empl.id }}: {{ empl.fullName }}
+        <option v-for="empl in availableEmployees" :key="empl.eId" :value="empl">
+          {{ empl.eId }}: {{ empl.fullName }}
         </option>
       </select>
     </div>

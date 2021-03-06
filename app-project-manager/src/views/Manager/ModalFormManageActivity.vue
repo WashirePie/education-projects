@@ -42,7 +42,7 @@
             <p class="d-inline">Used</p>
             <input
               v-model="rsc.actual"
-              class="form-control input-sm d-inline"
+              class="form-control input-sm d-inline mx-1"
               :class="rsc.actual > rsc.plan ? 'border-yellow' : 'border-green'"
               style="width: 73px"
               type="number"

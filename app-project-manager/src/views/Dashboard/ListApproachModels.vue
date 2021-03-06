@@ -3,7 +3,7 @@
     <h3 class="f3-light my-2">Approach Models</h3>
 
     <div class="Box Box--condensed mt-2">
-      <div class="Box-row d-flex flex-items-top" v-for="amp in approachModels" :key="amp.title">
+      <div class="Box-row d-flex flex-items-top flex-justify-between" v-for="amp in approachModels" :key="amp.title">
         <details class="details-reset">
           <summary class="btn-octicon">
             <Octicon octicon="package" class="circle d-inline mr-2" />
@@ -18,6 +18,11 @@
             </p>
           </div>
         </details>
+        <div>
+          <button class="btn-octicon btn-octicon-danger v-align-top" type="button" @click="removeApproachModel(amp)">
+            <Octicon octicon="x" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -34,13 +39,17 @@ export default defineComponent({
   components: {
     Octicon,
   },
-  setup() {
+  emits: ["removeApproachModel"],
+  setup(props, { emit }) {
     const store = useStore();
 
     const approachModels: ComputedRef<Array<ApproachModel>> = computed(() => store.state.approachModels);
 
+    const removeApproachModel = (model: ApproachModel) => emit("removeApproachModel", model);
+
     return {
       approachModels,
+      removeApproachModel,
     };
   },
 });
