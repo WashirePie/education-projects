@@ -18,8 +18,8 @@
 
 <script lang="ts">
 import { computed, ComputedRef, defineComponent } from "vue";
-import Nav from "./components/Nav.vue";
 import { useStore } from "./store";
+import Nav from "./components/Nav.vue";
 
 export default defineComponent({
   name: "Dashboard",
@@ -38,30 +38,26 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-// TODO: Move to global scss file @root-rules
-// html, body { padding: 0; }
-// body { margin: 0 }
-
-// h1, h2, h3, h4, h5, p, a {
-//   color: $color-font-main;
-// }
-
-// TODO: Move to global scss file @electron-stuff
 ::-webkit-scrollbar {
   display: none;
-  background-color: $color-general;
+  background-color: #ffffff;
   width: 10px;
 }
 
 ::-webkit-scrollbar-thumb:window-inactive,
 ::-webkit-scrollbar-thumb {
-  background: $color-general-darker;
+  background: #f1f0f5;
   border-radius: 5px;
 }
 
 .pm-dragbar {
-  height: $dragbar-height;
-  background: $color-dragbar;
+  height: 10px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background: #282e33;
   -webkit-app-region: drag;
 }
 </style>

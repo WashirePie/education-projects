@@ -137,7 +137,6 @@ export default defineComponent({
     const projectToBeManaged: ComputedRef<Project> = computed(() => store.state.projectToBeManaged!);
 
     const projectedEndDate: ComputedRef<Date> = computed(() => projectToBeManaged.value.endDate);
-    console.log(projectToBeManaged.value);
 
     const removeDocument = (document: DocumentRef) => projectToBeManaged.value.removeDocument(document);
 

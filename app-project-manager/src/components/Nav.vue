@@ -35,9 +35,15 @@
       <router-link class="Header-link" to="/execute">Manager</router-link>
     </div>
 
-    <!-- Nav avatar -->
-    <div class="Header-item mr-0">
-      <img class="avatar" height="20" alt="@octocat" src="@/assets/logo.png" width="20" />
+    <div class="Header-item Header-item--full">&nbsp;</div>
+
+    <!-- Exit App -->
+    <div class="Header-item float-right">
+      <a class="Header-link f4">
+        <button class="btn-octicon btn-octicon-danger v-align-top" type="button" @click="closeApp">
+          <Octicon octicon="x" />
+        </button>
+      </a>
     </div>
   </div>
 </template>
@@ -61,10 +67,15 @@ export default defineComponent({
 
     const waitingProjectsCount: ComputedRef<number> = computed(() => store.getters.waitingProjectsCount);
 
+    const closeApp = () => {
+      window.ipcRenderer.send("quit-app", "");
+    };
+
     return {
       hasProjectToBePlanned,
       hasProjectToBeManaged,
       waitingProjectsCount,
+      closeApp,
     };
   },
 });

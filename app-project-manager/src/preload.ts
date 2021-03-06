@@ -11,4 +11,4 @@ import "reflect-metadata"
 
 window.dialog = remote.dialog
 window.ipcRenderer = ipcRenderer
-window.path = process.env.PWD!
+window.path = remote.app.getPath('home')

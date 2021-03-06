@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, nativeTheme } from 'electron'
+import { app, protocol, BrowserWindow, nativeTheme, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import * as path from "path";
@@ -18,6 +18,7 @@ async function createWindow() {
     minHeight: 800,
     minWidth: 1400,
     frame: false,
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       enableRemoteModule: true,
@@ -25,6 +26,10 @@ async function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: (process.env.ELECTRON_NODE_INTEGRATION as unknown) as boolean
     }
+  })
+
+  win.once('ready-to-show', () => {
+    win.show()
   })
 
   // Restrain Theme to 'light'
@@ -74,6 +79,9 @@ app.on('ready', async () => {
   }
   createWindow()
 })
+
+// Exit app on ipc event
+ipcMain.on('quit-app', (event: any, arg: any) => app.exit(0))
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

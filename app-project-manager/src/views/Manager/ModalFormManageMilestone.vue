@@ -100,8 +100,6 @@ export default defineComponent({
       emit("done");
     };
 
-    console.log(props.phase.activities[0].resources);
-
     const setAsReworked = () => {
       props.phase.setMilestoneState(props.milestone, EMilestoneState.reworked);
       emit("done");
