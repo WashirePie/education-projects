@@ -146,9 +146,11 @@ export default defineComponent({
     };
 
     const removeProjectToBeManaged = () => {
-      store.dispatch(ActionTypes.deleteProject, projectToBeManaged.value);
       router.push(<RouteLocationRaw>{ path: "/" }).then(() => {
         store.dispatch(ActionTypes.setProjectToBeManaged, null);
+
+        loadingbar.start();
+        store.dispatch(ActionTypes.deleteProject, projectToBeManaged.value).finally(() => loadingbar.finish());
       });
     };
 
@@ -157,21 +159,21 @@ export default defineComponent({
       saveProjectToBeManaged();
     };
 
-    const saveProjectToBeManaged = () => {
+    const saveProjectToBeManaged = async () => {
+      projectToBeManaged.value.manage();
+
+      loadingbar.start();
       try {
-        projectToBeManaged.value.manage();
-        store
-          .dispatch(ActionTypes.storeProject, projectToBeManaged.value)
-          .then((res: string) => {
-            errorMessage.value = "";
-            router
-              .push(<RouteLocationRaw>{ path: "/" })
-              .then(() => store.dispatch(ActionTypes.setProjectToBeManaged, null));
-          })
-          .catch((err: Error) => (errorMessage.value = err.message))
-          .finally(() => loadingbar.finish());
+        errorMessage.value = "";
+        await store.dispatch(ActionTypes.storeProject, projectToBeManaged.value);
       } catch (error) {
         errorMessage.value = error.message;
+      } finally {
+        loadingbar.finish();
+      }
+
+      if (!errorMessage.value) {
+        discardProjectToBeManaged();
       }
     };
 

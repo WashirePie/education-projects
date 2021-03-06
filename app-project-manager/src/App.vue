@@ -8,16 +8,18 @@
   <!-- Views -->
   <div class="mx-3 my-3">
     <router-view v-slot="{ Component }">
-      <keep-alive include="Planner, Manager">
+      <keep-alive include="Planner" v-if="hasProjectToBePlanned">
         <component :is="Component" />
       </keep-alive>
+      <component v-else :is="Component" />
     </router-view>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, ComputedRef, defineComponent } from "vue";
 import Nav from "./components/Nav.vue";
+import { useStore } from "./store";
 
 export default defineComponent({
   name: "Dashboard",
@@ -25,7 +27,12 @@ export default defineComponent({
     Nav,
   },
   setup() {
-    return {};
+    const store = useStore();
+    const hasProjectToBePlanned: ComputedRef<boolean> = computed(() => store.state.projectToBePlanned != null);
+
+    return {
+      hasProjectToBePlanned,
+    };
   },
 });
 </script>
