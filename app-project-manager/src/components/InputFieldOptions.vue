@@ -52,8 +52,6 @@ export default defineComponent({
   },
   setup(props) {
     const errorMessage = ref<string>("");
-
-    // TODO: Make the errorMessage reset upon changes in inputSource (When the user selects an item)
     const validateInput = (
       minSelected = 1,
       maxSelected = props.inputSource.length

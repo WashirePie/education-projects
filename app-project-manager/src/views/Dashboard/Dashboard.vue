@@ -117,11 +117,8 @@ export default defineComponent({
 
     const loadingbar = getCurrentInstance()?.appContext.config.globalProperties.$Loadingbar;
 
-    // TODO: Implement Really? Dialog
     const removeApproachModel = (model: ApproachModel) => store.dispatch(ActionTypes.deleteApproachModel, model);
-    // TODO: Implement Really? Dialog
     const removeCostType = (costType: CostType) => store.dispatch(ActionTypes.deleteCostType, costType);
-    // TODO: Implement Really? Dialog
     const removeEmployee = (employee: Employee) => store.dispatch(ActionTypes.deleteEmployee, employee);
 
     const handleProjectAction = (project: Project) => {

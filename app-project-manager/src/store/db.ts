@@ -21,6 +21,10 @@ export type ProjectManagerDBs = {
   [EDatabases.employees]: Nedb
 }
 
+// preload.ts does not when testing
+const isTestEnv = process.env.NODE_ENV == 'test'
+if (isTestEnv) window.path = ''
+
 const databasePaths = {
   [EDatabases.projects]: path.join(window.path, [EDatabases.projects] + '.db'),
   [EDatabases.approachModels]: path.join(window.path, [EDatabases.approachModels] + '.db'),
@@ -32,9 +36,11 @@ export function useDatabase(): ProjectManagerDBs {
   return databases
 }
 
+// Databases will initialize the vuex state upon their onLoad event
 const databases: ProjectManagerDBs = {
   [EDatabases.projects]: new Nedb({
     filename: databasePaths.projects,
+    inMemoryOnly: isTestEnv,
     autoload: true,
     onload(error: Error | null) {
       if (error) window.dialog.showErrorBox(`Error while loading the '${[EDatabases.projects]}' database`, error.message)
@@ -42,16 +48,13 @@ const databases: ProjectManagerDBs = {
       // Get all stored projects
       databases[EDatabases.projects].find({}, (error: Error, docs: Array<object>) => {
         if (error) window.dialog.showErrorBox(`Error while loading data from the '${[EDatabases.projects]} database'`, error.message)
-        try {
-          store.state.projects = plainToClass(Project, docs)
-        } catch (error) {
-          if (error) window.dialog.showErrorBox(`Error casting data from the '${[EDatabases.projects]} database'`, error.message)
-        }
+        store.state.projects = plainToClass(Project, docs)
       })
     }
   }),
   [EDatabases.approachModels]: new Nedb({
     filename: databasePaths.approachModels,
+    inMemoryOnly: isTestEnv,
     autoload: true,
     onload(error: Error | null) {
       if (error) window.dialog.showErrorBox(`Error while loading the '${[EDatabases.approachModels]}' database`, error.message)
@@ -59,16 +62,13 @@ const databases: ProjectManagerDBs = {
       // Get all stored approach modesl
       databases[EDatabases.approachModels].find({}, (error: Error, docs: Array<object>) => {
         if (error) window.dialog.showErrorBox(`Error while loading data from the '${[EDatabases.approachModels]} database'`, error.message)
-        try {
-          store.state.approachModels = plainToClass(ApproachModel, docs)
-        } catch (error) {
-          if (error) window.dialog.showErrorBox(`Error casting data from the '${[EDatabases.approachModels]} database'`, error.message)
-        }
+        store.state.approachModels = plainToClass(ApproachModel, docs)
       })
     }
   }),
   [EDatabases.costTypes]: new Nedb({
     filename: databasePaths.costTypes,
+    inMemoryOnly: isTestEnv,
     autoload: true,
     onload(error: Error | null) {
       if (error) window.dialog.showErrorBox(`Error while loading the '${[EDatabases.costTypes]}' database`, error.message)
@@ -76,16 +76,13 @@ const databases: ProjectManagerDBs = {
       // Get all stored cost types
       databases[EDatabases.costTypes].find({}, (error: Error, docs: Array<object>) => {
         if (error) window.dialog.showErrorBox(`Error while loading data from the '${[EDatabases.costTypes]} database'`, error.message)
-        try {
-          store.state.costTypes = plainToClass(CostType, docs)
-        } catch (error) {
-          if (error) window.dialog.showErrorBox(`Error casting data from the '${[EDatabases.costTypes]} database'`, error.message)
-        }
+        store.state.costTypes = plainToClass(CostType, docs)
       })
     }
   }),
   [EDatabases.employees]: new Nedb({
     filename: databasePaths.employees,
+    inMemoryOnly: isTestEnv,
     autoload: true,
     onload(error: Error | null) {
       if (error) window.dialog.showErrorBox(`Error while loading the '${[EDatabases.employees]}' database`, error.message)
@@ -93,11 +90,7 @@ const databases: ProjectManagerDBs = {
       // Get all stored employees
       databases[EDatabases.employees].find({}, (error: Error, docs: Array<object>) => {
         if (error) window.dialog.showErrorBox(`Error while loading data from the '${[EDatabases.employees]} database'`, error.message)
-        try {
-          store.state.employees = plainToClass(Employee, docs)
-        } catch (error) {
-          if (error) window.dialog.showErrorBox(`Error casting data from the '${[EDatabases.employees]} database'`, error.message)
-        }
+        store.state.employees = plainToClass(Employee, docs)
       })
     }
   })

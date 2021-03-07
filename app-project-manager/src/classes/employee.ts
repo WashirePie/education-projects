@@ -12,7 +12,23 @@ export interface IEmployeeFunction {
   note?: string
 }
 
+/**
+ * Specifies an employee
+ *
+ * @export
+ * @class Employee
+ */
 export class Employee {
+  /**
+   * Creates an instance of Employee.
+   * @param {string} name
+   * @param {string} lastName
+   * @param {string} department
+   * @param {string} id
+   * @param {number} workload
+   * @param {Array<EEmployeeFunctions>} possibleFunctions
+   * @memberof Employee
+   */
   constructor(
     name: string,
     lastName: string,
@@ -29,35 +45,79 @@ export class Employee {
     this._possibleFunctions = possibleFunctions
   }
 
+  /**
+   * Unique identifier
+   *
+   * @readonly
+   * @property
+   * @type {string}
+   * @memberof Employee
+   */
   private _eId: string;
-  public get eId(): string {
-    return this._eId;
-  }
+  public get eId(): string { return this._eId; }
 
+  /**
+   * Name
+   *
+   * @readonly
+   * @property
+   * @type {string}
+   * @memberof Employee
+   */
   private _name: string;
-  public get name(): string {
-    return this._name;
-  }
+  public get name(): string { return this._name; }
 
+  /**
+   * Lastname
+   *
+   * @readonly
+   * @property
+   * @type {string}
+   * @memberof Employee
+   */
   private _lastName: string;
-  public get lastName(): string {
-    return this._lastName;
-  }
+  public get lastName(): string { return this._lastName; }
 
-  get fullName(): string {
-    return `${this.name} ${this.lastName}`
-  }
+  /**
+   * Fullname
+   *
+   * @readonly
+   * @property
+   * @type {string}
+   * @memberof Employee
+   */
+  get fullName(): string { return `${this.name} ${this.lastName}` }
 
+  /**
+   * Department
+   *
+   * @readonly
+   * @property
+   * @type {string}
+   * @memberof Employee
+   */
   private _department: string;
-  public get department(): string {
-    return this._department;
-  }
+  public get department(): string { return this._department; }
 
+  /**
+   * Workload - in hours per week
+   *
+   * @readonly
+   * @property
+   * @type {number}
+   * @memberof Employee
+   */
   private _workload: number;
-  public get workload(): number {
-    return this._workload;
-  }
+  public get workload(): number { return this._workload; }
 
+  /**
+   * Possible functions. List of functions this employee can occupy
+   *
+   * @private
+   * @property
+   * @type {Array<EEmployeeFunctions>}
+   * @memberof Employee
+   */
   private _possibleFunctions: Array<EEmployeeFunctions>;
   public get possibleFunctions(): Array<EEmployeeFunctions> {
     return this._possibleFunctions;

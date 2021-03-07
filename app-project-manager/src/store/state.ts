@@ -21,8 +21,6 @@ export type ProjectManagerState =
   }
 
 const db = useDatabase()
-// TODO: Take data from db
-// TODO: Move sample data to 'setupTests.ts'
 
 const employeeFunctions: Array<IEmployeeFunction> = [
   { name: EEmployeeFunctions.Developer, note: 'Available for developer functions' },
@@ -38,49 +36,24 @@ const sampleData = useSampleData()
 
 if (process.env.NODE_ENV !== "production") {
   // Clear approach model database and insert sample data
-  db.approachModels.remove({}, { multi: true }, (error: Error | null) => {
-    if (error) console.error(`Error while erasing '${EDatabases.approachModels}' database`, error);
-    db.approachModels.loadDatabase((error: Error | null) => {
-      if (error) console.error(`Error while erasing '${EDatabases.approachModels}' database`, error);
-    })
-  });
+  db.approachModels.remove({}, { multi: true }, () => { db.approachModels.loadDatabase() });
   const models = classToPlain(sampleData.approachModels)
   db.approachModels.insert(models, (error: Error | null) => { if (error) window.dialog.showErrorBox("Error while inserting sample approach models", error!.message) })
 
   // Clear projects database and insert sample data
-  db.projects.remove({}, { multi: true }, (error: Error | null) => {
-    if (error) console.error(`Error while erasing '${EDatabases.projects}' database`, error);
-    db.projects.loadDatabase((error: Error | null) => {
-      if (error) console.error(`Error while erasing '${EDatabases.projects}' database`, error);
-    })
-  });
+  db.projects.remove({}, { multi: true }, () => { db.projects.loadDatabase() });
   const projects = classToPlain(sampleData.projects)
   db.projects.insert(projects, (error: Error | null) => { if (error) window.dialog.showErrorBox("Error while inserting sample projects", error!.message) })
 
   // Clear cost types database and insert sample data
-  db.costTypes.remove({}, { multi: true }, (error: Error | null) => {
-    if (error) console.error(`Error while erasing '${EDatabases.costTypes}' database`, error);
-    db.costTypes.loadDatabase((error: Error | null) => {
-      if (error) console.error(`Error while erasing '${EDatabases.costTypes}' database`, error);
-    })
-  });
+  db.costTypes.remove({}, { multi: true }, (error: Error | null) => { db.costTypes.loadDatabase() });
   const costTypes = classToPlain(sampleData.costTypes)
   db.costTypes.insert(costTypes, (error: Error | null) => { if (error) window.dialog.showErrorBox("Error while inserting sample cost types", error!.message) })
 
   // Clear employees database and insert sample data
-  db.employees.remove({}, { multi: true }, (error: Error | null) => {
-    if (error) console.error(`Error while erasing '${EDatabases.employees}' database`, error);
-    db.employees.loadDatabase((error: Error | null) => {
-      if (error) console.error(`Error while erasing '${EDatabases.employees}' database`, error);
-    })
-  });
+  db.employees.remove({}, { multi: true }, (error: Error | null) => { db.employees.loadDatabase() });
   const employees = classToPlain(sampleData.employees)
   db.employees.insert(employees, (error: Error | null) => { if (error) window.dialog.showErrorBox("Error while inserting sample employee", error!.message) })
-
-  // Use sample projects to invoke planner & manager module
-  // TODO: These need a nedb _id - otherwise it'll fail on saving since it thinks it's a new project
-  // projectToBePlanned = sampleData.sampleProjectToBePlanned!
-  // projectToBeManaged = sampleData.sampleProjectToBeManaged
 }
 
 export const state: ProjectManagerState = {

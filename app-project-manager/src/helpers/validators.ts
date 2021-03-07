@@ -24,7 +24,6 @@ export type ValidationParams = {
     max?: number,
     min?: number
   },
-
 }
 
 export type ValidationReturns = {

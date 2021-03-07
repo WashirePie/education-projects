@@ -52,7 +52,9 @@ export default defineComponent({
   setup(props, { emit }) {
     const closeModal = () => emit("close");
 
-    return { closeModal };
+    return {
+      closeModal,
+    };
   },
 });
 </script>

@@ -44,7 +44,7 @@ describe('InputFieldDate.vue', () => {
     const date = new Date()
 
     const pastDate = new Date()
-    pastDate.setDate(date.getDate() - 1)
+    pastDate.setDate(date.getDate() - 2)
 
     const futureDate = new Date()
     futureDate.setDate(date.getDate() + 1)
@@ -59,7 +59,8 @@ describe('InputFieldDate.vue', () => {
     await wrapper.find('input').setValue(toISODate(date))
     res = wrapper.vm.validateInput({ minDate: pastDate })
     expect(wrapper.vm.errorMessage).toEqual('')
-    expect(res.getDate()).toEqual(date.getDate())
+    expect(res.getDate()).toBeLessThanOrEqual(date.getDate())
+    expect(res.getDate()).toBeGreaterThanOrEqual(date.getDate() - 1)
     expect(res.getMonth()).toEqual(date.getMonth())
     expect(res.getFullYear()).toEqual(date.getFullYear())
 
@@ -73,7 +74,8 @@ describe('InputFieldDate.vue', () => {
     await wrapper.find('input').setValue(toISODate(date))
     res = wrapper.vm.validateInput({ maxDate: futureDate })
     expect(wrapper.vm.errorMessage).toEqual('')
-    expect(res.getDate()).toEqual(date.getDate())
+    expect(res.getDate()).toBeLessThanOrEqual(date.getDate())
+    expect(res.getDate()).toBeGreaterThanOrEqual(date.getDate() - 1)
     expect(res.getMonth()).toEqual(date.getMonth())
     expect(res.getFullYear()).toEqual(date.getFullYear())
   })

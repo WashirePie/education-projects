@@ -75,8 +75,7 @@
           <div class="flex-1">
             <div class="Box mt-2">
               <div class="Box-row" v-for="rsc in resources" :key="rsc.title">
-                <!-- TODO: sometimes results in a too long string which moves the close button to an awkward spot -->
-                <span>{{ rsc.toPlanString() }}</span>
+                <span class="css-truncate-overflow">{{ rsc.toPlanString() }}</span>
                 <div class="float-right">
                   <button class="btn-octicon btn-octicon-danger" type="button" @click="removeResource(rsc)">
                     <Octicon octicon="x" />
