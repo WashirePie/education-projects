@@ -124,6 +124,8 @@ export default defineComponent({
       if (name && lastName && department && id && workload && funcs) {
         const newEmployee: Employee = new Employee(name, lastName, department, id, workload, funcs);
 
+        loadingbar.start();
+
         store
           .dispatch(ActionTypes.storeEmployee, newEmployee)
           .then((res: string) => {
