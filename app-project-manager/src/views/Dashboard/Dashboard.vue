@@ -121,9 +121,10 @@ export default defineComponent({
     const removeCostType = (costType: CostType) => store.dispatch(ActionTypes.deleteCostType, costType);
     const removeEmployee = (employee: Employee) => store.dispatch(ActionTypes.deleteEmployee, employee);
 
-    const handleProjectAction = (project: Project) => {
+    const handleProjectAction = async (project: Project) => {
       if (project.isAwaitingApproval) {
-        project.approve();
+        await project.approve();
+
         loadingbar.start();
 
         store

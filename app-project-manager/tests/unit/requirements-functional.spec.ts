@@ -295,9 +295,9 @@ describe('requirements according to the specification book', () => {
     project!.phases[0].activities[0].resources[0].actual = 11 // FA21
     project!.phases[0].activities[0].resources[0].deviation = 'Sample Deviation explanation' // FA21
 
-    project?.approve(false) // coverage fill
+    project?.approveProgrammatically(false) // coverage fill
     expect(project?.isDenied).toBeTruthy // coverage fill
-    project?.approve() // coverage fill
+    project?.approveProgrammatically() // coverage fill
     expect(project?.isExecuting).toBeTruthy() // coverage fill
 
     project?.manage() // coverage fill

@@ -1,4 +1,5 @@
 import { Type } from 'class-transformer'
+import { MessageBoxReturnValue } from 'electron/main'
 import { ApproachModel } from './approachModel'
 import { DocumentRef } from './document'
 import { Employee } from './employee'
@@ -273,7 +274,25 @@ export class Project {
    * @param doApprove {boolean}
    * @memberof Project
    */
-  public approve(doApprove: boolean = true) {
+  public async approve() {
+    const res: MessageBoxReturnValue = await window.dialog.showMessageBox({
+      buttons: ['Accept', 'Deny', 'Cancel'],
+      type: 'question',
+      message: `Approve or deny the execution of Project '${this._title}' (${this._pId})`
+    })
+
+    if (res.response != 2) {
+      const doApprove = res.response == 0 ? true : false
+
+      if (!doApprove) this._state = EProjectState.DENIED
+      else {
+        this._state = EProjectState.EXECUTION
+        this._phases.forEach(p => p.approvalDate = new Date())
+        this.approvalDate = new Date()
+      }
+    }
+  }
+  public async approveProgrammatically(doApprove: boolean = true) {
     if (!doApprove) this._state = EProjectState.DENIED
     else {
       this._state = EProjectState.EXECUTION
@@ -281,7 +300,6 @@ export class Project {
       this.approvalDate = new Date()
     }
   }
-
   /**
    * Cancels this project
    * 

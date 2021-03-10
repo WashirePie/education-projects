@@ -93,10 +93,10 @@ projects.forEach(proj => {
 // Pick out planned-project and  denied project
 const plannedProject = projects.shift()
 const deniedProject = projects.shift()
-deniedProject?.approve(false)
+deniedProject?.approveProgrammatically(false)
 
 // Approve other projects
-projects.forEach(proj => proj.approve())
+projects.forEach(proj => proj.approveProgrammatically())
 
 // Set arbitrary progress values
 projects.forEach(proj => {
