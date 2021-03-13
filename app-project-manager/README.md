@@ -1,5 +1,35 @@
 # app-project-manager
 
+## Prerequisites
+- A [Node.js](https://nodejs.org/en/) installation
+
+## Project setup
+```bash
+npm install
+```
+
+### Compiles & hot-reloads for development
+```bash
+npm run electron:serve
+```
+
+### Compiles and minifies for production
+```bash
+npm run electron:build
+```
+
+### Test: Unit
+```bash
+npm run test:unit
+```
+
+### Test: Coverage
+Generates a *coverage* Website trough Jest
+```bash
+npm run test:coverage
+```
+
+
 ## Dev References
 - [Primer CSS Docs](https://primer.style/css)
 - [Primer Octicons](https://primer.style/octicons/)
